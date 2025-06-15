@@ -72,9 +72,13 @@ This system enables organizations to:
 
 | Page | Preview |
 |------|---------|
-| **Login Page** | ![Login Page](/screenshots/Screenshot 2025-06-15 170810.png) |
-| **Task Creation** | ![Task Creation](/screenshots/task-creation.png) |
-| **Employee View** | ![Employee View](/screenshots/employee-view.png) |
-| **Mobile Responsive** | ![Mobile View](/screenshots/mobile-view.png) |
+| **Login Page** | ![Login Page](./screenshots/Screenshot 2025-06-15 170810.png) |
+| **Task Creation** | ![Task Creation](./screenshots/Screenshot 2025-06-15 170828.png) |
+| **Task View** | ![Task View](./screenshots/Screenshot 2025-06-15 170837.png) |
+| **Employee Creation** | ![Employee Creation](./screenshots/Screenshot 2025-06-15 170847.png) |
+| **Employee Directory** | ![Employee Directory](./screenshots/Screenshot 2025-06-15 170853.png) |
+| **Employee View** | ![Employee View](./screenshots/Screenshot 2025-06-15 170954.png) |
+
+
 
 --
