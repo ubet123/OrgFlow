@@ -29,4 +29,42 @@ router.get('/alltasks',async(req,res)=>{
     }
 })
 
+router.get('/emptasks', async(req,res)=>{
+    const user = req.body
+try {
+        
+        const { employee } = req.query;
+        
+        if (!employee) {
+            return res.status(400).json({ msg: 'Employee name is required' });
+        }
+
+        const usertasks = await Tasks.find({ assigned: employee });
+        res.json({ usertasks });
+        
+    } catch (error) {
+        console.error('Error fetching Tasks:', error);
+        res.status(500).json({ 
+            msg: 'Error Fetching Tasks', 
+            error: error.message 
+        });
+    }
+})
+
+
+router.patch("/complete",async (req,res)=>{
+    try {
+        const {taskId} = req.body
+        await Tasks.updateOne({taskId:taskId},{$set:{status:'Completed'}})
+        res.json({message:`task ${taskId} marked as completed`})
+
+    } catch (error) {
+        console.error('Error marking task as complete:', error);
+        res.status(500).json({ 
+            msg: 'Error marking task as complete', 
+            error: error.message 
+        });
+    }
+})
+
 module.exports=router

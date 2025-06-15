@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect } from 'react';
 
 const TaskCreate = () => {
-  const [employees,setEmployees] = useState([
+  const [employees, setEmployees] = useState([
     { id: 'EMP-1001', name: 'John Doe', role: 'developer' },
     { id: 'EMP-1002', name: 'Jane Smith', role: 'tester' },
     { id: 'EMP-1003', name: 'Mike Johnson', role: 'designer' }
   ]);
 
-useEffect(() => {
- const fetchEmployees = async () => {
+  useEffect(() => {
+    const fetchEmployees = async () => {
       try {
         const response = await axios.get('http://localhost:3001/user/employees');
         setEmployees(response.data.users); 
         console.log('Fetched employees:', response.data.users);
       } catch (err) {
         console.error('Error fetching employees:', err);
-        
       }
     }
     fetchEmployees();
-},[])
-
+  }, []);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const generateShortId = () => uuidv4().substring(0, 5).toUpperCase();
@@ -90,90 +87,90 @@ useEffect(() => {
   };
 
   return (
-   <div className="bg-neutral-900/80 backdrop-blur-sm rounded-xl border border-neutral-800 py-8 px-24  my-4 w-[82vw] max-w-[1800px]">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-emerald-400">Create New Task</h2>
-        <div className="text-md font-medium text-neutral-400">
-          Task ID: <span className="font-mono text-emerald-300 text-xl">{taskForm.taskId}</span>
+    <div className="bg-neutral-900/80 backdrop-blur-sm rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-24 my-4 w-full sm:w-[90vw] md:w-[82vw] max-w-[1800px] mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <h2 className="text-xl sm:text-2xl font-semibold text-emerald-400">Create New Task</h2>
+        <div className="text-sm sm:text-md font-medium text-neutral-400">
+          Task ID: <span className="font-mono text-emerald-300 text-lg sm:text-xl">{taskForm.taskId}</span>
         </div>
       </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Task Title - Full width */}
-            <div className="md:col-span-2">
-              <label className="block text-md font-medium text-neutral-300 mb-2">Task Title*</label>
-              <input
-                type="text"
-                name="title"
-                value={taskForm.title}
-                onChange={handleInputChange}
-                required
-                className="w-full px-5 py-3 text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
-                placeholder="Enter task title"
-              />
-            </div>
-
-            {/* Assign To */}
-            <div>
-              <label className="block text-md font-medium text-neutral-300 mb-2">Assign To*</label>
-              <select
-                name="assignedTo"
-                value={taskForm.assignedTo}
-                onChange={handleInputChange}
-                required
-                className="w-full px-5 py-3 text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
-              >
-                <option value="">Select Employee</option>
-                {employees.map(emp => (
-                  <option key={emp.id} value={emp.name}>
-                    {emp.name} ({emp.role})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Due Date */}
-            <div>
-              <label className="block text-md font-medium text-neutral-300 mb-2">Due Date*</label>
-              <input
-                type="date"
-                name="dueDate"
-                value={taskForm.dueDate}
-                onChange={handleInputChange}
-                required
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full px-5 py-3 text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
-              />
-            </div>
-          </div>
-
-          {/* Task Description */}
-          <div>
-            <label className="block text-md font-medium text-neutral-300 mb-2">Description*</label>
-            <textarea
-              name="description"
-              value={taskForm.description}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Task Title - Full width */}
+          <div className="md:col-span-2">
+            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Task Title*</label>
+            <input
+              type="text"
+              name="title"
+              value={taskForm.title}
               onChange={handleInputChange}
               required
-              rows={5}
-              className="w-full px-5 py-3 text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
-              placeholder="Describe the task details..."
+              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              placeholder="Enter task title"
             />
           </div>
 
-         {/* Submit Button */}
+          {/* Assign To */}
+          <div>
+            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Assign To*</label>
+            <select
+              name="assignedTo"
+              value={taskForm.assignedTo}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+            >
+              <option value="">Select Employee</option>
+              {employees.map(emp => (
+                <option key={emp.id} value={emp.name}>
+                  {emp.name} ({emp.role})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Due Date*</label>
+            <input
+              type="date"
+              name="dueDate"
+              value={taskForm.dueDate}
+              onChange={handleInputChange}
+              required
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+            />
+          </div>
+        </div>
+
+        {/* Task Description */}
+        <div>
+          <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Description*</label>
+          <textarea
+            name="description"
+            value={taskForm.description}
+            onChange={handleInputChange}
+            required
+            rows={5}
+            className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+            placeholder="Describe the task details..."
+          />
+        </div>
+
+        {/* Submit Button */}
         <div className="pt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`bg-emerald-700 hover:bg-emerald-600 text-white px-8 py-3.5 rounded-xl transition-colors font-medium flex items-center justify-center w-full text-lg ${
+            className={`bg-emerald-700 hover:bg-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl transition-colors font-medium flex items-center justify-center w-full text-base sm:text-lg ${
               isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
             }`}
           >
             {isSubmitting ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -181,7 +178,7 @@ useEffect(() => {
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                 </svg>
                 Create Task
@@ -191,7 +188,7 @@ useEffect(() => {
         </div>
       </form>
     </div>
-    );
-  };
+  );
+};
 
-  export default TaskCreate;
+export default TaskCreate;

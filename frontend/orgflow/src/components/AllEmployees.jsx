@@ -53,25 +53,26 @@ const AllEmployees = () => {
     setEmployeeToDelete(null);
   };
 
- const handleSearch = (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  setSearch(searchTerm);
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearch(searchTerm);
 
-  if (searchTerm === '') {
-    setFilteredEmployees([]);
-    return;
-  }
+    if (searchTerm === '') {
+      setFilteredEmployees([]);
+      return;
+    }
 
-  const results = employees.filter((employee) => {
-    return (
-      employee.name.toLowerCase().includes(searchTerm) ||
-      employee.email.toLowerCase().includes(searchTerm) ||
-      employee.employeeId.toLowerCase().includes(searchTerm) ||
-      employee.role.toLowerCase().includes(searchTerm)
-  )});
+    const results = employees.filter((employee) => {
+      return (
+        employee.name.toLowerCase().includes(searchTerm) ||
+        employee.email.toLowerCase().includes(searchTerm) ||
+        employee.employeeId.toLowerCase().includes(searchTerm) ||
+        employee.role.toLowerCase().includes(searchTerm)
+      );
+    });
 
-  setFilteredEmployees(results);
-};
+    setFilteredEmployees(results);
+  };
 
   const clearSearch = () => {
     setSearch('');
@@ -118,69 +119,115 @@ const AllEmployees = () => {
     }
 
     return (
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="border-b border-neutral-700">
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Employee ID</th>
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Name</th>
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Email</th>
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Password</th>
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Role</th>
-            <th className="py-3 px-4 text-left text-neutral-300 font-medium">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <>
+        {/* Desktop Table */}
+        <table className="w-full border-collapse hidden sm:table">
+          <thead>
+            <tr className="border-b border-neutral-700">
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Employee ID</th>
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Name</th>
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Email</th>
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Password</th>
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Role</th>
+              <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base text-neutral-300 font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dataToShow.map((employee) => (
+              <tr key={employee._id} className="border-b border-neutral-800 hover:bg-neutral-800/50 transition-colors">
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200 font-mono">{employee.employeeId}</td>
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">{employee.name}</td>
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">{employee.email}</td>
+                <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-400 font-mono">
+                  {employee.password}
+                </td>
+                <td className="py-3 px-2 sm:px-4">
+                  <span className={`px-2 py-1 rounded-full text-xs sm:text-sm border-2 sm:border-4 border-emerald-500 font-bold bg-slate-100 text-black`}>
+                    {employee.role}
+                  </span>
+                </td>
+                <td className="py-3 px-2 sm:px-4">
+                  <button
+                    onClick={() => handleDeleteClick(employee)}
+                    className="text-red-400 hover:text-red-300 transition-colors flex items-center text-sm sm:text-base"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Mobile Cards */}
+        <div className="sm:hidden space-y-4">
           {dataToShow.map((employee) => (
-            <tr key={employee._id} className="border-b border-neutral-800 hover:bg-neutral-800/50 transition-colors">
-              <td className="py-3 px-4 text-neutral-200 font-mono">{employee.employeeId}</td>
-              <td className="py-3 px-4 text-neutral-200">{employee.name}</td>
-              <td className="py-3 px-4 text-neutral-200">{employee.email}</td>
-              <td className="py-3 px-4 text-neutral-400 font-mono text-sm">
-                {employee.password}
-              </td>
-              <td className="py-3 px-4">
-                <span className={`px-2 py-1 rounded-full text-sm border-4 border-emerald-500 font-bold bg-slate-100 text-black`}>
-                  {employee.role}
-                </span>
-              </td>
-              <td className="py-3 px-4">
+            <div key={employee._id} className="bg-neutral-800/50 rounded-lg p-4 border border-neutral-700">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-neutral-500">ID</p>
+                  <p className="text-sm font-mono text-emerald-400">{employee.employeeId}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-neutral-500">Role</p>
+                  <span className={`px-2 py-1 rounded-full text-xs border-2 border-emerald-500 font-bold bg-slate-100 text-black`}>
+                    {employee.role}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-xs text-neutral-500">Name</p>
+                  <p className="text-sm text-white">{employee.name}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-xs text-neutral-500">Email</p>
+                  <p className="text-sm text-neutral-300">{employee.email}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-xs text-neutral-500">Password</p>
+                  <p className="text-xs font-mono text-neutral-400">{employee.password}</p>
+                </div>
+              </div>
+              <div className="mt-4 flex justify-end">
                 <button
                   onClick={() => handleDeleteClick(employee)}
-                  className="text-red-400 hover:text-red-300 transition-colors flex items-center"
+                  className="text-red-400 hover:text-red-300 transition-colors flex items-center text-sm"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                   Delete
                 </button>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </>
     );
   };
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-300 pt-12 px-4 pb-11">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-neutral-900/80 backdrop-blur-sm rounded-xl border border-neutral-800 p-6 my-6 overflow-x-auto">
-          <div className='flex justify-between items-center mb-6'>
-            <h2 className="text-2xl font-semibold text-emerald-400">Employee Directory</h2>
-            <div className="relative">
+        <div className="bg-neutral-900/80 backdrop-blur-sm rounded-xl border border-neutral-800 p-4 sm:p-6 my-4 sm:my-6 overflow-x-auto">
+          <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4'>
+            <h2 className="text-xl sm:text-2xl font-semibold text-emerald-400">Employee Directory</h2>
+            <div className="relative w-full sm:w-80">
               <input
                 onChange={handleSearch}
                 value={search}
                 type="text"
                 placeholder="Search employees..."
-                className="w-80 px-4 py-2 rounded-xl bg-neutral-800 border-2 border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-white placeholder-neutral-500 transition-all duration-200"
+                className="w-full px-4 py-2 rounded-lg sm:rounded-xl bg-neutral-800 border-2 border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-white placeholder-neutral-500 transition-all duration-200 text-sm sm:text-base"
               />
               {search && (
                 <button
                   onClick={clearSearch}
                   className="absolute right-3 top-2.5 text-neutral-400 hover:text-white"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </button>
@@ -194,33 +241,33 @@ const AllEmployees = () => {
 
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-neutral-900/90 backdrop-blur-sm rounded-xl border border-neutral-800 p-6 w-full max-w-md">
+          <div className="bg-neutral-900/90 backdrop-blur-sm rounded-xl border border-neutral-800 p-4 sm:p-6 w-full max-w-md">
             <div className="flex items-start mb-4">
               <div className="bg-red-900/30 p-2 rounded-lg mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white mb-1">Delete Employee</h3>
-                <p className="text-neutral-400">
+                <p className="text-sm sm:text-base text-neutral-400">
                   Are you sure you want to permanently delete <span className="font-medium text-white">{employeeToDelete?.name}</span>?
                 </p>
               </div>
             </div>
             
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex justify-end space-x-3 mt-4 sm:mt-6">
               <button
                 onClick={handleDeleteCancel}
-                className="px-4 py-2 rounded-lg border border-neutral-700 text-neutral-300 hover:bg-neutral-800 transition-colors"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-neutral-700 text-neutral-300 hover:bg-neutral-800 transition-colors text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors flex items-center"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors flex items-center text-sm sm:text-base"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
                 Delete

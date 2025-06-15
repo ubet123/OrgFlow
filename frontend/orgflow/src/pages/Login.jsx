@@ -109,7 +109,7 @@ const Login = () => {
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-neutral-600">
-              Secure employee portal
+              Secure employee Task portal
             </p>
           </div>
         </div>
