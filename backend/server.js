@@ -3,6 +3,8 @@ const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors') // Add this
 const loginroute = require('./routes/login')
+const taskroute = require('./routes/task')
+const userroute = require('./routes/user')
 
 const port = 3001
 
@@ -18,6 +20,8 @@ app.use(express.json())
 
 // Routes
 app.use('/auth', loginroute)
+app.use('/task',taskroute)
+app.use('/user',userroute)
 
 
 //server started 

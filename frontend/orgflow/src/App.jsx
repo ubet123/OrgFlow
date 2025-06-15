@@ -1,23 +1,65 @@
-import { BrowserRouter, Route, Routes } from "react-router"
-import Login from "./pages/Login"
-import ManagerDash from "./pages/ManagerDash"
-import EmployeeDash from "./pages/EmployeeDash"
-
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import ManagerDash from "./pages/ManagerDash";
+import EmployeeDash from "./pages/EmployeeDash";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CreateEmployee from './pages/CreateEmployee';
 
 function App() {
-  
+  const [authChecked, setAuthChecked] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Check auth status whenever the component mounts or authChecked changes
+    const data = JSON.parse(localStorage.getItem('userData') || null);
+    setUserData(data);
+  }, [authChecked]);
 
   return (
     <>
-       <BrowserRouter>
-       <Routes>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/manager-dashboard" element={<ManagerDash/>}/>
-        <Route path="/employee-dashboard" element={<EmployeeDash/>} />
-       </Routes>
-       </BrowserRouter>
+     <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/create-employee' element={<CreateEmployee/>}/>
+        {/* Public routes */}
+        {!userData && (
+          <Route path="/login" element={<Login onLogin={() => setAuthChecked(prev => !prev)} />} />
+        )}
+        
+        {/* Protected routes */}
+        <Route element={<ProtectedRoutes authChecked={authChecked} />}>
+        
+        
+          <Route path="/manager-dashboard" element={<ManagerDash onLogout={() => setAuthChecked(prev => !prev)} />} />
+          <Route path="/employee-dashboard" element={<EmployeeDash onLogout={() => setAuthChecked(prev => !prev)} />} />
+        </Route>
+        
+        {/* Redirect to login by default */}
+        <Route path="*" element={
+          <Navigate to={
+            userData ? 
+              (userData.role === 'manager' ? '/manager-dashboard' : '/employee-dashboard') 
+              : '/login'
+          } replace />
+        } />
+      </Routes>
+    </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
