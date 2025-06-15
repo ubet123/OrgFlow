@@ -72,7 +72,7 @@ This system enables organizations to:
 
 | Page | Preview |
 |------|---------|
-| **Manager Dashboard** | ![Manager Dashboard](/screenshots/manager-dashboard.png) |
+| **Login Page** | ![Login Page](/screenshots/Screenshot 2025-06-15 170810.png) |
 | **Task Creation** | ![Task Creation](/screenshots/task-creation.png) |
 | **Employee View** | ![Employee View](/screenshots/employee-view.png) |
 | **Mobile Responsive** | ![Mobile View](/screenshots/mobile-view.png) |
