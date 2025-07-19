@@ -74,9 +74,9 @@ This system enables organizations to:
 |------|---------|
 | **Login Page** | ![Login Page](./screenshots/Screenshot%202025-06-15%20170810.png) |
 | **Task Creation** | ![Task Creation](./screenshots/Screenshot%202025-06-15%20170828.png) |
-| **Task View** | ![Task View](./screenshots/Screenshot%202025-06-15%20170837.png) |
+| **Task View** | ![Task View](./screenshots/Screenshot%202025-07-19%20210155.png) |
 | **Employee Creation** | ![Employee Creation](./screenshots/Screenshot%202025-06-15%20170847.png) |
-| **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-06-15%20170853.png) |
+| **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-07-19%20210230.png) |
 | **Employee View** | ![Employee View](./screenshots/Screenshot%202025-06-15%20170954.png) |
 
 
