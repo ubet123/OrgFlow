@@ -142,8 +142,8 @@ const AllEmployees = () => {
                   {employee.password}
                 </td>
                 <td className="py-3 px-2 sm:px-4">
-                  <span className={`px-2 py-1 rounded-full text-xs sm:text-sm border-2 sm:border-4 border-emerald-500 font-bold bg-slate-100 text-black`}>
-                    {employee.role}
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-emerald-900/30 text-emerald-200 border border-emerald-400/50 shadow-sm shadow-emerald-500/20">
+                  {employee.role}
                   </span>
                 </td>
                 <td className="py-3 px-2 sm:px-4">
@@ -171,12 +171,7 @@ const AllEmployees = () => {
                   <p className="text-xs text-neutral-500">ID</p>
                   <p className="text-sm font-mono text-emerald-400">{employee.employeeId}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-neutral-500">Role</p>
-                  <span className={`px-2 py-1 rounded-full text-xs border-2 border-emerald-500 font-bold bg-slate-100 text-black`}>
-                    {employee.role}
-                  </span>
-                </div>
+               
                 <div className="col-span-2">
                   <p className="text-xs text-neutral-500">Name</p>
                   <p className="text-sm text-white">{employee.name}</p>
@@ -188,6 +183,12 @@ const AllEmployees = () => {
                 <div className="col-span-2">
                   <p className="text-xs text-neutral-500">Password</p>
                   <p className="text-xs font-mono text-neutral-400">{employee.password}</p>
+                </div>
+                 <div className='flex items-center gap-2'>
+                  <p className="text-xs text-neutral-500">Role</p>
+                  <span className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium bg-emerald-900/30 text-emerald-200 border border-emerald-400/50 shadow-sm shadow-emerald-500/20">
+                  {employee.role}
+                  </span>
                 </div>
               </div>
               <div className="mt-4 flex justify-end">

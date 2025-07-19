@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 const ManagerTop = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const ManagerTop = ({ onLogout }) => {
       
       <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
         <button
-          onClick={() => navigate('/create-employee')}
+          onClick={() => navigate('/manager-dashboard/create-employee')}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 w-full sm:w-auto"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,6 +57,7 @@ const ManagerTop = ({ onLogout }) => {
           <span className="text-sm sm:text-base">Logout</span>
         </button>
       </div>
+     
     </header>
   );
 };

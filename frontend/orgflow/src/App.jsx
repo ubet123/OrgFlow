@@ -7,6 +7,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateEmployee from './pages/CreateEmployee';
+import AdminEmpTasks from './components/AdminEmpTasks';
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -34,7 +35,7 @@ function App() {
       />
     <BrowserRouter>
       <Routes>
-        <Route path='/create-employee' element={<CreateEmployee/>}/>
+        
         {/* Public routes */}
         {!userData && (
           <Route path="/login" element={<Login onLogin={() => setAuthChecked(prev => !prev)} />} />
@@ -44,7 +45,9 @@ function App() {
         <Route element={<ProtectedRoutes authChecked={authChecked} />}>
         
         
-          <Route path="/manager-dashboard" element={<ManagerDash onLogout={() => setAuthChecked(prev => !prev)} />} />
+    <Route path="/manager-dashboard" element={<ManagerDash onLogout={() => setAuthChecked(prev => !prev)} />} />
+  <Route path="/manager-dashboard/create-employee" element={<CreateEmployee />} />
+  <Route path="/manager-dashboard/employee-tasks/:id" element={<AdminEmpTasks/>} />
           <Route path="/employee-dashboard" element={<EmployeeDash onLogout={() => setAuthChecked(prev => !prev)} />} />
         </Route>
         

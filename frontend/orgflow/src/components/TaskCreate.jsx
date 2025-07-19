@@ -99,7 +99,7 @@ const TaskCreate = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Task Title - Full width */}
           <div className="md:col-span-2">
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Task Title*</label>
+            <label className="block text-lg sm:text-md font-medium text-neutral-300 mb-2">Task Title*</label>
             <input
               type="text"
               name="title"
@@ -113,7 +113,7 @@ const TaskCreate = () => {
 
           {/* Assign To */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Assign To*</label>
+            <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Assign To*</label>
             <select
               name="assignedTo"
               value={taskForm.assignedTo}
@@ -132,7 +132,7 @@ const TaskCreate = () => {
 
           {/* Due Date */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Due Date*</label>
+            <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Due Date*</label>
             <input
               type="date"
               name="dueDate"
@@ -147,7 +147,7 @@ const TaskCreate = () => {
 
         {/* Task Description */}
         <div>
-          <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Description*</label>
+          <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Description*</label>
           <textarea
             name="description"
             value={taskForm.description}

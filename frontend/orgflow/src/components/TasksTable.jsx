@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const TasksTable = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -55,16 +57,26 @@ const TasksTable = () => {
                   <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Assigned To</th>
                   <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Description</th>
                   <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Due Date</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Task Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">
                 {tasks.map((task) => (
-                  <tr key={task.taskId} className="hover:bg-neutral-800/50 transition-colors">
-                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-300 font-mono">{task.taskId}</td>
+                  <tr key={task.taskId} className={`
+                    ${(new Date(task.due) < new Date()) && (task.status == 'Pending') 
+                      ? 'bg-red-950 ' 
+                      : ''} 
+                    transition-colors
+                    first:rounded-lg last:rounded-lg
+                    my-3
+                  `}>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-300 font-mono first:rounded-tl-lg last:rounded-bl-lg">{task.taskId}</td>
                     <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-300">{task.title}</td>
                     <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-300">
                       <div className="flex items-center space-x-2">
-                        <span className="bg-emerald-900/30 text-emerald-300 px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm">
+                        <span
+                        onClick={()=>navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
+                        className="bg-emerald-900/30 hover:cursor-pointer hover:bg-green-700 hover:text-black text-emerald-300 px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm">
                           {task.assigned}
                         </span>
                       </div>
@@ -77,6 +89,16 @@ const TasksTable = () => {
                     <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-400">
                       {formatDate(task.due)}
                     </td>
+                    
+                    {task.status == 'Completed' ? (
+                      <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-lg font-semibold text-green-300 last:rounded-tr-lg last:rounded-br-lg">
+                        {task.status}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-lg font-semibold text-yellow-300 last:rounded-tr-lg last:rounded-br-lg">
+                        {task.status}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -85,7 +107,9 @@ const TasksTable = () => {
             {/* Mobile Cards */}
             <div className="sm:hidden space-y-4">
               {tasks.map((task) => (
-                <div key={task.taskId} className="bg-neutral-800/50 rounded-lg p-4 border border-neutral-700">
+                <div key={task.taskId} className={`
+                 ${(task.status=='Pending')&&(new Date()> new Date(task.due))?('bg-red-950 rounded-lg p-4 border border-neutral-700'):('bg-neutral-800/50 rounded-lg p-4 border border-neutral-700')}                 
+                `}>
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-emerald-400 font-medium">{task.title}</h3>
@@ -100,9 +124,18 @@ const TasksTable = () => {
                     <p className="text-sm text-neutral-300 line-clamp-3">{task.description}</p>
                   </div>
                   
-                  <div className="mt-3 flex justify-between items-center">
-                    <span className="text-xs text-neutral-500">Due Date:</span>
-                    <span className="text-xs text-neutral-300">{formatDate(task.due)}</span>
+                  <div className='flex justify-between items-center'>
+                    <div className="mt-3 flex justify-start gap-2 items-center">
+                      <span className="text-xs text-neutral-500">Due Date:</span>
+                      <span className="text-xs text-neutral-300">{formatDate(task.due)}</span>
+                    </div>
+                    <div className='pt-2'>
+                      {task.status == 'Completed' ? (
+                        <div className='text-base font-bold text-green-300'>{task.status}</div>
+                      ) : (
+                        <div className='text-base font-bold text-yellow-300'>{task.status}</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
