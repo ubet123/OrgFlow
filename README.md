@@ -81,4 +81,8 @@ This system enables organizations to:
 
 
 
---
+## Upcoming Features ⏰
+- JWT auth + bcrypt hashing
+- Personal chat (employee to manager)
+- Mail notifications for employees when task is assigned 
+
