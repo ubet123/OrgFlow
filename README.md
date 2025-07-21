@@ -85,4 +85,8 @@ This system enables organizations to:
 - JWT auth + bcrypt hashing
 - Personal chat (employee to manager)
 - Mail notifications for employees when task is assigned 
+- Add Edit Employee feature for admin
+- Add edit task feature for admin
+
+
 
