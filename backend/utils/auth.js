@@ -13,7 +13,7 @@ const generateToken = (user) => {
 
 // Verify token middleware
 const verifyToken = async (req, res, next) => {
-  // 1. Get token from cookies
+  
   const token = req.cookies.token;
   
   if (!token) {
@@ -24,7 +24,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    // 2. Verify JWT token
+   
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     if (!decoded?.id) {
@@ -34,7 +34,7 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
-    // 3. Verify user exists in database
+    
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {
       // Clear invalid token
@@ -45,19 +45,17 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
-    // 4. Attach fresh user data to request
+  
     req.user = {
       id: user._id,
       name: user.name,
       role: user.role,
       employeeId: user.employeeId,
-      // Add any other necessary user fields
+     
     };
-    
-    // 5. Proceed to next middleware/route
     next();
   } catch (error) {
-    // Handle different error cases
+    
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ 
         success: false,
@@ -72,7 +70,7 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
-    // For any other errors
+ 
     console.error('Token verification error:', error);
     return res.status(500).json({ 
       success: false,

@@ -78,7 +78,7 @@ const TasksTable = () => {
                       <div className="flex items-center space-x-2">
                         <span
                         onClick={()=>navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                        className="bg-emerald-900/30 hover:cursor-pointer hover:bg-green-700 hover:text-black text-emerald-300 px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm">
+                        className="bg-emerald-900/30 hover:cursor-pointer hover:bg-green-700  font-bold  hover:text-black hover:font-bold text-emerald-300 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm">
                           {task.assigned}
                         </span>
                       </div>
@@ -117,7 +117,9 @@ const TasksTable = () => {
                       <h3 className="text-emerald-400 font-medium">{task.title}</h3>
                       <p className="text-xs text-neutral-400 font-mono mt-1">ID: {task.taskId}</p>
                     </div>
-                    <span className="bg-emerald-900/30 text-emerald-300 px-2 py-1 rounded-md text-xs">
+                    <span
+                    onClick={()=>navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
+                    className="bg-emerald-900/30 text-emerald-300 px-2 py-1 rounded-md text-xs">
                       {task.assigned}
                     </span>
                   </div>

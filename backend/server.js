@@ -17,10 +17,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/orgflow')
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend URL
-  credentials: true // Allow cookies
+  origin: 'http://localhost:5173', 
+  credentials: true 
 }))
-app.use(cookieParser()) // Add this
+app.use(cookieParser()) 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 

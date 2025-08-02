@@ -69,7 +69,7 @@ const EmployeeCreate = () => {
 
 
   return (
-    <div className="bg-neutral-900/80 backdrop-blur-sm rounded-lg sm:rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-16 xl:px-24 mt-8 sm:mt-12 md:mt-16 lg:mt-20 mb-4 w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[82vw] max-w-[1800px] mx-auto">
+    <div className="bg-neutral-900/80  backdrop-blur-sm rounded-lg sm:rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-16 xl:px-24 mt-8 sm:mt-32 md:mt-16 lg:mt-20 mb-4 w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[82vw] max-w-[1800px] mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
         <h2 className="text-xl sm:text-2xl font-semibold text-emerald-400">Add New Employee</h2>
         <div className="text-sm sm:text-md font-medium text-neutral-400">

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const {verifyToken} = require('../utils/auth')
 
+//get all employees
 router.get('/employees', async (req, res) => {
     try {
         const users = await User.find({}, 'id name role'); 
@@ -15,7 +17,7 @@ router.get('/employees', async (req, res) => {
     }
 });
 
-
+//get all employees
 router.get('/allemployees', async (req, res) => {
     try {
         const users = await User.find({}); 
@@ -29,6 +31,8 @@ router.get('/allemployees', async (req, res) => {
     }
 });
 
+
+//create employee
 router.post('/create',async (req,res)=>{
     const {name,email,employeeId,password,role}=req.body
 
@@ -45,6 +49,8 @@ router.post('/create',async (req,res)=>{
     }
 })
 
+
+//delete employee by id
 router.delete('/delete/:id', async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -56,5 +62,30 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting employee', error: error.message });
   }
 });
+
+//update employee details
+router.patch('/update/:id',verifyToken,async(req,res)=>{
+
+    try {
+    
+    const { name, email, employeeId, role, password } = req.body;
+    const updates = {};
+
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+    if (employeeId) updates.employeeId = employeeId;
+    if (role) updates.role = role;
+    if(password) updates.password=password;
+
+    const userId=req.params.id;
+    if(!userId) return res.json('UserId not found')
+
+     await User.findByIdAndUpdate(userId,{$set:updates})   
+     res.json({message:`${name}'s details have been updated succesfully`})
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating employee', error: error.message });
+    }
+ })
 
 module.exports = router;

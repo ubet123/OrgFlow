@@ -3,6 +3,8 @@ const router = express.Router()
 const User = require('../models/user')
 const { generateToken,verifyToken } = require('../utils/auth')
 
+
+//Login route
 router.post('/login', async (req, res) => {
   try {
     const { employeeId, password } = req.body
@@ -42,13 +44,13 @@ router.post('/login', async (req, res) => {
   }
 })
 
-// Add logout route
+//logout route
 router.post('/logout', (req, res) => {
   res.clearCookie('token')
   res.json({ message: 'Logged out successfully' })
 })
 
-
+//user data route
 router.get('/check-auth', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');

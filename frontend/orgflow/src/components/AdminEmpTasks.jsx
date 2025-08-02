@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 
 const AdminEmpTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -13,6 +14,7 @@ const AdminEmpTasks = () => {
   const { id } = useParams();
   const employeeName = id ? decodeURIComponent(id) : '';
 
+  const navigate =useNavigate()
 
   const isOverdue = (dueDate) => {
     if (!dueDate) return false;
@@ -95,13 +97,25 @@ const AdminEmpTasks = () => {
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-300 pt-12 px-4 pb-11">
    <div className="mb-8">
-  <div className="flex items-end gap-4">
+    <div className='flex flex-row items-center justify-between md:gap-0   md:justify-between mr-20'>
+      <div className="flex items-end gap-4">
     <h1 className="md:text-4xl font-extrabold text-white">
       <span className="text-neutral-300 pl-3 font-extrabold font-mono text-xl sm:text-5xl">{employeeName || 'Employee'}</span>
       <span className="text-emerald-300 sm:text-3xl">'s Tasks</span>
     </h1>
-   
+    
   </div>
+
+  <div
+   onClick={() => navigate('/manager-dashboard')}
+  className="inline-block  md:px-5 md:py-2.5 md:text-base md:font-medium text-sm px-3 py-2 text-emerald-400 bg-neutral-900/70 border border-emerald-400/20 rounded-lg hover:bg-neutral-800/90 cursor-pointer">
+  <div className="flex items-center justify-center gap-2">
+    <span className="md:text-xl"><IoIosArrowBack /></span>
+    <span>Back</span>
+  </div>
+</div>
+    </div>
+  
   <div className="mt-2 h-px bg-gradient-to-r from-emerald-500/20 via-amber-500/10 to-transparent"></div>
 </div>
       <div className="max-w-7xl mx-auto">

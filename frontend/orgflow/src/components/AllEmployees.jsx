@@ -10,6 +10,8 @@ const AllEmployees = () => {
   const [loading, setLoading] = useState(true);
   const [showConfirm, setShowConfirm] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editedEmployee, setEditedEmployee] = useState({});
 
   useEffect(() => {
     fetchEmployees();
@@ -18,7 +20,7 @@ const AllEmployees = () => {
   const fetchEmployees = async () => {
     try {
       const response = await axios.get('http://localhost:3001/user/allemployees', {
-        withCredentials: true // Add this to send cookies
+        withCredentials: true
       });
       setEmployees(response.data.users);
     } catch (error) {
@@ -29,6 +31,45 @@ const AllEmployees = () => {
     }
   };
 
+  const handleEditClick = (employee) => {
+    setEditingId(employee._id);
+    setEditedEmployee({ 
+      name: employee.name,
+      email: employee.email,
+      employeeId: employee.employeeId,
+      role: employee.role,
+      password: '' // Don't pre-fill password for security
+    });
+  };
+
+  const handleEditChange = (e, field) => {
+    setEditedEmployee({
+      ...editedEmployee,
+      [field]: e.target.value
+    });
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3001/user/update/${editingId}`,
+        editedEmployee,
+        { withCredentials: true }
+      );
+      
+      toast.success(`${response.data.message}`);
+      fetchEmployees();
+      setEditingId(null);
+    } catch (error) {
+      toast.error('Failed to update employee');
+      console.error('Error:', error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+  };
+
   const handleDeleteClick = (employee) => {
     setEmployeeToDelete(employee);
     setShowConfirm(true);
@@ -37,7 +78,7 @@ const AllEmployees = () => {
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(`http://localhost:3001/user/delete/${employeeToDelete._id}`, {
-        withCredentials: true // Add this to send cookies
+        withCredentials: true
       });
       toast.success(`${employeeToDelete.name} deleted successfully`);
       fetchEmployees();
@@ -70,7 +111,7 @@ const AllEmployees = () => {
       return (
         employee.name.toLowerCase().includes(searchTerm) ||
         employee.email.toLowerCase().includes(searchTerm) ||
-        employee.employeeId.toLowerCase().includes(searchTerm) ||
+        (employee.employeeId && employee.employeeId.toLowerCase().includes(searchTerm)) ||
         employee.role.toLowerCase().includes(searchTerm)
       );
     });
@@ -139,27 +180,122 @@ const AllEmployees = () => {
           <tbody>
             {dataToShow.map((employee) => (
               <tr key={employee._id} className="border-b border-neutral-800 hover:bg-neutral-800/50 transition-colors">
-                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200 font-mono">{employee.employeeId}</td>
-                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">{employee.name}</td>
-                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">{employee.email}</td>
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200 font-mono">
+                  {editingId === employee._id ? (
+                    <input
+                      type="text"
+                      value={editedEmployee.employeeId}
+                      onChange={(e) => handleEditChange(e, 'employeeId')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    employee.employeeId
+                  )}
+                </td>
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">
+                  {editingId === employee._id ? (
+                    <input
+                      type="text"
+                      value={editedEmployee.name}
+                      onChange={(e) => handleEditChange(e, 'name')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    employee.name
+                  )}
+                </td>
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-neutral-200">
+                  {editingId === employee._id ? (
+                    <input
+                      type="email"
+                      value={editedEmployee.email}
+                      onChange={(e) => handleEditChange(e, 'email')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    employee.email
+                  )}
+                </td>
                 <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-400 font-mono">
-                  {employee.password}
+                  {editingId === employee._id ? (
+                    <input
+                      type="password"
+                      value={editedEmployee.password}
+                      onChange={(e) => handleEditChange(e, 'password')}
+                      placeholder="New password"
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                  employee.password
+                  )}
                 </td>
                 <td className="py-3 px-2 sm:px-4">
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-emerald-900/30 text-emerald-200 border border-emerald-400/50 shadow-sm shadow-emerald-500/20">
-                  {employee.role}
-                  </span>
+                  {editingId === employee._id ? (
+                    <select
+                      value={editedEmployee.role}
+                      onChange={(e) => handleEditChange(e, 'role')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm"
+                    >
+                      <option value="employee">Employee</option>
+                      <option value="manager">Manager</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  ) : (
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      employee.role === 'admin' ? 'bg-purple-900/30 text-purple-200 border-purple-400/50' :
+                      employee.role === 'manager' ? 'bg-blue-900/30 text-blue-200 border-blue-400/50' :
+                      'bg-emerald-900/30 text-emerald-200 border-emerald-400/50'
+                    } border shadow-sm shadow-emerald-500/20`}>
+                      {employee.role}
+                    </span>
+                  )}
                 </td>
                 <td className="py-3 px-2 sm:px-4">
-                  <button
-                    onClick={() => handleDeleteClick(employee)}
-                    className="text-red-400 hover:text-red-300 transition-colors flex items-center text-sm sm:text-base"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Delete
-                  </button>
+                  <div className="flex flex-wrap gap-2">
+                    {editingId === employee._id ? (
+                      <>
+                        <button
+                          onClick={handleSaveClick}
+                          className="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 rounded-md text-sm flex items-center transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          Save
+                        </button>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="px-3 py-1 bg-neutral-700 hover:bg-neutral-600 rounded-md text-sm flex items-center transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEditClick(employee)}
+                          className="px-3 py-1 bg-blue-700 hover:bg-blue-600 rounded-md text-sm flex items-center transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(employee)}
+                          className="px-3 py-1 bg-red-700 hover:bg-red-600 rounded-md text-sm flex items-center transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -173,38 +309,125 @@ const AllEmployees = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-neutral-500">ID</p>
-                  <p className="text-sm font-mono text-emerald-400">{employee.employeeId}</p>
+                  {editingId === employee._id ? (
+                    <input
+                      type="text"
+                      value={editedEmployee.employeeId}
+                      onChange={(e) => handleEditChange(e, 'employeeId')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    <p className="text-sm font-mono text-emerald-400">{employee.employeeId}</p>
+                  )}
                 </div>
                
                 <div className="col-span-2">
                   <p className="text-xs text-neutral-500">Name</p>
-                  <p className="text-sm text-white">{employee.name}</p>
+                  {editingId === employee._id ? (
+                    <input
+                      type="text"
+                      value={editedEmployee.name}
+                      onChange={(e) => handleEditChange(e, 'name')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    <p className="text-sm text-white">{employee.name}</p>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <p className="text-xs text-neutral-500">Email</p>
-                  <p className="text-sm text-neutral-300">{employee.email}</p>
+                  {editingId === employee._id ? (
+                    <input
+                      type="text"
+                      value={editedEmployee.email}
+                      onChange={(e) => handleEditChange(e, 'email')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    <p className="text-sm text-neutral-300">{employee.email}</p>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <p className="text-xs text-neutral-500">Password</p>
-                  <p className="text-xs font-mono text-neutral-400">{employee.password}</p>
+                  {editingId === employee._id ? (
+                    <input
+                      type="password"
+                      value={editedEmployee.password}
+                      onChange={(e) => handleEditChange(e, 'password')}
+                      placeholder="New password"
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm w-full"
+                    />
+                  ) : (
+                    <p className="text-xs font-mono text-neutral-400">{employee.password}</p>
+                  )}
                 </div>
-                 <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2'>
                   <p className="text-xs text-neutral-500">Role</p>
-                  <span className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium bg-emerald-900/30 text-emerald-200 border border-emerald-400/50 shadow-sm shadow-emerald-500/20">
-                  {employee.role}
-                  </span>
+                  {editingId === employee._id ? (
+                    <select
+                      value={editedEmployee.role}
+                      onChange={(e) => handleEditChange(e, 'role')}
+                      className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm"
+                    >
+                      <option value="employee">Employee</option>
+                      <option value="manager">Manager</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  ) : (
+                    <span className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium ${
+                      employee.role === 'admin' ? 'bg-purple-900/30 text-purple-200 border-purple-400/50' :
+                      employee.role === 'manager' ? 'bg-blue-900/30 text-blue-200 border-blue-400/50' :
+                      'bg-emerald-900/30 text-emerald-200 border-emerald-400/50'
+                    } border shadow-sm shadow-emerald-500/20`}>
+                      {employee.role}
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={() => handleDeleteClick(employee)}
-                  className="text-red-400 hover:text-red-300 transition-colors flex items-center text-sm"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  Delete
-                </button>
+              <div className="mt-4 flex justify-end space-x-2">
+                {editingId === employee._id ? (
+                  <>
+                    <button
+                      onClick={handleSaveClick}
+                      className="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 rounded-md text-sm flex items-center transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Save
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="px-3 py-1 bg-neutral-700 hover:bg-neutral-600 rounded-md text-sm flex items-center transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleEditClick(employee)}
+                      className="px-3 py-1 bg-blue-700 hover:bg-blue-600 rounded-md text-sm flex items-center transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(employee)}
+                      className="px-3 py-1 bg-red-700 hover:bg-red-600 rounded-md text-sm flex items-center transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}

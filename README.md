@@ -85,8 +85,8 @@ This system enables organizations to:
 - JWT auth (completed✅)
 - Personal chat (employee to manager)
 - Mail notifications for employees when task is assigned 
-- Add Edit Employee feature for admin
-- Add edit task feature for admin
+- Implement Edit Employee feature for admin (completed✅)
+
 
 
 

@@ -1,6 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import SunAnimation from './SunAnimation';
+import Afternoon from './Afternoon';
+import Evening from './Evening';
+
+
 
 const EmployeeHeader = ({ onLogout, employee }) => {
   const navigate = useNavigate();
@@ -8,11 +13,33 @@ const EmployeeHeader = ({ onLogout, employee }) => {
  
   
   const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return '🌞 Good Morning';
-    if (hour < 16) return '🌤️ Good Afternoon';
-    return '🌆 Good Evening';
-  };
+  const hour = new Date().getHours();
+  
+  if (hour < 12) {
+    return (
+      <>
+        <SunAnimation />
+        <span>Good Morning</span>
+      </>
+    );
+  }
+  
+  if (hour < 18) {
+    return (
+      <>
+        <Afternoon/>
+        <span>Good Afternoon</span>
+      </>
+    );
+  }
+  
+  return (
+    <>
+      <Evening/>
+      <span>Good Evening</span>
+    </>
+  );
+};
 
   const handleLogout = async () => {
     try {
@@ -36,7 +63,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold flex flex-row gap-1 justify-center items-center tracking-tight">
             {getGreeting()}, <span className="text-emerald-400 font-extrabold text-2xl sm:text-3xl">{employee?.name}</span>
           </h1>
         </div>
