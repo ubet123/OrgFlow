@@ -33,7 +33,10 @@ This system enables organizations to:
 - **Express.js** (Server framework)
 - **MongoDB** (Database)
 - **Mongoose** (ODM)
+- **JWT (JSON Web Token)** (Secure authentication)
 
+### Additional Integrations
+- **Nodemailer** (Email notifications for task assignment)
 
 ### Development Tools
 - **Postman** (API testing)
@@ -46,23 +49,24 @@ This system enables organizations to:
 
 ### 👨‍💼 Manager Dashboard
 - ✅ Create tasks with titles, descriptions, and due dates
-- ✅ Assign tasks to specific employees
+- ✅ Assign tasks to specific employees (with **email notifications**)
 - ✅ View all tasks with status indicators
 - ✅ Track task completion rates
+- ✅ Personal chat with employees *(Upcoming)*
 
 ### 👩‍💻 Employee Dashboard
 - ✅ View assigned tasks
 - ✅ Mark tasks as complete
 - ✅ See pending vs. completed tasks
 - ✅ Visual alerts for overdue tasks
+- ✅ Receive task assignment notifications via email
 
 ### 🔐 Authentication System
-- ✅ Secure login for managers and employees
+- ✅ Secure login using **JWT authentication** for managers and employees
 - ✅ Role-based access control
 
-
 ### 🛠️ Admin Features
-- ✅ Employee management (create/delete)
+- ✅ Employee management (create/delete/edit)
 - ✅ Task oversight
 - ✅ System-wide controls
 
@@ -78,15 +82,16 @@ This system enables organizations to:
 | **Employee Creation** | ![Employee Creation](./screenshots/Screenshot%202025-06-15%20170847.png) |
 | **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-07-19%20210230.png) |
 | **Employee View** | ![Employee View](./screenshots/Screenshot%202025-06-15%20170954.png) |
+| **Edit Employee** | ![Edit Employee](./screenshots/Screenshot%202025-08-02%20171032.png) |
 
-
+---
 
 ## Upcoming Features ⏰
-- JWT auth (completed✅)
 - Personal chat (employee to manager)
-- Mail notifications for employees when task is assigned (completed✅)
-- Implement Edit Employee feature for admin (completed✅)
 
+---
 
-
-
+## 📌 Status
+- **JWT authentication** ✅ Implemented
+- **Mail notifications** ✅ Implemented
+- **Edit Employee feature** ✅ Implemented
