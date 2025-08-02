@@ -3,7 +3,33 @@ const router = express.Router()
 const Tasks = require('../models/task')
 const { verifyToken } = require('../utils/auth') 
 const Users= require('../models/user')
+const sendMail = require('../services/nodemail')
 
+//send email
+const mailToEmp = async (task, employeeName) => {
+  try {
+    
+    const employee = await Users.findOne({ name: employeeName });
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+
+    const email = employee.email; 
+    if (!email) {
+      throw new Error('No email found for employee');
+    }
+
+   
+    await sendMail(
+      email,
+      'Task Assigned on OrgFlow',
+      `<h1>${task.title}</h1><h3>Task ID:${task.taskId}</h3><p><b>Task Description</b>:${task.description}</p>`
+    );
+  } catch (error) {
+    console.error('Mail error:', error);
+    throw error; // Let the route handler catch it
+  }
+};
 
 //Create Task 
 router.post('/create',verifyToken, async(req,res)=>{
@@ -12,6 +38,9 @@ router.post('/create',verifyToken, async(req,res)=>{
     try {
         
         await Tasks.create({taskId:taskId,title:title,assigned:assignedTo,due:dueDate,description:description})
+        
+       await mailToEmp(req.body,assignedTo);
+
         return res.json({message:'Task created successfully'})
     } catch (error) {
         return res.status(500).json({ msg: 'Error creating Task', error });

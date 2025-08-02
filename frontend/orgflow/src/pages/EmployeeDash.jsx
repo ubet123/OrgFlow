@@ -7,8 +7,8 @@ import EmployeeTask from '../components/EmployeeTask';
 const EmployeeDash = ({ onLogout, userData }) => {
     const navigate = useNavigate()
 
-    // Debug: check what's actually being received
-    console.log('EmployeeDash received userData:', userData)
+    
+    // console.log('EmployeeDash received userData:', userData)
 
     if (!userData) {
         return (
