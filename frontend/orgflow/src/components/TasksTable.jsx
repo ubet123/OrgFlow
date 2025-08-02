@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 const TasksTable = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/task/alltasks');
+        const response = await axios.get('http://localhost:3001/task/alltasks', {
+          withCredentials: true
+        });
         setTasks(response.data.tasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);

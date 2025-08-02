@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import axios from 'axios';
 
 const ManagerTop = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -12,11 +13,18 @@ const ManagerTop = ({ onLogout }) => {
     return '🌆 Good Evening';
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userData');
-    onLogout();
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3001/auth/logout', {}, {
+        withCredentials: true
+      });
+      onLogout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
+
 
   return (
     <header className="bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-700 p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-10 space-y-4 sm:space-y-0">

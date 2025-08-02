@@ -1,8 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const EmployeeHeader = ({ onLogout, employee }) => {
   const navigate = useNavigate();
+
+ 
   
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -11,11 +14,18 @@ const EmployeeHeader = ({ onLogout, employee }) => {
     return '🌆 Good Evening';
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userData');
-    onLogout();
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3001/auth/logout', {}, {
+        withCredentials: true
+      });
+      onLogout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
+
 
   return (
     <header className="bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-700 p-3 sm:p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-10 gap-3 sm:gap-0">
@@ -27,7 +37,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
             </svg>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-            {getGreeting()}, <span className="text-emerald-400 font-extrabold text-2xl sm:text-3xl">{employee.name}</span>
+            {getGreeting()}, <span className="text-emerald-400 font-extrabold text-2xl sm:text-3xl">{employee?.name}</span>
           </h1>
         </div>
         

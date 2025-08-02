@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 const EmployeeCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Generate employee ID with EMP- prefix + 4 random chars
   const generateEmployeeId = () => `EMP-${uuidv4().substring(0, 4).toUpperCase()}`;
 
   const [employeeForm, setEmployeeForm] = useState({
@@ -34,6 +33,8 @@ const EmployeeCreate = () => {
         employeeId: employeeForm.employeeId,
         password: employeeForm.password,
         role: employeeForm.role
+      }, {
+        withCredentials: true // Add this to send cookies
       });
 
       toast.success('Employee created successfully!', {
@@ -65,6 +66,7 @@ const EmployeeCreate = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="bg-neutral-900/80 backdrop-blur-sm rounded-lg sm:rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-16 xl:px-24 mt-8 sm:mt-12 md:mt-16 lg:mt-20 mb-4 w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[82vw] max-w-[1800px] mx-auto">

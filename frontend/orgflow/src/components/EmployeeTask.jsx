@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
-const EmployeeTask = ({ employee }) => {
+const EmployeeTask = ({employee}) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [completingTask, setCompletingTask] = useState(null);
 
+
+  // console.log('EmployeeTask received employee:', employee)
+  
   const isOverdue = (dueDate) => {
     if (!dueDate) return false;
     const due = new Date(dueDate);
@@ -16,38 +19,49 @@ const EmployeeTask = ({ employee }) => {
     return !isNaN(due.getTime()) && due < today;
   };
 
-  const filterTasks = useCallback(() => {
-    const pendingtasks = tasks.filter((task) => task.status === 'Pending');
-    const completedtasks = tasks.filter((task) => task.status === 'Completed');
-    setPending(pendingtasks);
-    setCompleted(completedtasks);
+useEffect(() => {
+    if (tasks.length > 0) {
+      const pendingTasks = tasks.filter((task) => task.status === 'Pending');
+      const completedTasks = tasks.filter((task) => task.status === 'Completed');
+      setPending(pendingTasks);
+      setCompleted(completedTasks);
+    }
   }, [tasks]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/task/emptasks', {
-          params: { employee: employee.name }
-        });
-        setTasks(response.data.usertasks);
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+     const response = await axios.get('http://localhost:3001/task/emptasks', {
+  withCredentials: true
+});
 
-    fetchTasks();
-  }, [employee.name]);
+if (response.data.success) {
+  console.log('emp tasks on frontend',response.data.tasks);
+  
+  setTasks(response.data.tasks); // Note the changed field name from usertasks to tasks
+} else {
+  // Handle error
+  console.error(response.data.message);
+}
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+  
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    filterTasks();
-  }, [tasks, filterTasks]);
+
+  fetchTasks();
+}, []); 
 
   const handleMarkComplete = async (taskId) => {
     try {
       setCompletingTask(taskId);
-      await axios.patch('http://localhost:3001/task/complete', { taskId });
+      await axios.patch('http://localhost:3001/task/complete', { taskId }, {
+        withCredentials: true 
+      });
       setTasks(tasks.map(task => 
         task.taskId === taskId ? { ...task, status: 'Completed' } : task
       ));
@@ -57,7 +71,6 @@ const EmployeeTask = ({ employee }) => {
       setCompletingTask(null);
     }
   };
-
   const formatDueDate = (dateString) => {
     try {
       const date = new Date(dateString);

@@ -2,41 +2,44 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  try {
-    const response = await axios.post('http://localhost:3001/auth/login', {
-      employeeId,
-      password
-    });
+    try {
+      const response = await axios.post('http://localhost:3001/auth/login', {
+        employeeId,
+        password
+      }, {
+        withCredentials: true
+      });
 
-    // Handle successful login
-    const { user } = response.data;
-    localStorage.setItem('userData', JSON.stringify(user));
-    
-    // Redirect based on role
-    if (user.role === 'manager') {
-      navigate('/manager-dashboard');
-    } else {
-      navigate('/employee-dashboard');
+      // Handle successful login
+      onLogin(); // Trigger auth check in App component
+      
+      // Redirect based on role
+      if (response.data.user.role === 'manager') {
+        navigate('/manager-dashboard');
+      } else {
+        navigate('/employee-dashboard');
+      }
+
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
+  };
 
-  } catch (err) {
-    setError(err.response?.data?.message || 'Login failed. Please try again.');
-  } finally {
-    setLoading(false);
-  }
-};
+
 
   return (
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-4">

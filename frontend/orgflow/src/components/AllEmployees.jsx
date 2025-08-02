@@ -17,7 +17,9 @@ const AllEmployees = () => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/user/allemployees');
+      const response = await axios.get('http://localhost:3001/user/allemployees', {
+        withCredentials: true // Add this to send cookies
+      });
       setEmployees(response.data.users);
     } catch (error) {
       toast.error('Failed to fetch employees');
@@ -34,7 +36,9 @@ const AllEmployees = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3001/user/delete/${employeeToDelete._id}`);
+      await axios.delete(`http://localhost:3001/user/delete/${employeeToDelete._id}`, {
+        withCredentials: true // Add this to send cookies
+      });
       toast.success(`${employeeToDelete.name} deleted successfully`);
       fetchEmployees();
       setSearch('');

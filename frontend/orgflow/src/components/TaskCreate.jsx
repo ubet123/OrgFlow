@@ -5,18 +5,16 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const TaskCreate = () => {
-  const [employees, setEmployees] = useState([
-    { id: 'EMP-1001', name: 'John Doe', role: 'developer' },
-    { id: 'EMP-1002', name: 'Jane Smith', role: 'tester' },
-    { id: 'EMP-1003', name: 'Mike Johnson', role: 'designer' }
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/user/employees');
+        const response = await axios.get('http://localhost:3001/user/employees', {
+          withCredentials: true
+        });
         setEmployees(response.data.users); 
-        console.log('Fetched employees:', response.data.users);
       } catch (err) {
         console.error('Error fetching employees:', err);
       }
@@ -24,7 +22,6 @@ const TaskCreate = () => {
     fetchEmployees();
   }, []);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const generateShortId = () => uuidv4().substring(0, 5).toUpperCase();
 
   const [taskForm, setTaskForm] = useState({
@@ -45,23 +42,18 @@ const TaskCreate = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/task/create', {
+      await axios.post('http://localhost:3001/task/create', {
         taskId: taskForm.taskId,
         title: taskForm.title,
         description: taskForm.description,
         assignedTo: taskForm.assignedTo,
         dueDate: taskForm.dueDate
+      }, {
+        withCredentials: true
       });
 
-      toast.success('Task created successfully!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-
+      toast.success('Task created successfully!');
+      
       // Reset form
       setTaskForm({
         taskId: generateShortId(),
@@ -73,14 +65,7 @@ const TaskCreate = () => {
 
     } catch (error) {
       console.error('Error creating task:', error);
-      toast.error(error.response?.data?.msg || 'Failed to create task', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.error(error.response?.data?.msg || 'Failed to create task');
     } finally {
       setIsSubmitting(false);
     }

@@ -8,20 +8,36 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateEmployee from './pages/CreateEmployee';
 import AdminEmpTasks from './components/AdminEmpTasks';
+import axios from 'axios';
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check auth status whenever the component mounts or authChecked changes
-    const data = JSON.parse(localStorage.getItem('userData') || null);
-    setUserData(data);
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/auth/check-auth', {
+          withCredentials: true
+        });
+        setUserData(response.data.user);
+      } catch (error) {
+        setUserData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
   }, [authChecked]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a proper loading spinner
+  }
 
   return (
     <>
-     <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -33,34 +49,36 @@ function App() {
         pauseOnHover
         theme="dark"
       />
-    <BrowserRouter>
-      <Routes>
-        
-        {/* Public routes */}
-        {!userData && (
-          <Route path="/login" element={<Login onLogin={() => setAuthChecked(prev => !prev)} />} />
-        )}
-        
-        {/* Protected routes */}
-        <Route element={<ProtectedRoutes authChecked={authChecked} />}>
-        
-        
-    <Route path="/manager-dashboard" element={<ManagerDash onLogout={() => setAuthChecked(prev => !prev)} />} />
-  <Route path="/manager-dashboard/create-employee" element={<CreateEmployee />} />
-  <Route path="/manager-dashboard/employee-tasks/:id" element={<AdminEmpTasks/>} />
-          <Route path="/employee-dashboard" element={<EmployeeDash onLogout={() => setAuthChecked(prev => !prev)} />} />
-        </Route>
-        
-        {/* Redirect to login by default */}
-        <Route path="*" element={
-          <Navigate to={
-            userData ? 
-              (userData.role === 'manager' ? '/manager-dashboard' : '/employee-dashboard') 
-              : '/login'
-          } replace />
-        } />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route 
+            path="/login" 
+            element={
+              userData ? 
+                <Navigate to={userData.role === 'manager' ? '/manager-dashboard' : '/employee-dashboard'} replace /> 
+                : <Login onLogin={() => setAuthChecked(prev => !prev)} />
+            } 
+          />
+          
+          {/* Protected routes */}
+          <Route element={<ProtectedRoutes userData={userData} />}>
+            <Route path="/manager-dashboard" element={<ManagerDash onLogout={() => setAuthChecked(prev => !prev)} userData={userData} />} />
+            <Route path="/manager-dashboard/create-employee" element={<CreateEmployee />} />
+            <Route path="/manager-dashboard/employee-tasks/:id" element={<AdminEmpTasks/>} />
+            <Route path="/employee-dashboard" element={<EmployeeDash onLogout={() => setAuthChecked(prev => !prev)} userData={userData} />} />
+          </Route>
+          
+          {/* Redirect to login by default */}
+          <Route path="*" element={
+            <Navigate to={
+              userData ? 
+                (userData.role === 'manager' ? '/manager-dashboard' : '/employee-dashboard') 
+                : '/login'
+            } replace />
+          } />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

@@ -22,21 +22,23 @@ const AdminEmpTasks = () => {
     return !isNaN(due.getTime()) && due < today;
   };
 
-  const filterTasks = useCallback(() => {
-    const pendingtasks = tasks.filter((task) => task.status === 'Pending');
-    const completedtasks = tasks.filter((task) => task.status === 'Completed');
-    setPending(pendingtasks);
-    setCompleted(completedtasks);
-  }, [tasks]);
+ useEffect(() => {
+     if (tasks.length > 0) {
+       const pendingTasks = tasks.filter((task) => task.status === 'Pending');
+       const completedTasks = tasks.filter((task) => task.status === 'Completed');
+       setPending(pendingTasks);
+       setCompleted(completedTasks);
+     }
+   }, [tasks]);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchTasks = async () => {
       try {
-        console.log('Fetching tasks for:', employeeName); // Debug log
-        const response = await axios.get('http://localhost:3001/task/emptasks', {
-          params: { employee: employeeName }
+        const response = await axios.get('http://localhost:3001/task/adminemptasks', {
+          params: { employee: employeeName },
+          
         });
-        setTasks(response.data.usertasks);
+        setTasks(response.data.tasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       } finally {
@@ -47,9 +49,7 @@ const AdminEmpTasks = () => {
     fetchTasks();
   }, [employeeName]);
 
-  useEffect(() => {
-    filterTasks();
-  }, [tasks, filterTasks]);
+  
 
 //   const handleMarkComplete = async (taskId) => {
 //     try {
