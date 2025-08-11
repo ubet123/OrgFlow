@@ -88,7 +88,7 @@ This system enables organizations to:
 
 ## Upcoming Features ⏰
 - Personal chat (employee to manager)
-
+- Mail notifications for admin when task is completed 
 ---
 
 ## 📌 Status
