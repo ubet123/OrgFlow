@@ -82,7 +82,6 @@ This system enables organizations to:
 | **Employee Creation** | ![Employee Creation](./screenshots/Screenshot%202025-06-15%20170847.png) |
 | **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-07-19%20210230.png) |
 | **Employee View** | ![Employee View](./screenshots/Screenshot%202025-06-15%20170954.png) |
-| **Edit Employee** | ![Edit Employee](./screenshots/Screenshot%202025-08-02%20171032.png) |
 
 ---
 
