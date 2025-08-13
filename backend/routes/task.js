@@ -5,7 +5,7 @@ const { verifyToken } = require('../utils/auth')
 const Users= require('../models/user')
 const sendMail = require('../services/nodemail')
 
-//send email
+//send email to employee when *Task is Assigned*
 const mailToEmp = async (task, employeeName) => {
   try {
     
@@ -27,7 +27,7 @@ const mailToEmp = async (task, employeeName) => {
     );
   } catch (error) {
     console.error('Mail error:', error);
-    throw error; // Let the route handler catch it
+    throw error; 
   }
 };
 
@@ -101,12 +101,18 @@ router.get('/emptasks', verifyToken, async (req, res) => {
 });
 
 
-//Mark task as complete
+//Mark task as completed
 router.patch("/complete",verifyToken,async (req,res)=>{
     try {
         const {taskId} = req.body
-        await Tasks.updateOne({taskId:taskId},{$set:{status:'Completed'}})
-        res.json({message:`task ${taskId} marked as completed`})
+        await Tasks.updateOne({taskId:taskId},{$set:{status:'Completed'}});
+        const taskInfo= await Tasks.findOne({taskId:taskId})
+
+        //Send Email to manager regarding Task Completion
+       await sendMail('dmelloserene08@gmail.com',`Task ${taskId} Completed on Orgflow `,`<h2>Hello Manager</h2> <p>Task ${taskId} has been <b>Completed</b> by <b>${taskInfo.assigned} . <br/> Thank You  `)
+
+        res.json({message:`Task ${taskId} marked as completed`})
+      
 
     } catch (error) {
         console.error('Error marking task as complete:', error);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
+import { toast } from 'react-toastify';
+
 const EmployeeTask = ({employee}) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,12 +61,19 @@ if (response.data.success) {
   const handleMarkComplete = async (taskId) => {
     try {
       setCompletingTask(taskId);
-      await axios.patch('http://localhost:3001/task/complete', { taskId }, {
+    const response =  await axios.patch('http://localhost:3001/task/complete', { taskId }, {
         withCredentials: true 
       });
       setTasks(tasks.map(task => 
         task.taskId === taskId ? { ...task, status: 'Completed' } : task
       ));
+
+      
+toast.success(`${response.data.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
     } catch (error) {
       console.error('Error marking task complete:', error);
     } finally {

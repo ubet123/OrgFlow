@@ -88,7 +88,7 @@ const TasksTable = () => {
                         {task.description}
                       </div>
                     </td>
-                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base text-neutral-400">
+                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-sm min-w-28 sm:text-base text-neutral-400">
                       {formatDate(task.due)}
                     </td>
                     

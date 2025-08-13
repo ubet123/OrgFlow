@@ -8,11 +8,7 @@
 @layer base {
   html {
     font-family: 'Nunito', sans-serif;
-  }
-}
-
-
-.custom-scrollbar::-webkit-scrollbar {
+    .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
@@ -30,3 +26,6 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #059669;
 }
+  }
+}
+
