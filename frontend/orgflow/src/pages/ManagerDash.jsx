@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ManagerTop from '../components/ManagerTop';
 import TaskCreate from '../components/TaskCreate';
 import TasksTable from '../components/TasksTable';
+import Analytics from '../components/charts/Analytics';
 
 const ManagerDash = ({ onLogout }) => {
     return (
@@ -14,6 +15,7 @@ const ManagerDash = ({ onLogout }) => {
             <main className="p-6 max-w-7xl mx-auto">
                 <TaskCreate />
                 <TasksTable/>
+                <Analytics/>
             </main>
         </div>
     );

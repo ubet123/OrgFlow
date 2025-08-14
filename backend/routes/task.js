@@ -18,12 +18,18 @@ const mailToEmp = async (task, employeeName) => {
     if (!email) {
       throw new Error('No email found for employee');
     }
+const isoDate = task.dueDate;
+const readableDate = new Date(isoDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
 
    
     await sendMail(
       email,
       'Task Assigned on OrgFlow',
-      `<h1>${task.title}</h1><h3>Task ID:${task.taskId}</h3><p><b>Task Description</b>:${task.description}</p>`
+      `<h1>${task.title}</h1><h3>Task ID:${task.taskId}</h3><p><b>Task Description</b>:${task.description}</p><p>Task DueDate:<b>${readableDate}</b></p>`
     );
   } catch (error) {
     console.error('Mail error:', error);

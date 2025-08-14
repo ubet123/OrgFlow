@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const TasksTable = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+ 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +36,9 @@ const TasksTable = () => {
         });
   };
 
+
+
+
   return (
     <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 bg-neutral-900/80 backdrop-blur-sm rounded-lg sm:rounded-xl border border-neutral-800 overflow-hidden w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] mx-auto">
       <div className="py-6 px-4 sm:py-8 sm:px-6 md:px-10 lg:px-16 xl:px-20">
@@ -54,12 +58,12 @@ const TasksTable = () => {
             <table className="w-full border-collapse hidden sm:table">
               <thead>
                 <tr className="border-b border-neutral-700">
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Task ID</th>
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Title</th>
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Assigned To</th>
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Description</th>
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Due Date</th>
-                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-base font-medium text-neutral-300">Task Status</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left min-w-32 text-sm sm:text-lg font-medium text-neutral-300">Task ID</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium text-neutral-300">Title</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium text-neutral-300">Assigned To</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium text-neutral-300">Description</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium text-neutral-300">Due Date</th>
+                  <th className="px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium text-neutral-300">Task Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">

@@ -21,7 +21,7 @@ const ManagerTop = ({ onLogout }) => {
     );
   }
   
-  if (hour < 18) {
+  if (hour < 17) {
     return (
       <>
         <Afternoon/>

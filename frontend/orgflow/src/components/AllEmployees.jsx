@@ -481,6 +481,9 @@ const AllEmployees = () => {
                 <p className="text-sm sm:text-base text-neutral-400">
                   Are you sure you want to permanently delete <span className="font-medium text-white">{employeeToDelete?.name}</span>?
                 </p>
+                <p className="text-sm text-amber-500 mt-2">
+  Note: This will permanently delete the employee account and all their assigned tasks.
+</p>
               </div>
             </div>
             
