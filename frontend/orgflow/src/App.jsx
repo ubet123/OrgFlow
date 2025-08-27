@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateEmployee from './pages/CreateEmployee';
 import AdminEmpTasks from './components/AdminEmpTasks';
+import { ThemeProvider } from './context/themeContext';
+import Analytics from './components/charts/Analytics';
 import axios from 'axios';
 
 function App() {
@@ -37,11 +39,12 @@ function App() {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
+      <ThemeProvider>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
@@ -79,6 +82,8 @@ function App() {
           } />
         </Routes>
       </BrowserRouter>
+    
+      </ThemeProvider>
     </>
   );
 }

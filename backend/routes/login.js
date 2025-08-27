@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
     const token = generateToken(user)
 
     // Set cookie
-    res.cookie('token', token, {
+    res.cookie('orgflow_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
 
 //logout route
 router.post('/logout', (req, res) => {
-  res.clearCookie('token')
+  res.clearCookie('orgflow_token')
   res.json({ message: 'Logged out successfully' })
 })
 

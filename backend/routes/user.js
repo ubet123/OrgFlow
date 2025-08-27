@@ -51,6 +51,7 @@ router.post('/create',verifyToken,async (req,res)=>{
 })
 
 
+//delete employee and their tasks
 router.delete('/delete/:id',verifyToken, async (req, res) => {
   try {
    

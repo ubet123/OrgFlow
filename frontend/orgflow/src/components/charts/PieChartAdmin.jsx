@@ -1,38 +1,64 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { useTheme } from '../../context/themeContext';
 
 const valueFormatter = (data) => `${data.value}%`;
 
-function PieChartAdmin({completed, pending}) {
+function PieChartAdmin({ completed, pending }) {
+  const { theme } = useTheme();
+
   // Calculate percentages
   const total = Number(completed) + Number(pending);
-  const completePercentage = total > 0 ? ((Number(completed)) / total) * 100 : 0;
-  const pendingPercentage = total > 0 ? ((Number(pending)) / total) * 100 : 0;
+  const completePercentage = total > 0 ? (Number(completed) / total) * 100 : 0;
+  const pendingPercentage = total > 0 ? (Number(pending) / total) * 100 : 0;
 
   const tasksStatus = [
-    { 
-      id: 1, 
-      value: pendingPercentage.toFixed(0), 
-      label: 'Pending' 
+    {
+      id: 1,
+      value: pendingPercentage.toFixed(0),
+      label: 'Pending',
+      color: theme === 'dark' ? '#facc15' : '#ca8a04', // yellow shades
     },
-    { 
-      id: 2, 
-      value: completePercentage.toFixed(0), 
-      label: 'Completed' 
+    {
+      id: 2,
+      value: completePercentage.toFixed(0),
+      label: 'Completed',
+      color: theme === 'dark' ? '#34d399' : '#059669', // emerald shades
     },
   ];
 
+  // Theme-based styles
+  const containerStyles =
+    theme === 'dark'
+      ? {
+          backgroundColor: 'rgb(23 23 23 / 0.8)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        }
+      : {
+          backgroundColor: 'rgba(245, 245, 245, 0.8)',
+          border: '1px solid rgba(0, 0, 0, 0.1)',
+        };
+
+  const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
+
   return (
-    <Box sx={{ 
-      width: '100%',
-      backgroundColor: 'rgb(23 23 23 / 0.8)',
-      borderRadius: '12px',
-      p: 3,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-      border: '1px solid rgba(255, 255, 255, 0.1)'
-    }}>
-      <h1 className='text-2xl font-bold mb-2 ml-2'>Task Status</h1>
+    <Box
+      sx={{
+        width: '100%',
+        borderRadius: '12px',
+        p: 3,
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        ...containerStyles,
+      }}
+    >
+      <h1
+        className={`text-2xl font-bold mb-2 ml-2 ${
+          theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'
+        }`}
+      >
+        Task Status
+      </h1>
       <PieChart
         series={[
           {
@@ -42,13 +68,17 @@ function PieChartAdmin({completed, pending}) {
             arcLabelMinAngle: 20,
             valueFormatter,
             highlightScope: { faded: 'global', highlight: 'item' },
-            faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+            faded: {
+              innerRadius: 30,
+              additionalRadius: -30,
+              color: theme === 'dark' ? '#404040' : '#d4d4d4',
+            },
           },
         ]}
         slotProps={{
           legend: {
             labelStyle: {
-              fill: '#ffffff',
+              fill: textColor,
               fontSize: 14,
             },
             itemMarkWidth: 10,
@@ -59,13 +89,13 @@ function PieChartAdmin({completed, pending}) {
         }}
         sx={{
           '& .MuiChartsLegend-root': {
-            color: 'white !important',
+            color: `${textColor} !important`,
           },
           '& .MuiChartsLegend-series text': {
-            fill: '#ffffff !important',
+            fill: `${textColor} !important`,
           },
           '& .MuiChartsArc-label': {
-            fill: '#ffffff',
+            fill: textColor,
             fontSize: '0.8rem',
             fontWeight: 'bold',
           },

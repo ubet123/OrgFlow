@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useTheme } from '../context/themeContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const TaskCreate = () => {
   const [employees, setEmployees] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -71,12 +73,28 @@ const TaskCreate = () => {
     }
   };
 
+  // Theme-based styles
+  const containerStyles = theme === 'dark' 
+    ? 'bg-neutral-900/80 text-neutral-300 border-neutral-800' 
+    : 'bg-neutral-100 text-neutral-900 border-neutral-300';
+  
+  const inputStyles = theme === 'dark' 
+    ? 'bg-neutral-800 border-neutral-700 text-white focus:ring-emerald-700' 
+    : 'bg-white border-neutral-300 text-neutral-900 focus:ring-emerald-500';
+  
+  const labelStyles = theme === 'dark' 
+    ? 'text-neutral-300' 
+    : 'text-neutral-900';
+  
+  const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-900';
+    const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
+
   return (
-    <div className="bg-neutral-900/80 backdrop-blur-sm rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-24 my-4 w-full sm:w-[90vw] md:w-[82vw] max-w-[1800px] mx-auto">
+    <div className={`${containerStyles} backdrop-blur-sm rounded-xl border py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-24 my-4 w-full sm:w-[90vw] md:w-[82vw] max-w-[1800px] mx-auto`}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <h2 className="text-xl sm:text-2xl font-semibold text-emerald-400">Create New Task</h2>
-        <div className="text-sm sm:text-md font-medium text-neutral-400">
-          Task ID: <span className="font-mono text-emerald-300 text-lg sm:text-xl">{taskForm.taskId}</span>
+        <h2 className={`text-xl sm:text-2xl font-semibold ${accentColor}`}>Create New Task</h2>
+        <div className={`text-sm sm:text-md font-medium ${textColor}`}>
+          Task ID: <span className={`font-mono ${accentColor} text-lg sm:text-xl`}>{taskForm.taskId}</span>
         </div>
       </div>
 
@@ -84,27 +102,31 @@ const TaskCreate = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Task Title - Full width */}
           <div className="md:col-span-2">
-            <label className="block text-lg sm:text-md font-medium text-neutral-300 mb-2">Task Title*</label>
+            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
+              Task Title <span className='text-red-500'>*</span>
+            </label>
             <input
               type="text"
               name="title"
               value={taskForm.title}
               onChange={handleInputChange}
               required
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
               placeholder="Enter task title"
             />
           </div>
 
           {/* Assign To */}
           <div>
-            <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Assign To*</label>
+            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
+              Assign To <span className='text-red-500'>*</span>
+            </label>
             <select
               name="assignedTo"
               value={taskForm.assignedTo}
               onChange={handleInputChange}
               required
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
             >
               <option value="">Select Employee</option>
               {employees.map(emp => (
@@ -117,7 +139,9 @@ const TaskCreate = () => {
 
           {/* Due Date */}
           <div>
-            <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Due Date*</label>
+            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
+              Due Date <span className='text-red-500'>*</span>
+            </label>
             <input
               type="date"
               name="dueDate"
@@ -125,21 +149,23 @@ const TaskCreate = () => {
               onChange={handleInputChange}
               required
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
             />
           </div>
         </div>
 
         {/* Task Description */}
         <div>
-          <label className="block text-lg  sm:text-md font-medium text-neutral-300 mb-2">Description*</label>
+          <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
+            Description <span className='text-red-500'>*</span>
+          </label>
           <textarea
             name="description"
             value={taskForm.description}
             onChange={handleInputChange}
             required
             rows={5}
-            className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+            className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
             placeholder="Describe the task details..."
           />
         </div>

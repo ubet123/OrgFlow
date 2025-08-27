@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
-const cookieParser = require('cookie-parser') // Add this
+const cookieParser = require('cookie-parser') 
 
 const loginroute = require('./routes/login')
 const taskroute = require('./routes/task')

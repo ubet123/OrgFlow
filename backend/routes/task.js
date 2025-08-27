@@ -27,10 +27,36 @@ const readableDate = new Date(isoDate).toLocaleDateString('en-US', {
 
    
     await sendMail(
-      email,
-      'Task Assigned on OrgFlow',
-      `<h1>${task.title}</h1><h3>Task ID:${task.taskId}</h3><p><b>Task Description</b>:${task.description}</p><p>Task DueDate:<b>${readableDate}</b></p>`
-    );
+  email,
+  `New Task Assigned - OrgFlow (Task ID: ${task.taskId})`,
+  `
+    <h2 style="color:#2c3e50;">Hello,</h2>
+    <p>
+      A new task has been assigned to you in <b>OrgFlow</b>. Please review the details below:
+    </p>
+    
+    <h3 style="color:#16a34a;">${task.title}</h3>
+    <p>
+      <b>Task ID:</b> ${task.taskId} <br/>
+      <b>Description:</b> ${task.description} <br/>
+      <b>Due Date:</b> <span style="color:#e63946;">${readableDate}</span>
+    </p>
+
+    <p>
+      Kindly make sure to complete the task by the due date. You can view and update the task 
+      status anytime on the <b>OrgFlow</b> platform.
+    </p>
+    
+    <br/>
+    <p>
+      Wishing you the best for successful completion.
+    </p>
+    <p style="color:#7f8c8d; font-size: 0.9rem;">
+      — OrgFlow Task Management System
+    </p>
+  `
+);
+
   } catch (error) {
     console.error('Mail error:', error);
     throw error; 
@@ -115,7 +141,32 @@ router.patch("/complete",verifyToken,async (req,res)=>{
         const taskInfo= await Tasks.findOne({taskId:taskId})
 
         //Send Email to manager regarding Task Completion
-       await sendMail('dmelloserene08@gmail.com',`Task ${taskId} Completed on Orgflow `,`<h2>Hello Manager</h2> <p>Task ${taskId} has been <b>Completed</b> by <b>${taskInfo.assigned} . <br/> Thank You  `)
+       await sendMail(
+  'dmelloserene08@gmail.com',
+  `Task ${taskId} Completion Notification - OrgFlow`,
+  `
+    <h2 style="color:#2c3e50;">Hello Manager,</h2>
+    <p>
+      We would like to inform you that <b>Task ID: ${taskId}</b> has been successfully marked as 
+      <span style="color:green;font-weight:bold;">Completed</span>.
+    </p>
+    <p>
+      <b>Assigned Employee:</b> ${taskInfo.assigned} <br/>
+      <b>Completion Time:</b> ${new Date().toLocaleString()}
+    </p>
+    <p>
+      Please review the task details at your earliest convenience on the <b>OrgFlow</b> platform.
+    </p>
+    <br/>
+    <p>
+      Thank you for using <b>OrgFlow</b> to manage your team’s workflow efficiently.
+    </p>
+    <p style="color:#7f8c8d; font-size: 0.9rem;">
+      — OrgFlow Task Management System
+    </p>
+  `
+);
+
 
         res.json({message:`Task ${taskId} marked as completed`})
       

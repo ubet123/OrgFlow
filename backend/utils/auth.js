@@ -14,7 +14,7 @@ const generateToken = (user) => {
 // Verify token middleware
 const verifyToken = async (req, res, next) => {
   
-  const token = req.cookies.token;
+  const token = req.cookies.orgflow_token;
   
   if (!token) {
     return res.status(401).json({ 
@@ -38,7 +38,7 @@ const verifyToken = async (req, res, next) => {
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {
       // Clear invalid token
-      res.clearCookie('token');
+      res.clearCookie('orgflow_token');
       return res.status(401).json({ 
         success: false,
         message: 'User account not found' 

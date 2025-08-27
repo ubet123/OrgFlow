@@ -3,9 +3,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
+import { useTheme } from '../context/themeContext';
 
 const EmployeeCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { theme } = useTheme();
   
   const generateEmployeeId = () => `EMP-${uuidv4().substring(0, 4).toUpperCase()}`;
 
@@ -34,7 +36,7 @@ const EmployeeCreate = () => {
         password: employeeForm.password,
         role: employeeForm.role
       }, {
-        withCredentials: true // Add this to send cookies
+        withCredentials: true
       });
 
       toast.success('Employee created successfully!', {
@@ -42,7 +44,6 @@ const EmployeeCreate = () => {
         autoClose: 3000,
       });
 
-      // Reset form
       setEmployeeForm({
         name: '',
         email: '',
@@ -67,13 +68,36 @@ const EmployeeCreate = () => {
     }
   };
 
+  // Theme-based styles
+  const containerStyles = theme === 'dark' 
+    ? 'bg-neutral-900 border-neutral-800 ' 
+    : 'bg-gradient-to-br from-neutral-100 via-neutral-50 to-white border-neutral-300 ';
+  
+  const inputStyles = theme === 'dark' 
+    ? 'bg-neutral-900/60 border-neutral-700 text-white placeholder-neutral-500 focus:ring-emerald-600' 
+    : 'bg-white border-neutral-300 text-neutral-900 placeholder-neutral-400 focus:ring-emerald-500';
+  
+  const labelStyles = theme === 'dark' 
+    ? 'text-neutral-300' 
+    : 'text-neutral-700';
+  
+  const textColor = theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600';
+  const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
+  const accentColorLight = theme === 'dark' ? 'text-emerald-300' : 'text-emerald-500';
+  
+  const dividerStyles = theme === 'dark' 
+    ? 'bg-emerald-600' 
+    : 'bg-emerald-500';
 
   return (
-    <div className="bg-neutral-900/80  backdrop-blur-sm rounded-lg sm:rounded-xl border border-neutral-800 py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-16 xl:px-24 mt-8 sm:mt-32 md:mt-16 lg:mt-20 mb-4 w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[82vw] max-w-[1800px] mx-auto">
+    <div className={`backdrop-blur-md rounded-lg sm:rounded-xl border py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-16 xl:px-24 mt-8 sm:mt-32 md:mt-16 lg:mt-20 mb-4 w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[82vw] max-w-[1800px] mx-auto  ${containerStyles}`}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
-        <h2 className="text-xl sm:text-2xl font-semibold text-emerald-400">Add New Employee</h2>
-        <div className="text-sm sm:text-md font-medium text-neutral-400">
-          Employee ID: <span className="font-mono text-emerald-300 text-lg sm:text-xl">{employeeForm.employeeId}</span>
+        <div>
+          <h2 className={`text-xl sm:text-2xl font-semibold ${accentColor}`}>Add New Employee</h2>
+          <div className={`h-0.5 w-32 rounded-full mt-1 ${dividerStyles}`}></div>
+        </div>
+        <div className={`text-sm sm:text-md font-medium ${textColor}`}>
+          Employee ID: <span className={`font-mono ${accentColorLight} text-lg sm:text-xl`}>{employeeForm.employeeId}</span>
         </div>
       </div>
 
@@ -81,49 +105,49 @@ const EmployeeCreate = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           {/* Name */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Full Name*</label>
+            <label className={`block text-sm sm:text-base font-medium ${labelStyles} mb-2`}>Full Name <span className={`text-red-500`}>*</span></label>
             <input
               type="text"
               name="name"
               value={employeeForm.name}
               onChange={handleInputChange}
               required
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
               placeholder="John Doe"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Email*</label>
+            <label className={`block text-sm sm:text-base font-medium ${labelStyles} mb-2`}>Email <span className={`text-red-500`}>*</span></label>
             <input
               type="email"
               name="email"
               value={employeeForm.email}
               onChange={handleInputChange}
               required
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
               placeholder="john@orgflow.com"
             />
           </div>
 
           {/* Role */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Role*</label>
+            <label className={`block text-sm sm:text-base font-medium ${labelStyles} mb-2`}>Role <span className={`text-red-500`}>*</span></label>
             <input
               type="text"
               name="role"
               value={employeeForm.role}
               onChange={handleInputChange}
               required
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
               placeholder="Enter role (e.g. Developer)"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm sm:text-md font-medium text-neutral-300 mb-2">Temporary Password*</label>
+            <label className={`block text-sm sm:text-base font-medium ${labelStyles} mb-2`}>Temporary Password <span className={`text-red-500`}>*</span></label>
             <input
               type="password"
               name="password"
@@ -131,10 +155,10 @@ const EmployeeCreate = () => {
               onChange={handleInputChange}
               required
               minLength="6"
-              className="w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white"
+              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-lg sm:rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
               placeholder="••••••••"
             />
-            <p className="mt-1 text-xs text-neutral-500">Minimum 6 characters</p>
+            <p className={`mt-1 text-xs ${textColor}`}>Minimum 6 characters</p>
           </div>
         </div>
 
@@ -143,9 +167,9 @@ const EmployeeCreate = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`bg-emerald-700 hover:bg-emerald-800 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg sm:rounded-xl transition-colors font-medium flex items-center justify-center w-full text-base sm:text-lg ${
+            className={`bg-emerald-600 hover:bg-emerald-700 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg sm:rounded-xl transition-all duration-200 font-medium flex items-center justify-center w-full text-base sm:text-lg ${
               isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            } ${theme === 'dark' ? '' : ''}`}
           >
             {isSubmitting ? (
               <>
