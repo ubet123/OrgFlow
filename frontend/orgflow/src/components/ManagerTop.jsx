@@ -87,9 +87,9 @@ const ManagerTop = ({ onLogout }) => {
       
       <div className="flex flex-col items-center sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
 
-<div className='mr-12'>
-<Switch
-      checked={theme === 'light'}
+<div className='mr-12'
+title='Toggle Theme'>
+<Switch checked={theme === 'light'}
       onChange={toggleTheme}
     />
 
