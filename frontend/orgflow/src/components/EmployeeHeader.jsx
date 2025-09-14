@@ -10,7 +10,9 @@ import Switch from './Switch';
 const EmployeeHeader = ({ onLogout, employee }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-
+  
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+   
   // Theme-based styles
   const headerStyles = theme === 'dark' 
     ? 'bg-neutral-900/80 border-neutral-700' 
@@ -54,7 +56,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3001/auth/logout', {}, {
+      await axios.post(`${API_URL}/auth/logout`, {}, {
         withCredentials: true
       });
       onLogout();

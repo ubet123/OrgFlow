@@ -8,11 +8,12 @@ const TasksTable = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/task/alltasks', {
+        const response = await axios.get(`${API_URL}/task/alltasks`, {
           withCredentials: true
         });
         setTasks(response.data.tasks);
@@ -37,7 +38,7 @@ const TasksTable = () => {
         });
   };
 
-  // Theme-based styles
+  // Custom styles for theme
   const containerStyles = theme === 'dark' 
     ? 'bg-neutral-900/80 border-neutral-800' 
     : 'bg-neutral-100/80 border-neutral-300';
@@ -79,7 +80,7 @@ const TasksTable = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            {/* Desktop Table */}
+            {/* Desktop Screeen Responsive Table */}
             <table className="w-full border-collapse hidden sm:table">
               <thead>
                 <tr className={`border-b ${tableBorderColor}`}>
@@ -142,7 +143,7 @@ const TasksTable = () => {
               </tbody>
             </table>
 
-            {/* Mobile Cards */}
+            {/* Mobile Responsive View Cards */}
             <div className="sm:hidden space-y-4">
               {tasks.map((task) => (
                 <div 

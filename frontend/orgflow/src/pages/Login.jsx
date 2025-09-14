@@ -9,13 +9,15 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', {
+      const response = await axios.post(`${API_URL}/auth/login`, {
         employeeId,
         password
       }, {
@@ -25,7 +27,7 @@ const Login = ({ onLogin }) => {
       // Handle successful login
       onLogin(); // Trigger auth check in App component
       
-      // Redirect based on role
+      // Redirect to dashboard based on role
       if (response.data.user.role === 'manager') {
         navigate('/manager-dashboard');
       } else {
@@ -109,7 +111,7 @@ const Login = ({ onLogin }) => {
             </div>
           </form>
 
-          {/* Footer */}
+          
           <div className="mt-6 text-center">
             <p className="text-xs text-neutral-600">
               Secure employee Task portal

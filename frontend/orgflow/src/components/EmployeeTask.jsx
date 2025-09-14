@@ -11,7 +11,9 @@ const EmployeeTask = ({employee}) => {
   const [completingTask, setCompletingTask] = useState(null);
   const { theme } = useTheme();
 
-  // Theme-based styles
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
+  // Custom styles for theme
   const containerStyles = theme === 'dark' 
     ? 'bg-neutral-950 text-neutral-300' 
     : 'bg-neutral-50 text-neutral-800';
@@ -54,7 +56,7 @@ const EmployeeTask = ({employee}) => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3001/task/emptasks', {
+        const response = await axios.get(`${API_URL}/task/emptasks`, {
           withCredentials: true
         });
 
@@ -77,7 +79,7 @@ const EmployeeTask = ({employee}) => {
   const handleMarkComplete = async (taskId) => {
     try {
       setCompletingTask(taskId);
-      const response = await axios.patch('http://localhost:3001/task/complete', { taskId }, {
+      const response = await axios.patch(`${API_URL}/task/complete`, { taskId }, {
         withCredentials: true 
       });
       

@@ -5,10 +5,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from '../context/themeContext';
 
+
 const EmployeeCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { theme } = useTheme();
-  
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
   const generateEmployeeId = () => `EMP-${uuidv4().substring(0, 4).toUpperCase()}`;
 
   const [employeeForm, setEmployeeForm] = useState({
@@ -29,7 +31,7 @@ const EmployeeCreate = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/user/create', {
+      const response = await axios.post(`${API_URL}/user/create`, {
         name: employeeForm.name,
         email: employeeForm.email,
         employeeId: employeeForm.employeeId,

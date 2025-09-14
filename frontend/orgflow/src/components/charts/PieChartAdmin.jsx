@@ -28,7 +28,7 @@ function PieChartAdmin({ completed, pending }) {
     },
   ];
 
-  // Theme-based styles
+  //Custom styles for theme
   const containerStyles =
     theme === 'dark'
       ? {

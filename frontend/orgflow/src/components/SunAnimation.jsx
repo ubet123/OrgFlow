@@ -27,7 +27,7 @@ const SunAnimation = () => {
         style={{
           width: '100%',
           height: '100%',
-          pointerEvents: 'none' /* Prevents interaction with the animation */
+          pointerEvents: 'none' 
         }}
       />
     </SunContainer>

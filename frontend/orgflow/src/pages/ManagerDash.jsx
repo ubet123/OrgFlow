@@ -11,10 +11,10 @@ const ManagerDash = ({ onLogout }) => {
     const {theme,toggleTheme} = useTheme();
     return (
         <div className={`min-h-screen ${theme==='dark'?'bg-neutral-950 text-neutral-300':'bg-neutral-100 text-neutral-900'}`}>
-            {/* Now ManagerTop is just the header */}
+           
             <ManagerTop onLogout={onLogout} />
             
-            {/* Content sits right below with minimal gap */}
+           
             <main className="p-6 max-w-7xl mx-auto">
                 <TaskCreate />
                 <TasksTable/>

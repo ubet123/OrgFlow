@@ -12,6 +12,10 @@ const ManagerTop = ({ onLogout }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
+
+  //For the Good Morning, Afternoon, Evening
   const getGreeting = () => {
     const hour = new Date().getHours();
     
@@ -43,7 +47,7 @@ const ManagerTop = ({ onLogout }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3001/auth/logout', {}, {
+      await axios.post(`${API_URL}/auth/logout`, {}, {
         withCredentials: true
       });
       onLogout();
@@ -53,7 +57,7 @@ const ManagerTop = ({ onLogout }) => {
     }
   };
 
-  // Theme-based styles
+  // Custom styles for theme
   const headerStyles = theme === 'dark' 
     ? 'bg-neutral-900/80 border-neutral-700' 
     : 'bg-neutral-100/80 border-neutral-300';

@@ -10,6 +10,7 @@ const AdminEmpTasks = () => {
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
 
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
   const { id } = useParams();
   const employeeName = id ? decodeURIComponent(id) : '';
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const AdminEmpTasks = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/task/adminemptasks', {
+        const response = await axios.get(`${API_URL}/task/adminemptasks`, {
           params: { employee: employeeName },
         });
         setTasks(response.data.tasks);
@@ -57,7 +58,7 @@ const AdminEmpTasks = () => {
     }
   };
 
-  // Theme styles
+  // Custom styles for theme
   const pageBg = theme === 'dark' ? 'bg-neutral-950 text-neutral-300' : 'bg-gray-50 text-gray-800';
   const cardBg = theme === 'dark' ? 'bg-neutral-900/80 border-neutral-800' : 'bg-white border-gray-200';
   const sectionTitle = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';

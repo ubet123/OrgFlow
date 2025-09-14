@@ -8,11 +8,12 @@ const Analytics = () => {
   const [pending, setPending] = useState(0);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
 
   useEffect(() => {
     const fetchAndProcessTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/task/alltasks', {
+          const response = await axios.get(`${API_URL}/task/alltasks`, {
           withCredentials: true
         });
 
@@ -32,7 +33,7 @@ const Analytics = () => {
     fetchAndProcessTasks();
   }, []);
 
-  // Theme-based styles
+  // Custom styles for theme
   const containerStyles = theme === 'dark'
     ? 'bg-neutral-900/80 border-neutral-800'
     : 'bg-neutral-100/80 border-neutral-300';

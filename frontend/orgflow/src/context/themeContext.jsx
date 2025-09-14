@@ -7,7 +7,7 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  // Initialize from localStorage, fallback to "light"
+  // Get theme from localstorage or default to light
   const [theme, setTheme] = useState(() => localStorage.getItem("orgflow_theme") || "light");
 
   useEffect(() => {

@@ -16,11 +16,12 @@ function App() {
   const [authChecked, setAuthChecked] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/auth/check-auth', {
+        const response = await axios.get(`${API_URL}/auth/check-auth`, {
           withCredentials: true
         });
         setUserData(response.data.user);
@@ -34,7 +35,7 @@ function App() {
   }, [authChecked]);
 
   if (loading) {
-    return <div>Loading...</div>; // Or a proper loading spinner
+    return <div>Loading...</div>; 
   }
 
   return (

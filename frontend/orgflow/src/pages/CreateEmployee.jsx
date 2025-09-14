@@ -9,7 +9,7 @@ const CreateEmployee = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
 
-  // Theme styles
+  // Custom styles for theme
   const containerStyles = theme === 'dark'
     ? 'bg-neutral-950 text-neutral-300'
     : 'bg-neutral-50 text-neutral-800';

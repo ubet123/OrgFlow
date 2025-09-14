@@ -1,16 +1,20 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect } from 'react';
 
 const ProtectedRoutes = () => {
   const location = useLocation();
   const [authChecked, setAuthChecked] = React.useState(false);
   const [userData, setUserData] = React.useState(null);
+  
 
-  React.useEffect(() => {
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/auth/check-auth', {
+        const response = await axios.get(`${API_URL}/auth/check-auth`, {
           withCredentials: true
         });
         setUserData(response.data.user);
@@ -24,7 +28,6 @@ const ProtectedRoutes = () => {
   }, [location]);
 
   if (!authChecked) {
-    // Show loading state while checking auth
     return <div className="flex justify-center items-center h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
     </div>;

@@ -15,13 +15,15 @@ const AllEmployees = () => {
   const [editedEmployee, setEditedEmployee] = useState({});
   const { theme } = useTheme();
 
+ const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
   useEffect(() => {
     fetchEmployees();
   }, []);
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/user/allemployees', {
+      const response = await axios.get(`${API_URL}/user/allemployees`, {
         withCredentials: true
       });
       setEmployees(response.data.users);
@@ -40,7 +42,7 @@ const AllEmployees = () => {
       email: employee.email,
       employeeId: employee.employeeId,
       role: employee.role,
-      password: '' // Don't pre-fill password for security
+      password: '' //Leave password field empty from admin side
     });
   };
 
@@ -54,7 +56,7 @@ const AllEmployees = () => {
   const handleSaveClick = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:3001/user/update/${editingId}`,
+        `${API_URL}/user/update/${editingId}`,
         editedEmployee,
         { withCredentials: true }
       );
@@ -79,7 +81,7 @@ const AllEmployees = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3001/user/delete/${employeeToDelete._id}`, {
+      await axios.delete(`${API_URL}/user/delete/${employeeToDelete._id}`, {
         withCredentials: true
       });
       toast.success(`${employeeToDelete.name} deleted successfully`);
@@ -126,7 +128,7 @@ const AllEmployees = () => {
     setFilteredEmployees([]);
   };
 
-  // Theme-based styles
+  // Custom styles for theme
   const containerStyles = theme === 'dark' 
     ? 'bg-neutral-950 text-neutral-300' 
     : 'bg-neutral-50 text-neutral-800';
@@ -332,7 +334,7 @@ const AllEmployees = () => {
           </tbody>
         </table>
 
-        {/* Mobile Cards */}
+        {/* Mobile Responsive View Cards */}
         <div className="sm:hidden space-y-4">
           {dataToShow.map((employee) => (
             <div key={employee._id} className={`rounded-lg p-4 border ${cardStyles}`}>

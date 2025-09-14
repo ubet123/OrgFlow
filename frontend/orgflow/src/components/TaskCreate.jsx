@@ -10,10 +10,12 @@ const TaskCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { theme } = useTheme();
 
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/user/employees', {
+        const response = await axios.get(`${API_URL}/user/employees`, {
           withCredentials: true
         });
         setEmployees(response.data.users); 
@@ -44,7 +46,7 @@ const TaskCreate = () => {
     setIsSubmitting(true);
 
     try {
-      await axios.post('http://localhost:3001/task/create', {
+      await axios.post(`${API_URL}/task/create`, {
         taskId: taskForm.taskId,
         title: taskForm.title,
         description: taskForm.description,
@@ -73,7 +75,7 @@ const TaskCreate = () => {
     }
   };
 
-  // Theme-based styles
+  //Custom styles for theme
   const containerStyles = theme === 'dark' 
     ? 'bg-neutral-900/80 text-neutral-300 border-neutral-800' 
     : 'bg-neutral-100 text-neutral-900 border-neutral-300';
