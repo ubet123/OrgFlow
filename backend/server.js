@@ -17,9 +17,27 @@ mongoose.connect(process.env.MONGO_CONNECTION)
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow all origins in development, specific origins in production
+    if (process.env.NODE_ENV !== 'production') {
+      callback(null, true)
+    } else {
+      const allowedOrigins = [
+        'https://org-flow-six.vercel.app', // Your Vercel frontend URL
+        'https://org-flow-six.vercel.app'          // Your production domain
+      ]
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+  },
+  credentials: true, // This allows cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }))
+
 app.use(cookieParser()) 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

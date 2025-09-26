@@ -16,29 +16,35 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     setError('');
 
-    try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        employeeId,
-        password
-      }, {
-        withCredentials: true
-      });
-
-      // Handle successful login
-      onLogin(); // Trigger auth check in App component
-      
-      // Redirect to dashboard based on role
-      if (response.data.user.role === 'manager') {
-        navigate('/manager-dashboard');
-      } else {
-        navigate('/employee-dashboard');
-      }
-
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
+  try {
+  const response = await axios.post(`${API_URL}/auth/login`, {
+    employeeId,
+    password
+  }, {
+    withCredentials: true, // This is correct
+    headers: {
+      'Content-Type': 'application/json'
     }
+  });
+
+  console.log('Login response:', response.data); // Debug log
+
+  // Handle successful login
+  onLogin(); // Trigger auth check in App component
+  
+  // Redirect to dashboard based on role
+  if (response.data.user.role === 'manager') {
+    navigate('/manager-dashboard');
+  } else {
+    navigate('/employee-dashboard');
+  }
+
+} catch (err) {
+  console.error('Login error:', err); // Detailed error logging
+  setError(err.response?.data?.message || 'Login failed. Please try again.');
+} finally {
+  setLoading(false);
+}
   };
 
 
