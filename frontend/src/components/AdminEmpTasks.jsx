@@ -10,7 +10,7 @@ const AdminEmpTasks = () => {
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
 
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
   const { id } = useParams();
   const employeeName = id ? decodeURIComponent(id) : '';
   const navigate = useNavigate();

@@ -8,7 +8,7 @@ const TasksTable = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
   useEffect(() => {
     const fetchTasks = async () => {

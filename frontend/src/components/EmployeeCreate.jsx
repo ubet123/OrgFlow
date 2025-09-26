@@ -9,7 +9,7 @@ import { useTheme } from '../context/themeContext';
 const EmployeeCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { theme } = useTheme();
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
   const generateEmployeeId = () => `EMP-${uuidv4().substring(0, 4).toUpperCase()}`;
 

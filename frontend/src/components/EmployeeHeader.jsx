@@ -11,7 +11,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
    
   // Theme-based styles
   const headerStyles = theme === 'dark' 

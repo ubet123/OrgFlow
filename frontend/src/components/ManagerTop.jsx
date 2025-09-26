@@ -12,7 +12,7 @@ const ManagerTop = ({ onLogout }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 
   //For the Good Morning, Afternoon, Evening

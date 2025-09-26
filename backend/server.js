@@ -24,7 +24,8 @@ app.use(cors({
     } else {
       const allowedOrigins = [
         'https://org-flow-six.vercel.app', // Your Vercel frontend URL
-        'https://org-flow-six.vercel.app'          // Your production domain
+        'https://org-flow-six.vercel.app',
+        'https://orgflow-backend.onrender.com'          // Your production domain
       ]
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true)
