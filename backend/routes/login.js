@@ -1,5 +1,7 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const app = express();
+const router = express.Router();
+
 const User = require('../models/user')
 const { generateToken, verifyToken } = require('../utils/auth')
 
