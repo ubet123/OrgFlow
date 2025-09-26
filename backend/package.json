@@ -13,6 +13,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
+    "debug": "^4.4.3",
     "dotenv": "16.0.3",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
@@ -22,10 +23,10 @@
   "devDependencies": {
     "nodemon": "3.0.1"
   },
-  "engines": {
-    "node": "18.x",
-    "npm": "9.x"
-  },
+ "engines": {
+  "node": "20.x",
+  "npm": "10.x"
+},
   "keywords": [
     "express",
     "mongodb",
