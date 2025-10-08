@@ -40,15 +40,14 @@ router.post('/login', async (req, res) => {
     // Set cookie with cross-origin support - FIXED VERSION
     const isProduction = process.env.NODE_ENV === 'production';
 
-    res.cookie('orgflow_token', token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: '/',
-      // Add domain for cross-origin cookies
-      domain: isProduction ? '.onrender.com' : undefined
-    })
+   // Cookies - try without domain first
+res.cookie('orgflow_token', token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'none',
+  maxAge: 24 * 60 * 60 * 1000,
+  path: '/'
+});
 
     console.log('Cookie set with domain:', isProduction ? '.onrender.com' : 'localhost');
 
