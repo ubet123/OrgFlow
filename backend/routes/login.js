@@ -6,6 +6,7 @@ const User = require('../models/user')
 const { generateToken, verifyToken } = require('../utils/auth')
 
 // Login route
+// Login route
 router.post('/login', async (req, res) => {
   try {
     const { employeeId, password } = req.body
@@ -36,23 +37,20 @@ router.post('/login', async (req, res) => {
     // Generate token
     const token = generateToken(user)
 
-    // Set cookie with cross-origin support for production
+    // Set cookie with cross-origin support - FIXED VERSION
     const isProduction = process.env.NODE_ENV === 'production';
 
     res.cookie('orgflow_token', token, {
       httpOnly: true,
-      secure: isProduction, // true in production
-      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin in production
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      path: '/', // Important for cookie to be accessible across all routes
-    })
-
-    console.log('Cookie set with options:', {
-      httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
-      maxAge: '1 day'
-    });
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+      // Add domain for cross-origin cookies
+      domain: isProduction ? '.onrender.com' : undefined
+    })
+
+    console.log('Cookie set with domain:', isProduction ? '.onrender.com' : 'localhost');
 
     res.json({ 
       success: true,
@@ -80,15 +78,17 @@ router.post('/logout', (req, res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   
   res.clearCookie('orgflow_token', {
-    path: '/', // Must match the path used when setting the cookie
+    path: '/',
     secure: isProduction,
     sameSite: isProduction ? 'none' : 'lax',
+    domain: isProduction ? '.onrender.com' : undefined
   })
   res.json({ 
     success: true,
     message: 'Logged out successfully' 
   })
 })
+
 
 // User data route
 router.get('/check-auth', verifyToken, async (req, res) => {
