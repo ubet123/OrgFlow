@@ -72,21 +72,23 @@ res.cookie('orgflow_token', token, {
   }
 })
 
+
 // Logout route
 router.post('/logout', (req, res) => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  
+  // Use the same options as when setting the cookie
   res.clearCookie('orgflow_token', {
-    path: '/',
-    secure: isProduction,
+    httpOnly: true,
+    secure: true,
     sameSite: 'none',
-    domain: isProduction ? '.onrender.com' : undefined
-  })
+    path: '/'
+    // Don't include domain unless you specifically set it when creating the cookie
+  });
+  
   res.json({ 
     success: true,
     message: 'Logged out successfully' 
-  })
-})
+  });
+});
 
 
 // User data route
