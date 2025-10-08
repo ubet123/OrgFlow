@@ -16,23 +16,27 @@ function App() {
   const [authChecked, setAuthChecked] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/auth/check-auth`, {
-          withCredentials: true
-        });
-        setUserData(response.data.user);
-      } catch (error) {
-        setUserData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, [authChecked]);
+ useEffect(() => {
+  const checkAuth = async () => {
+    try {
+      console.log('Checking cookies:', document.cookie); // Add this line
+      console.log('Making request to:', `${API_URL}/auth/check-auth`);
+      
+      const response = await axios.get(`${API_URL}/auth/check-auth`, {
+        withCredentials: true
+      });
+      setUserData(response.data.user);
+    } catch (error) {
+      console.error('Auth check failed:', error.response?.data || error.message);
+      setUserData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  checkAuth();
+}, [authChecked, API_URL]);
 
   if (loading) {
     return <div>Loading...</div>; 

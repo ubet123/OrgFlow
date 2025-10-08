@@ -20,31 +20,32 @@ mongoose.connect(process.env.MONGO_CONNECTION, {
 
 // Middleware
 const allowedOrigins = [
-  'http://localhost:5173',                     // local frontend
-  'https://org-flow-six.vercel.app',          // deployed frontend
-  'https://orgflow-backend.onrender.com'      // backend domain itself if needed
+  'http://localhost:5173',
+  'https://org-flow-six.vercel.app',
+  'https://orgflow-backend.onrender.com'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (Postman, server-to-server)
+    // Allow requests with no origin (mobile apps, postman, etc)
     if (!origin) return callback(null, true);
-
+    
     // Allow all in development
     if (process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
-
-    // Allow only listed origins in production
+    
+    // In production, check against allowed origins
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
+      console.log('CORS blocked for origin:', origin);
       return callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // allow cookies
+  credentials: true, // This is crucial for cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie']
 }));
 
 app.use(cookieParser());

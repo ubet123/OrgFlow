@@ -36,14 +36,23 @@ router.post('/login', async (req, res) => {
     // Generate token
     const token = generateToken(user)
 
-    // Set cookie with cross-origin support
+    // Set cookie with cross-origin support for production
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.cookie('orgflow_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true in production, false in development
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-origin
+      secure: isProduction, // true in production
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin in production
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       path: '/', // Important for cookie to be accessible across all routes
     })
+
+    console.log('Cookie set with options:', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: '1 day'
+    });
 
     res.json({ 
       success: true,
@@ -68,8 +77,12 @@ router.post('/login', async (req, res) => {
 
 // Logout route
 router.post('/logout', (req, res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   res.clearCookie('orgflow_token', {
     path: '/', // Must match the path used when setting the cookie
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
   })
   res.json({ 
     success: true,
@@ -103,6 +116,22 @@ router.get('/check-auth', verifyToken, async (req, res) => {
       message: 'Error checking authentication status' 
     })
   }
+})
+
+// Debug endpoint to test cookie reception
+router.get('/debug-cookies', (req, res) => {
+  console.log('=== COOKIE DEBUG ===');
+  console.log('All cookies:', req.cookies);
+  console.log('orgflow_token exists:', !!req.cookies.orgflow_token);
+  console.log('Request origin:', req.headers.origin);
+  console.log('Request headers:', req.headers);
+  
+  res.json({
+    success: true,
+    cookiesReceived: req.cookies,
+    hasOrgflowToken: !!req.cookies.orgflow_token,
+    origin: req.headers.origin
+  });
 })
 
 module.exports = router
