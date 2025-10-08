@@ -2,7 +2,7 @@
 
 **OrgFlow** is a **MERN stack application** that streamlines task assignment, tracking, and completion within organizations. With its **dark/light themed UI**, **mobile responsiveness**, and **data-driven analytics**, it provides managers, employees, and admins with an intuitive platform for efficient workflow management.  
 
-👉 **[Live Demo](#)** *(Coming soon - currently in development)*  
+👉 **[Live Demo](https://org-flow-six.vercel.app/)** 
 
 ---
 
