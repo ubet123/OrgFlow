@@ -96,70 +96,77 @@ const AdminEmpTasks = () => {
   }
 
   return (
-    <div className={`min-h-screen ${pageBg} pt-14 px-6 pb-14`}>
-      {/* Header */}
-      <div className="mb-10 max-w-7xl mx-auto flex items-center justify-between">
-        <h1 className="flex items-end gap-3 font-extrabold">
-          <span className={`font-mono text-3xl sm:text-5xl ${headingText}`}>
-            {employeeName || 'Employee'}
-          </span>
-          <span className={`${accentText} text-2xl sm:text-4xl`}>
-            ’s Tasks
-          </span>
-        </h1>
-        <button
-          onClick={() => navigate('/manager-dashboard')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all text-lg ${backButtonStyles}`}
-        >
-          <IoIosArrowBack className="text-xl" />
-          <span>Back</span>
-        </button>
+    <div className={`min-h-screen ${pageBg} pt-14 px-4 sm:px-6 pb-14`}>
+      {/* Header - Made Responsive */}
+      <div className="mb-8 sm:mb-10 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
+          {/* Employee Name and Title */}
+          <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-3">
+            <h1 className={`font-extrabold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl ${headingText} break-words`}>
+              {employeeName || 'Employee'}
+            </h1>
+            <span className={`${accentText} font-bold text-xl sm:text-2xl lg:text-3xl xl:text-4xl sm:mb-1`}>
+              's Tasks
+            </span>
+          </div>
+          
+          {/* Back Button */}
+          <button
+            onClick={() => navigate('/manager-dashboard')}
+            className={`flex items-center justify-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl transition-all text-base sm:text-lg w-full sm:w-auto ${backButtonStyles}`}
+          >
+            <IoIosArrowBack className="text-lg sm:text-xl" />
+            <span>Back to Dashboard</span>
+          </button>
+        </div>
       </div>
 
-      <div className="relative mt-2 mb-20">
+      {/* Divider */}
+      <div className="relative mt-2 mb-12 sm:mb-20 max-w-7xl mx-auto">
         <div className={`absolute bottom-0 left-0 w-full h-px ${dividerBg}`}></div>
       </div>
 
-      {/* Main */}
-      <div className="max-w-7xl mx-auto space-y-14">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto space-y-12 sm:space-y-14">
         {tasks.length === 0 ? (
-          <div className={`${cardBg} backdrop-blur-sm rounded-2xl border p-10 text-center`}>
-            <svg xmlns="http://www.w3.org/2000/svg" className={`h-20 w-20 mx-auto ${theme === 'dark' ? 'text-emerald-500' : 'text-emerald-600'} mb-6`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className={`${cardBg} backdrop-blur-sm rounded-2xl border p-8 sm:p-10 text-center`}>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-16 w-16 sm:h-20 sm:w-20 mx-auto ${theme === 'dark' ? 'text-emerald-500' : 'text-emerald-600'} mb-4 sm:mb-6`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <h2 className={`text-3xl font-semibold ${headingText}`}>No Tasks Assigned</h2>
+            <h2 className={`text-2xl sm:text-3xl font-semibold ${headingText} mb-2`}>No Tasks Assigned</h2>
+            <p className={subText}>This employee doesn't have any tasks yet.</p>
           </div>
         ) : (
           <>
-            {/* Pending */}
+            {/* Pending Tasks Section */}
             <div>
               {pending.length === 0 ? (
-                <div className={`${cardBg} rounded-2xl border p-8 text-center`}>
-                  <h3 className={`text-2xl font-semibold ${sectionTitle}`}>All Caught Up!</h3>
+                <div className={`${cardBg} rounded-2xl border p-6 sm:p-8 text-center`}>
+                  <h3 className={`text-xl sm:text-2xl font-semibold ${sectionTitle} mb-2`}>All Caught Up!</h3>
                   <p className={subText}>No pending tasks right now.</p>
                 </div>
               ) : (
                 <>
-                  <h2 className={`text-3xl font-bold mb-8 ${sectionTitle}`}>Pending Tasks ({pending.length})</h2>
-                  <div className="space-y-8">
+                  <h2 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ${sectionTitle}`}>Pending Tasks ({pending.length})</h2>
+                  <div className="space-y-6 sm:space-y-8">
                     {pending.sort((a, b) => new Date(a.due) - new Date(b.due)).map((task) => {
                       const overdue = isOverdue(task.due);
                       return (
                         <div
                           key={task.taskId}
-                          className={`rounded-2xl border p-8 transition-all ${
+                          className={`rounded-2xl border p-6 sm:p-8 transition-all ${
                             overdue
                               ? overdueCardStyles
                               : `${cardBg} hover:border-emerald-400/40`
                           }`}
                         >
-                          <div className="flex flex-col md:flex-row justify-between gap-6">
-                            <div>
-                              <div className="flex gap-3 mb-4 flex-wrap">
-                                <span className={`font-mono text-sm px-3 py-1 rounded-full ${taskIdBadge}`}>
+                          <div className="flex flex-col lg:flex-row justify-between gap-4 sm:gap-6">
+                            <div className="flex-1">
+                              <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
+                                <span className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full ${taskIdBadge}`}>
                                   {task.taskId}
                                 </span>
-                                <span className={`text-xs px-3 py-1 rounded-full ${
+                                <span className={`text-xs px-2 sm:px-3 py-1 rounded-full ${
                                   overdue
                                     ? 'bg-red-700 text-white'
                                     : statusBadgePending
@@ -167,23 +174,23 @@ const AdminEmpTasks = () => {
                                   {task.status}
                                 </span>
                                 {overdue && (
-                                  <span className="animate-pulse text-xs px-3 py-1 rounded-full bg-red-600 text-white">
+                                  <span className="animate-pulse text-xs px-2 sm:px-3 py-1 rounded-full bg-red-600 text-white">
                                     Past Due!
                                   </span>
                                 )}
                               </div>
-                              <h3 className={`text-2xl font-semibold ${overdue ? (theme === 'dark' ? 'text-white' : 'text-red-900') : headingText}`}>
+                              <h3 className={`text-xl sm:text-2xl font-semibold ${overdue ? (theme === 'dark' ? 'text-white' : 'text-red-900') : headingText}`}>
                                 {task.title}
                               </h3>
-                              <p className={`${overdue ? (theme === 'dark' ? 'text-red-100' : 'text-red-800') : subText} mt-5`}>
+                              <p className={`${overdue ? (theme === 'dark' ? 'text-red-100' : 'text-red-800') : subText} mt-3 sm:mt-5 text-sm sm:text-base`}>
                                 {task.description}
                               </p>
                             </div>
-                            <div className="text-right">
-                              <p className={`${overdue ? (theme === 'dark' ? 'text-red-200' : 'text-red-700') : subText} text-sm`}>
+                            <div className="text-left lg:text-right min-w-[120px]">
+                              <p className={`${overdue ? (theme === 'dark' ? 'text-red-200' : 'text-red-700') : subText} text-xs sm:text-sm`}>
                                 Due Date
                               </p>
-                              <p className={`${overdue ? (theme === 'dark' ? 'text-white' : 'text-red-900') : headingText} font-medium text-lg`}>
+                              <p className={`${overdue ? (theme === 'dark' ? 'text-white' : 'text-red-900') : headingText} font-medium text-base sm:text-lg`}>
                                 {formatDueDate(task.due)}
                               </p>
                             </div>
@@ -196,48 +203,48 @@ const AdminEmpTasks = () => {
               )}
             </div>
 
-            {/* Completed */}
+            {/* Completed Tasks Section */}
             <div>
               {completed.length === 0 ? (
-                <div className={`${cardBg} rounded-2xl border p-8 text-center`}>
-                  <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-amber-300' : 'text-amber-600'}`}>
+                <div className={`${cardBg} rounded-2xl border p-6 sm:p-8 text-center`}>
+                  <h3 className={`text-xl sm:text-2xl font-semibold ${theme === 'dark' ? 'text-amber-300' : 'text-amber-600'}`}>
                     Work In Progress
                   </h3>
                   <p className={subText}>No tasks completed yet.</p>
                 </div>
               ) : (
                 <>
-                  <h2 className={`text-3xl font-bold mb-8 mt-14 ${sectionTitle}`}>
+                  <h2 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 mt-10 sm:mt-14 ${sectionTitle}`}>
                     Completed Tasks ({completed.length})
                   </h2>
-                  <div className="space-y-8">
+                  <div className="space-y-6 sm:space-y-8">
                     {completed.sort((a, b) => new Date(a.due) - new Date(b.due)).map((task) => (
                       <div
                         key={task.taskId}
-                        className={`${cardBg} rounded-2xl border p-8 hover:border-emerald-400/40 transition-all`}
+                        className={`${cardBg} rounded-2xl border p-6 sm:p-8 hover:border-emerald-400/40 transition-all`}
                       >
-                        <div className="flex flex-col md:flex-row justify-between gap-6">
-                          <div>
-                            <div className="flex gap-3 mb-4 flex-wrap">
-                              <span className={`font-mono text-sm px-3 py-1 rounded-full ${taskIdBadge}`}>
+                        <div className="flex flex-col lg:flex-row justify-between gap-4 sm:gap-6">
+                          <div className="flex-1">
+                            <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
+                              <span className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full ${taskIdBadge}`}>
                                 {task.taskId}
                               </span>
-                              <span className={`text-xs px-3 py-1 rounded-full ${statusBadgeCompleted}`}>
+                              <span className={`text-xs px-2 sm:px-3 py-1 rounded-full ${statusBadgeCompleted}`}>
                                 {task.status}
                               </span>
                             </div>
-                            <h3 className={`text-2xl font-semibold ${headingText}`}>
+                            <h3 className={`text-xl sm:text-2xl font-semibold ${headingText}`}>
                               {task.title}
                             </h3>
-                            <p className={`${subText} mt-5`}>
+                            <p className={`${subText} mt-3 sm:mt-5 text-sm sm:text-base`}>
                               {task.description}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className={`${subText} text-sm`}>
+                          <div className="text-left lg:text-right min-w-[120px]">
+                            <p className={`${subText} text-xs sm:text-sm`}>
                               Due Date
                             </p>
-                            <p className={`${headingText} font-medium text-lg`}>
+                            <p className={`${headingText} font-medium text-base sm:text-lg`}>
                               {formatDueDate(task.due)}
                             </p>
                           </div>

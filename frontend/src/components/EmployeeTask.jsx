@@ -291,12 +291,12 @@ const EmployeeTask = ({employee}) => {
                             <p className={`${textColorSecondary} text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed`}>{task.description}</p>
                             <button
                               disabled
-                              className={`${theme === 'dark' ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-800'} px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-medium mt-4 sm:mt-6 flex items-center justify-center text-base sm:text-lg w-full sm:w-auto cursor-not-allowed opacity-70`}
+                              className={`${theme === 'dark' ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-800'} px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-medium mt-4 sm:mt-6 flex items-center justify-center text-base sm:text-lg min-w-72 sm:w-auto cursor-not-allowed opacity-70`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
-                              Task Completed
+                              Task Completed 
                             </button>
                           </div>
                           

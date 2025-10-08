@@ -156,14 +156,14 @@ const TasksTable = () => {
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className={`${accentColor} font-medium`}>{task.title}</h3>
+                      <h3 className={`${accentColor} font-medium max-w-60`}>{task.title}</h3>
                       <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'} font-mono`}>
                         ID: {task.taskId}
                       </p>
                     </div>
                     <span
                       onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                      className={`${employeeBadgeStyles} px-2 py-1 rounded-md text-xs`}
+                      className={`${employeeBadgeStyles} max-w-16 px-2 py-1 rounded-md text-xs sm:text-sm font-bold hover:cursor-pointer`}
                     >
                       {task.assigned}
                     </span>

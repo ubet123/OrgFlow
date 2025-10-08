@@ -79,7 +79,7 @@ router.post('/logout', (req, res) => {
   res.clearCookie('orgflow_token', {
     path: '/',
     secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax',
+    sameSite: 'none',
     domain: isProduction ? '.onrender.com' : undefined
   })
   res.json({ 

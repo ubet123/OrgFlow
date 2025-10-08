@@ -148,3 +148,5 @@ This system enables organizations to:
 
 ## ⏰ Upcoming Features  
 - Real-time chat (employee ↔ manager)  
+- Task Create/Edit option
+- Due Date Reminder for Employee
