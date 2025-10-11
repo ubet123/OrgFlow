@@ -1,11 +1,14 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config()
 
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Use service instead of host/port for better reliability
+  host: 'smtp.sendgrid.net',
+  port: 587,
+  secure: false, 
   auth: {
-    user: process.env.NODE_MAILER_GMAIL,
-    pass: process.env.NODE_MAILER_PASS 
+    user: 'apikey', 
+    pass: process.env.SENDGRID_API_KEY 
   }
 });
 
@@ -21,7 +24,6 @@ transporter.verify(function (error, success) {
 async function sendMail(to, sub, msg) {
   try {
     console.log('Attempting to send email to:', to);
-    console.log('Using email account:', process.env.NODE_MAILER_GMAIL);
     
     const info = await transporter.sendMail({
       from: '"OrgFlow" <dmelloserene08@gmail.com>', 

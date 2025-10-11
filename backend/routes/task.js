@@ -171,7 +171,7 @@ router.patch("/complete", verifyToken, async (req, res) => {
     
     const taskInfo = await Tasks.findOne({ taskId: taskId });
 
-    // Send completion email (but don't let email failure break task completion)
+    // Send completion email 
     try {
       await sendMail(
         'dmelloserene08@gmail.com',
