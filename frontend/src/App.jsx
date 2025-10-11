@@ -11,6 +11,7 @@ import AdminEmpTasks from './components/AdminEmpTasks';
 import { ThemeProvider } from './context/themeContext';
 import Analytics from './components/charts/Analytics';
 import axios from 'axios';
+import LoadingScreen from './components/LoadingScreen';
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -39,7 +40,7 @@ function App() {
 }, [authChecked, API_URL]);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <LoadingScreen/>
   }
 
   return (
