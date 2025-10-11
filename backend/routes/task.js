@@ -5,7 +5,7 @@ const router = express.Router();
 const Tasks = require('../models/task')
 const { verifyToken } = require('../utils/auth') 
 const Users= require('../models/user')
-const sendMail = require('../services/nodemail')
+const sendMail = require('../services/sendgrid')
 
 //send email to employee when *Task is Assigned*
 const mailToEmp = async (task, employeeName) => {
