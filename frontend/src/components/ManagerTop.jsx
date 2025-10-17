@@ -20,9 +20,9 @@ const ManagerTop = ({ onLogout }) => {
     
     if (hour < 12) {
       return (
-        <>
+        <> 
           <SunAnimation />
-          <span>Good Morning</span>
+          <span className='-ml-2 sm:ml-1'>Good Morning</span>
         </>
       );
     }
@@ -31,7 +31,7 @@ const ManagerTop = ({ onLogout }) => {
       return (
         <>
           <Afternoon/>
-          <span>Good Afternoon</span>
+          <span className='-ml-2 sm:ml-1'>Good Afternoon</span>
         </>
       );
     }
@@ -39,7 +39,7 @@ const ManagerTop = ({ onLogout }) => {
     return (
       <>
         <Evening/>
-        <span>Good Evening</span>
+        <span className='-ml-2 sm:ml-1'>Good Evening</span>
       </>
     );
   };
@@ -86,7 +86,7 @@ const ManagerTop = ({ onLogout }) => {
             <h1 className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight flex items-center gap-1 ${textColor}`}>
               {getGreeting()},
             </h1>
-            <span className={`${accentColor} font-extrabold sm:ml-2 text-2xl ml-14 sm:text-2xl lg:text-3xl`}>
+            <span className={`${accentColor} font-extrabold sm:ml-2 text-2xl ml-20 -mt-4 sm:mt-0 sm:text-2xl lg:text-3xl`}>
               Manager
             </span>
           </div>

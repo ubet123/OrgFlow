@@ -32,7 +32,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
       return (
         <div className='flex flex-row justify-center items-center gap-1'>
           <SunAnimation />
-          <span className={textColor}>Good Morning</span>
+          <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Morning</span>
         </div>
       );
     }
@@ -41,7 +41,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
       return (
         <div className='flex flex-row justify-center items-center gap-1'>
           <Afternoon/>
-          <span className={textColor}>Good Afternoon</span>
+          <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Afternoon</span>
         </div>
       );
     }
@@ -49,7 +49,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
     return (
       <div className='flex flex-row justify-center items-center gap-1'>
         <Evening/>
-        <span className={`${textColor} sm:text-2xl` }>Good Evening</span>
+        <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Evening</span>
       </div>
     );
   };
@@ -81,7 +81,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
               {getGreeting()}
               <span className={textColor}>,</span>
             </div>
-            <span className={`${accentColor} font-extrabold text-xl ml-9 sm:ml-2 sm:text-xl md:text-2xl lg:text-3xl`}>
+            <span className={`${accentColor} font-extrabold sm:ml-1 text-xl ml-[72px] -mt-4 sm:mt-0 sm:text-2xl lg:text-3xl`}>
               {employee?.name}
             </span>
           </div>

@@ -155,7 +155,7 @@ router.get('/emptasks', verifyToken, async (req, res) => {
       message: 'Error fetching tasks',
       error: error.message 
     });
-  }
+  } 
 });
 
 //Mark task as completed
