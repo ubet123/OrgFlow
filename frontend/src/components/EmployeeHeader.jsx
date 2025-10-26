@@ -81,7 +81,7 @@ const EmployeeHeader = ({ onLogout, employee }) => {
               {getGreeting()}
               <span className={textColor}>,</span>
             </div>
-            <span className={`${accentColor} font-extrabold sm:ml-1 text-xl ml-[72px] -mt-4 sm:mt-0 sm:text-2xl lg:text-3xl`}>
+            <span className={`${accentColor} font-extrabold sm:ml-1 text-xl ml-[54px] -mt-4 sm:mt-0 sm:text-2xl lg:text-3xl`}>
               {employee?.name}
             </span>
           </div>
