@@ -53,6 +53,7 @@ const verifyToken = async (req, res, next) => {
       employeeId: user.employeeId,
      
     };
+    
     next();
   } catch (error) {
     

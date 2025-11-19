@@ -154,3 +154,4 @@ This system enables organizations to:
 - Analytics download feature 
 - Fix Email feature using Email.js library
 - Move the backend logic to controllers folder
+- Improve Admin Authorization in backend for admin operations 
