@@ -115,10 +115,10 @@ const requireAdmin = async (req, res, next) => {
     }
 
     
-    if (user.role !== 'admin') {
+    if (user.role !== 'manager') {
       return res.status(403).json({ 
         success: false,
-        message: 'Access denied. Admin privileges required.' 
+        message: 'Access denied. Manager privileges required.' 
       });
     }
 

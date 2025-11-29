@@ -31,21 +31,22 @@ const AdminEmpTasks = () => {
     }
   }, [tasks]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/task/adminemptasks`, {
-          params: { employee: employeeName },
-        });
-        setTasks(response.data.tasks);
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTasks();
-  }, [employeeName]);
+useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/task/adminemptasks`, {
+        params: { employee: employeeName },
+        withCredentials: true  
+      });
+      setTasks(response.data.tasks);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchTasks();
+}, [employeeName]);
 
   const formatDueDate = (dateString) => {
     try {
