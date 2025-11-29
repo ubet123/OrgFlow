@@ -197,11 +197,11 @@ const TasksTable = () => {
         ) : (
           <>
             <div className="overflow-x-auto">
-              {/* Desktop Screen Responsive Table */}
+              {/* Desktop Screen Responsive Table - Keep original sizes */}
               <table className="w-full border-collapse hidden sm:table">
                 <thead>
                   <tr className={`border-b ${tableBorderColor}`}>
-                    <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left min-w-32 text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task ID</th>
+                    <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task ID</th>
                     <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Title</th>
                     <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Assigned To</th>
                     <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Description</th>
@@ -260,21 +260,21 @@ const TasksTable = () => {
                 </tbody>
               </table>
 
-              {/* Mobile Responsive View Cards */}
-              <div className="sm:hidden space-y-4">
+              {/* Mobile Responsive View Cards - More Compact but same font sizes */}
+              <div className="sm:hidden space-y-3">
                 {currentTasks.map((task) => (
                   <div 
                     key={task.taskId} 
                     className={`
                       ${(task.status === 'Pending') && (new Date() > new Date(task.due)) ? overdueStyles : cardStyles}
-                      rounded-lg p-4 border
+                      rounded-lg p-3 border
                       ${theme === 'dark' ? 'border-neutral-700' : 'border-neutral-300'}
                       w-full max-w-full overflow-hidden
                     `}
                   >
                     <div className="flex justify-between items-start gap-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className={`${accentColor} font-medium truncate`}>{task.title}</h3>
+                        <h3 className={`${accentColor} font-medium text-sm truncate`}>{task.title}</h3>
                         <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'} font-mono truncate`}>
                           ID: {task.taskId}
                         </p>
@@ -288,13 +288,13 @@ const TasksTable = () => {
                       </span>
                     </div>
                     
-                    <div className="mt-3">
-                      <p className={`text-sm ${theme === 'dark' ? 'text-neutral-300' : 'text-neutral-700'} break-words overflow-hidden max-h-16`}>
+                    <div className="mt-2">
+                      <p className={`text-sm ${theme === 'dark' ? 'text-neutral-300' : 'text-neutral-700'} break-words line-clamp-2 max-h-10 overflow-hidden`}>
                         {task.description}
                       </p>
                     </div>
                     
-                    <div className='flex justify-between items-center mt-3 gap-2'>
+                    <div className='flex justify-between items-center mt-2 gap-2'>
                       <div className="flex justify-start gap-2 items-center flex-1 min-w-0">
                         <span className={`text-xs ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-600'} flex-shrink-0`}>
                           Due Date:
@@ -320,7 +320,7 @@ const TasksTable = () => {
               </div>
             </div>
 
-            {/* Pagination Controls */}
+            {/* Pagination Controls - Mobile Optimized but same functionality */}
             {totalPages > 1 && (
               <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-neutral-700 gap-4">
                 <div className={`text-sm ${textColor}`}>

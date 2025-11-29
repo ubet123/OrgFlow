@@ -4,7 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '../../context/themeContext';
 import { Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 

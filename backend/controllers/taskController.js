@@ -1,6 +1,6 @@
 const Tasks = require('../models/task');
 const Users = require('../models/user');
-const sendMail = require('../services/sendgrid');
+const { sendTaskAssignmentEmail, sendTaskCompletionEmail } = require('../services/emailjs');
 
 //send email to employee when *Task is Assigned*
 const mailToEmp = async (task, employeeName) => {
@@ -24,36 +24,15 @@ const mailToEmp = async (task, employeeName) => {
       day: 'numeric'
     });
 
-    await sendMail(
-      email,
-      `New Task Assigned - OrgFlow (Task ID: ${task.taskId})`,
-      `
-        <h2 style="color:#2c3e50;">Hello,</h2>
-        <p>
-          A new task has been assigned to you in <b>OrgFlow</b>. Please review the details below:
-        </p>
-        
-        <h3 style="color:#16a34a;">${task.title}</h3>
-        <p>
-          <b>Task ID:</b> ${task.taskId} <br/>
-          <b>Description:</b> ${task.description} <br/>
-          <b>Due Date:</b> <span style="color:#e63946;">${readableDate}</span>
-        </p>
+    // Prepare task data for email
+    const taskData = {
+      taskId: task.taskId,
+      title: task.title,
+      description: task.description,
+      readableDate: readableDate
+    };
 
-        <p>
-          Kindly make sure to complete the task by the due date. You can view and update the task 
-          status anytime on the <b>OrgFlow</b> platform.
-        </p>
-        
-        <br/>
-        <p>
-          Wishing you the best for successful completion.
-        </p>
-        <p style="color:#7f8c8d; font-size: 0.9rem;">
-          — OrgFlow Task Management System
-        </p>
-      `
-    );
+    await sendTaskAssignmentEmail(email, taskData);
 
     console.log('Task assignment email sent successfully to:', email);
     return true;
@@ -69,7 +48,7 @@ const createTask = async (req, res) => {
   const { taskId, title, description, assignedTo, dueDate } = req.body;
 
   try {
-    
+    // Create task first
     await Tasks.create({
       taskId: taskId,
       title: title,
@@ -80,13 +59,13 @@ const createTask = async (req, res) => {
 
     console.log('Task created successfully, now sending email...');
 
-    
+    // Send email (but don't let email failure break task creation)
     try {
       await mailToEmp(req.body, assignedTo);
       console.log('Task creation email sent successfully');
     } catch (emailError) {
       console.error('Email failed but task was created:', emailError);
-      
+      // Don't throw error - task was created successfully
     }
 
     return res.json({ 
@@ -104,7 +83,7 @@ const createTask = async (req, res) => {
   }
 };
 
-//Admin All tasks 
+//Get all tasks for admin controller
 const getAllTasks = async (req, res) => {
   try {
     const tasks = await Tasks.find({});
@@ -122,7 +101,7 @@ const getAllTasks = async (req, res) => {
   }
 };
 
-//Get employee specific tasks 
+//Get employee specific tasks controller
 const getEmpTasks = async (req, res) => {
   try {
     const user = await Users.findById(req.user.id);
@@ -153,12 +132,12 @@ const getEmpTasks = async (req, res) => {
   } 
 };
 
-//Mark task as completed 
+//Mark task as completed controller
 const completeTask = async (req, res) => {
   try {
     const { taskId } = req.body;
     
-    
+    // Update task status first
     await Tasks.updateOne(
       { taskId: taskId }, 
       { $set: { status: 'Completed' } }
@@ -168,35 +147,16 @@ const completeTask = async (req, res) => {
 
     // Send completion email 
     try {
-      await sendMail(
-        'dmelloserene08@gmail.com',
-        `Task ${taskId} Completion Notification - OrgFlow`,
-        `
-          <h2 style="color:#2c3e50;">Hello Manager,</h2>
-          <p>
-            We would like to inform you that <b>Task ID: ${taskId}</b> has been successfully marked as 
-            <span style="color:green;font-weight:bold;">Completed</span>.
-          </p>
-          <p>
-            <b>Assigned Employee:</b> ${taskInfo.assigned} <br/>
-            <b>Completion Time:</b> ${new Date().toLocaleString()}
-          </p>
-          <p>
-            Please review the task details at your earliest convenience on the <b>OrgFlow</b> platform.
-          </p>
-          <br/>
-          <p>
-            Thank you for using <b>OrgFlow</b> to manage your team's workflow efficiently.
-          </p>
-          <p style="color:#7f8c8d; font-size: 0.9rem;">
-            — OrgFlow Task Management System
-          </p>
-        `
-      );
+      const taskData = {
+        taskId: taskId,
+        assigned: taskInfo.assigned
+      };
+
+      await sendTaskCompletionEmail('dmelloserene08@gmail.com', taskData);
       console.log('Task completion email sent successfully');
     } catch (emailError) {
       console.error('Completion email failed but task was marked complete:', emailError);
-      
+      // Don't throw error - task was completed successfully
     }
 
     res.json({
@@ -214,7 +174,7 @@ const completeTask = async (req, res) => {
   }
 };
 
-//Employee specific tasks for admin 
+//Employee specific tasks for admin controller
 const getAdminEmpTasks = async (req, res) => {
   try {
     const employeeName = req.query.employee;
