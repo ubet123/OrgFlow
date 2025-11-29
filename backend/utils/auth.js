@@ -80,4 +80,78 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-module.exports = { generateToken, verifyToken }
+
+
+// Admin authorization 
+const requireAdmin = async (req, res, next) => {
+  try {
+    const token = req.cookies.orgflow_token;
+    
+    if (!token) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Authorization token missing' 
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    if (!decoded?.id) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid token payload' 
+      });
+    }
+
+    // Get fresh user data from database
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) {
+      res.clearCookie('orgflow_token');
+      return res.status(401).json({ 
+        success: false,
+        message: 'User account not found' 
+      });
+    }
+
+    
+    if (user.role !== 'admin') {
+      return res.status(403).json({ 
+        success: false,
+        message: 'Access denied. Admin privileges required.' 
+      });
+    }
+
+    
+    req.user = {
+      id: user._id,
+      name: user.name,
+      role: user.role,
+      employeeId: user.employeeId,
+    };
+    
+    next();
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Token expired' 
+      });
+    }
+    
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid token' 
+      });
+    }
+
+    console.error('Admin authorization error:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error during authorization' 
+    });
+  }
+};
+
+module.exports = { generateToken, verifyToken , requireAdmin };

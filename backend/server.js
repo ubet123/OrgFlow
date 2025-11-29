@@ -18,12 +18,14 @@ mongoose.connect(process.env.MONGO_CONNECTION, {
   .then(() => console.log('MongoDB connected'))
   .catch(error => console.error(`MongoDB connection failed: ${error}`));
 
-// Middleware
+
 const allowedOrigins = [
   'http://localhost:5173',
   'https://org-flow-six.vercel.app',
   'https://orgflow-backend.onrender.com'
 ];
+
+// Middleware
 
 app.use(cors({
   origin: function (origin, callback) {

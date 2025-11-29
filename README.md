@@ -151,7 +151,7 @@ This system enables organizations to:
 - Task Delete/Edit option
 - Due Date Reminder for Employee
 - Task Completion Material Upload (for Employee)
-- Analytics download feature 
+- Analytics download feature - ✅
 - Fix Email feature using Email.js library
-- Move the backend logic to controllers folder
-- Improve Admin Authorization in backend for admin operations 
+- Move the backend logic to controllers folder - ✅
+- Improve Admin Authorization in backend for admin operations - ✅
