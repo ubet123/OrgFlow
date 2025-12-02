@@ -6,7 +6,9 @@ const {
   getAllTasks,
   getEmpTasks,
   completeTask,
-  getAdminEmpTasks
+  getAdminEmpTasks,
+  editTask,
+  deleteTask
 } = require('../controllers/taskController');
 
 //Create Task 
@@ -23,5 +25,12 @@ router.patch("/complete", verifyToken, completeTask);
 
 //Employee specific tasks for admin
 router.get('/adminemptasks', requireAdmin, getAdminEmpTasks);
+
+//Edit Task by Admin
+router.put('/edittask/:taskId', requireAdmin, editTask);
+
+//Delete Task by Admin
+router.delete('/deleteTask/:taskId', requireAdmin, deleteTask);
+
 
 module.exports = router;

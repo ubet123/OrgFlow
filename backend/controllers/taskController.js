@@ -1,3 +1,4 @@
+const { json } = require('express');
 const Tasks = require('../models/task');
 const Users = require('../models/user');
 const { sendTaskAssignmentEmail, sendTaskCompletionEmail } = require('../services/emailjs');
@@ -203,10 +204,66 @@ const getAdminEmpTasks = async (req, res) => {
   }
 };
 
+
+//Edit Task controller
+
+const editTask = async (req,res)=>{
+  console.log('updated task',req.body);
+  
+  try {
+    const {taskId} = req.params;
+
+const updated = req.body;
+
+ const task = await Tasks.findOneAndUpdate(
+      { taskId: taskId },
+      { $set: updated },
+      { new: true, runValidators: true }
+    );
+
+  if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+   res.status(200).json({
+      message: `Task ${taskId} updated successfully`,
+      task: task
+    });
+
+  } catch (error) {
+     console.error('Error updating task:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+
+  
+}
+
+
+//Delete Task Controller 
+
+const deleteTask= async (req,res)=>{
+  
+  
+try {
+  const {taskId} = req.params
+  console.log('to be deleted task:',taskId);
+  await Tasks.findByIdAndDelete(taskId)
+
+  res.status(200).json({message:`Task ${taskId} Deleted Successfully`})
+
+} catch (error) {
+  console.error('Error deleting task:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+}
+
+}
+
 module.exports = {
   createTask,
   getAllTasks,
   getEmpTasks,
   completeTask,
-  getAdminEmpTasks
+  getAdminEmpTasks,
+  editTask,
+  deleteTask
 };
