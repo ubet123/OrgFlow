@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { GoEye ,GoEyeClosed } from "react-icons/go";
 
 const Login = ({ onLogin }) => {
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -87,15 +89,22 @@ const Login = ({ onLogin }) => {
               <label htmlFor="password" className="block text-sm font-medium text-neutral-300 mb-1">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white placeholder-neutral-500 transition-all"
-                placeholder="••••••••"
-                required
-              />
+            <div className="flex flex-row items-center gap-3">
+ <input
+  id="password"
+  type={showPassword ? "text" : "password"}
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white placeholder-neutral-500 transition-all"
+  placeholder="••••••••"
+  required
+/>
+
+  {showPassword?<GoEyeClosed title='Hide' onClick={()=>setShowPassword(prev=>!prev)} className="text-neutral-500 cursor-pointer text-2xl"/>:<GoEye title='Show' onClick={()=>setShowPassword(prev=>!prev)} className="text-neutral-500 cursor-pointer text-2xl"/>}
+  
+</div>
+
+              
             </div>
 
             <div>
