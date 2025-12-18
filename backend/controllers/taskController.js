@@ -1,7 +1,7 @@
 const { json } = require('express');
 const Tasks = require('../models/task');
 const Users = require('../models/user');
-const { sendTaskAssignmentEmail, sendTaskCompletionEmail } = require('../services/emailjs');
+const { sendTaskAssignmentEmail, sendTaskCompletionEmail } = require('../services/nodemail');
 
 //send email to employee when *Task is Assigned*
 const mailToEmp = async (task, employeeName) => {
@@ -33,7 +33,13 @@ const mailToEmp = async (task, employeeName) => {
       readableDate: readableDate
     };
 
-    await sendTaskAssignmentEmail(email, taskData);
+   try {
+  await sendTaskAssignmentEmail(email, taskData);
+} catch (emailError) {
+  console.error('Email failed but continuing:', emailError.message);
+  // Don't throw - continue with task creation
+}
+
 
     console.log('Task assignment email sent successfully to:', email);
     return true;
@@ -153,10 +159,12 @@ const completeTask = async (req, res) => {
         assigned: taskInfo.assigned
       };
 
+      // Send email to manager
       await sendTaskCompletionEmail('dmelloserene08@gmail.com', taskData);
-      console.log('Task completion email sent successfully');
+      console.log(' Task completion email sent successfully');
+      
     } catch (emailError) {
-      console.error('Completion email failed but task was marked complete:', emailError);
+      console.error(' Completion email failed:', emailError.message);
       // Don't throw error - task was completed successfully
     }
 
@@ -174,6 +182,7 @@ const completeTask = async (req, res) => {
     });
   }
 };
+
 
 //Employee specific tasks for admin controller
 const getAdminEmpTasks = async (req, res) => {

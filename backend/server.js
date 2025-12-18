@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const loginroute = require('./routes/login');
 const taskroute = require('./routes/task');
 const userroute = require('./routes/user');
+const testRoute = require('./routes/test');
 
 const port = process.env.PORT || 3001;
 
@@ -58,7 +59,7 @@ app.use(express.json());
 app.use('/auth', loginroute);
 app.use('/task', taskroute);
 app.use('/user', userroute);
-
+app.use('/test', testRoute);
 // Global error handler for CORS or other errors
 app.use((err, req, res, next) => {
   if (err.message === 'Not allowed by CORS') {
