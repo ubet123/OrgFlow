@@ -18,7 +18,7 @@ const getEmployees = async (req, res) => {
 //get all employees with full details 
 const getAllEmployees = async (req, res) => {
   try {
-    const users = await User.find({}); 
+    const users = await User.find({role:{ $ne: 'manager' }}); 
     res.json({ users }); 
   } catch (error) {
     console.error('Error fetching employees:', error);
