@@ -1,26 +1,49 @@
+// services/emailService.js
 const nodemailer = require('nodemailer');
 
-// Create reusable transporter
+// Create reusable transporter with Render-compatible settings
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465, // Changed from 587 to 465 (more likely to work on Render)
+  secure: true, // true for 465, false for 587
   auth: {
     user: process.env.NODE_MAILER_GMAIL,
     pass: process.env.NODE_MAILER_PASS
-  }
+  },
+  tls: {
+    rejectUnauthorized: false // Important for Render
+  },
+  connectionTimeout: 30000, // Increase timeout
+  socketTimeout: 30000,
+  greetingTimeout: 30000
 });
 
 // Verify transporter
 transporter.verify((error, success) => {
   if (error) {
-    console.error('Email setup error:', error.message);
+    console.error('❌ Email setup error:', error.message);
+    console.error('Error details:', {
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
   } else {
     console.log('✅ Email service ready');
+    console.log('SMTP Config:', {
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      hasUser: !!process.env.NODE_MAILER_GMAIL,
+      hasPass: !!process.env.NODE_MAILER_PASS
+    });
   }
 });
 
 // Send task assignment email
 const sendTaskAssignmentEmail = async (toEmail, taskData) => {
   try {
+    console.log(`📧 Attempting to send task assignment to: ${toEmail}`);
+    
     const mailOptions = {
       from: `"OrgFlow" <${process.env.NODE_MAILER_GMAIL}>`,
       to: toEmail,
@@ -75,18 +98,20 @@ const sendTaskAssignmentEmail = async (toEmail, taskData) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Task assignment email sent:', info.messageId);
+    console.log('✅ Task assignment email sent successfully:', info.messageId);
     return info;
   } catch (error) {
     console.error('❌ Task assignment email error:', error.message);
+    console.error('Error details:', error);
     throw error;
   }
 };
 
-// Send task completion email 
+// Send task completion email
 const sendTaskCompletionEmail = async (toEmail, taskData) => {
   try {
-    // Define currentDate here
+    console.log(`📧 Attempting to send completion email to: ${toEmail}`);
+    
     const currentDate = new Date().toLocaleString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -99,7 +124,7 @@ const sendTaskCompletionEmail = async (toEmail, taskData) => {
     const mailOptions = {
       from: `"OrgFlow" <${process.env.NODE_MAILER_GMAIL}>`,
       to: toEmail,
-      subject: `Task Completed: ${taskData.taskId}`,
+      subject: `✅ Task Completed: ${taskData.taskId}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
           <div style="background: linear-gradient(135deg, #10B981, #34D399); padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
@@ -110,7 +135,11 @@ const sendTaskCompletionEmail = async (toEmail, taskData) => {
             <p style="color: #4b5563; margin-bottom: 20px;">Hello Manager, a task has been marked as completed in OrgFlow:</p>
             
             <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #10B981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-             
+              <div style="text-align: center; margin-bottom: 20px;">
+                <div style="background: #d1fae5; width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin: 0 auto;">
+                  <span style="font-size: 40px;">✅</span>
+                </div>
+              </div>
               
               <h2 style="color: #1f2937; text-align: center; margin-top: 0;">Task ${taskData.taskId}</h2>
               
@@ -132,7 +161,7 @@ const sendTaskCompletionEmail = async (toEmail, taskData) => {
               
               <div style="background: #ecfdf5; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: center;">
                 <p style="margin: 0; color: #065f46; font-weight: bold;">
-                  This task is now marked as <span style="color: #059669;">COMPLETED</span>
+                  🎉 This task is now marked as <span style="color: #059669;">COMPLETED</span>
                 </p>
               </div>
             </div>
@@ -158,10 +187,11 @@ const sendTaskCompletionEmail = async (toEmail, taskData) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Task completion email sent:', info.messageId);
+    console.log('✅ Task completion email sent successfully:', info.messageId);
     return info;
   } catch (error) {
     console.error('❌ Task completion email error:', error.message);
+    console.error('Error details:', error);
     throw error;
   }
 };
