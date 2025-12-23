@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useTheme } from '../context/themeContext';
+import { CgAttachment } from "react-icons/cg";
 
 const EmployeeTask = ({employee}) => {
   const [tasks, setTasks] = useState([]);
@@ -9,6 +10,9 @@ const EmployeeTask = ({employee}) => {
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [completingTask, setCompletingTask] = useState(null);
+  const [expandedTask, setExpandedTask] = useState(null);
+  const [taskAttachments, setTaskAttachments] = useState({});
+  const [loadingAttachments, setLoadingAttachments] = useState({});
   const { theme } = useTheme();
 
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -34,6 +38,36 @@ const EmployeeTask = ({employee}) => {
   const completedCardStyles = theme === 'dark' 
     ? 'border-emerald-500/30' 
     : 'border-emerald-400/30';
+
+  // File icon mapping
+  const getFileIcon = (fileType, mimetype) => {
+    if (fileType === 'image') return '🖼️';
+    if (fileType === 'pdf') return '📄';
+    if (fileType === 'document') return '📝';
+    if (fileType === 'spreadsheet') return '📊';
+    if (fileType === 'presentation') return '📈';
+    if (fileType === 'text') return '📃';
+    if (mimetype.includes('image')) return '🖼️';
+    if (mimetype.includes('pdf')) return '📄';
+    return '📎';
+  };
+
+  // Format file size
+  const formatFileSize = (bytes) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  };
+
+  // Format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
   const isOverdue = (dueDate) => {
     if (!dueDate) return false;
@@ -75,6 +109,69 @@ const EmployeeTask = ({employee}) => {
 
     fetchTasks();
   }, []); 
+
+  // Fetch attachments for a task
+  const fetchTaskAttachments = async (taskId) => {
+    if (taskAttachments[taskId]) return; // Already loaded
+    
+    try {
+      setLoadingAttachments(prev => ({ ...prev, [taskId]: true }));
+      
+      const response = await axios.get(
+        `${API_URL}/attachment/employee/${taskId}/attachments`,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        setTaskAttachments(prev => ({
+          ...prev,
+          [taskId]: response.data.attachments
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching attachments:', error);
+      toast.error('Failed to load attachments');
+    } finally {
+      setLoadingAttachments(prev => ({ ...prev, [taskId]: false }));
+    }
+  };
+
+  // Toggle task expansion
+  const toggleTaskExpansion = (taskId) => {
+    if (expandedTask === taskId) {
+      setExpandedTask(null);
+    } else {
+      setExpandedTask(taskId);
+      // Fetch attachments if not already loaded
+      if (!taskAttachments[taskId]) {
+        fetchTaskAttachments(taskId);
+      }
+    }
+  };
+
+  // Handle file download - Simple anchor tag approach
+  const handleDownload = (fileUrl, filename) => {
+    try {
+      // Create a temporary anchor tag
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      
+      // Add download attribute for non-image files
+      if (!fileUrl.includes('/image/') && !fileUrl.includes('.jpg') && !fileUrl.includes('.png') && !fileUrl.includes('.jpeg') && !fileUrl.includes('.gif')) {
+        link.download = filename || 'download';
+      }
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      // Fallback to window.open
+      window.open(fileUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   const handleMarkComplete = async (taskId) => {
     try {
@@ -158,6 +255,10 @@ const EmployeeTask = ({employee}) => {
                   </h1>
                   {pending.sort((a, b) => new Date(a.due) - new Date(b.due)).map((task) => {
                     const overdue = isOverdue(task.due);
+                    const attachments = taskAttachments[task.taskId] || [];
+                    const isLoading = loadingAttachments[task.taskId];
+                    const isExpanded = expandedTask === task.taskId;
+                    
                     return (
                       <div 
                         key={task.taskId}
@@ -165,8 +266,8 @@ const EmployeeTask = ({employee}) => {
                           overdue ? overdueCardStyles : cardStyles
                         }`}
                       >
-                        <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-6">
-                          <div className="flex-1">
+                        <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
+                          <div className="flex-1 w-full">
                             <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
                               <span className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20' : 'bg-emerald-100'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full`}>
                                 {task.taskId}
@@ -185,6 +286,28 @@ const EmployeeTask = ({employee}) => {
                                   Past Due!
                                 </span>
                               )}
+                              {/* Attachment indicator */}
+                              {task.hasAttachments && (
+                                <button
+                                  onClick={() => toggleTaskExpansion(task.taskId)}
+                                  className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 ${
+                                    theme === 'dark' 
+                                      ? 'bg-blue-900/50 text-blue-300 hover:bg-blue-800/50' 
+                                      : 'bg-blue-200 text-blue-800 hover:bg-blue-300'
+                                  }`}
+                                >
+                                  <span><CgAttachment className="h-3 w-3 sm:h-4 sm:w-4" /></span>
+                                  <span>{task.attachmentCount} file{task.attachmentCount !== 1 ? 's' : ''}</span>
+                                  <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+                                    viewBox="0 0 20 20" 
+                                    fill="currentColor"
+                                  >
+                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                </button>
+                              )}
                             </div>
                             <h2 className={`text-xl sm:text-2xl font-semibold mb-2 sm:mb-4 ${
                               overdue ? (theme === 'dark' ? 'text-red-300' : 'text-red-700') : textColor
@@ -196,36 +319,100 @@ const EmployeeTask = ({employee}) => {
                             }`}>
                               {task.description}
                             </p>
-                            <button
-                              onClick={() => handleMarkComplete(task.taskId)}
-                              disabled={completingTask === task.taskId}
-                              className={`${
-                                overdue
-                                  ? 'bg-red-700 hover:bg-red-600'
-                                  : 'bg-emerald-700 hover:bg-emerald-600'
-                              } text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg transition-colors font-medium mt-4 sm:mt-6 flex items-center justify-center text-base sm:text-lg min-w-72 sm:min-w-60 disabled:opacity-50 disabled:cursor-not-allowed`}
-                            >
-                              {completingTask === task.taskId ? (
-                                <>
-                                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                  </svg>
-                                  Completing...
-                                </>
-                              ) : (
-                                <>
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                  Mark Complete
-                                </>
-                              )}
-                            </button>
+
+                            {/* Attachments Section */}
+                            {isExpanded && task.hasAttachments && (
+                              <div className="mt-6 mb-6">
+                                <h3 className={`text-lg font-semibold mb-4 ${textColor} flex items-center gap-2`}>
+                                  <span><CgAttachment className="h-3 w-3 sm:h-4 sm:w-4" /></span>
+                                  <span>Attachments ({attachments.length})</span>
+                                </h3>
+                                
+                                {isLoading ? (
+                                  <div className="flex items-center justify-center py-4">
+                                    <div className={`animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
+                                    <span className="ml-3 text-neutral-500">Loading files...</span>
+                                  </div>
+                                ) : attachments.length === 0 ? (
+                                  <div className={`text-center py-6 rounded-lg ${theme === 'dark' ? 'bg-neutral-800/50' : 'bg-neutral-100'}`}>
+                                    <p className={textColorSecondary}>No files attached to this task</p>
+                                  </div>
+                                ) : (
+                                  <div className="space-y-3">
+                                    {attachments.map((file, index) => (
+                                      <div 
+                                        key={index}
+                                        className={`flex flex-col xs:flex-row items-start sm:max-w-[700px] xs:items-center justify-between p-3 rounded-lg ${theme === 'dark' ? 'bg-neutral-800/50 hover:bg-neutral-800' : 'bg-neutral-100 hover:bg-neutral-200'} transition-colors gap-3 xs:gap-4`}
+                                      >
+                                        <div className="flex items-center gap-3 flex-1 min-w-0 w-full sm:w-auto">
+                                          <span className="text-xl flex-shrink-0">
+                                            {getFileIcon(file.fileType, file.mimetype)}
+                                          </span>
+                                          <div className="min-w-0 flex-1">
+                                            <p className={`font-medium ${textColor} truncate`}>{file.filename}</p>
+                                            <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 mt-1">
+                                              <span>{formatFileSize(file.size)}</span>
+                                              <span>•</span>
+                                              <span className="capitalize">{file.fileType}</span>
+                                              {file.uploadedAt && (
+                                                <>
+                                                  <span>•</span>
+                                                  <span className="hidden xs:inline">Added {formatDate(file.uploadedAt)}</span>
+                                                  <span className="xs:hidden">{formatDate(file.uploadedAt)}</span>
+                                                </>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <button
+                                          onClick={() => handleDownload(file.url, file.filename)}
+                                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap w-full sm:w-44 mt-2 xs:mt-0 flex-shrink-0 ${
+                                            theme === 'dark' 
+                                              ? 'bg-emerald-800 hover:bg-emerald-700 text-emerald-100' 
+                                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                          }`}
+                                        >
+                                          Download
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                              <button
+                                onClick={() => handleMarkComplete(task.taskId)}
+                                disabled={completingTask === task.taskId}
+                                className={`${
+                                  overdue
+                                    ? 'bg-red-700 hover:bg-red-600'
+                                    : 'bg-emerald-700 hover:bg-emerald-600'
+                                } text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-colors font-medium flex items-center justify-center text-base sm:text-lg w-full sm:w-80 disabled:opacity-50 disabled:cursor-not-allowed`}
+                              >
+                                {completingTask === task.taskId ? (
+                                  <>
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span className="truncate">Completing...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="truncate">Mark Complete</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
                           </div>
                           
-                          <div className="flex flex-col items-end w-full md:w-auto md:min-w-[200px] mt-4 md:mt-0">
-                            <div className="text-right">
+                          <div className="flex flex-col items-start lg:items-end w-full lg:w-auto lg:min-w-[180px] mt-4 lg:mt-0">
+                            <div className="text-left lg:text-right w-full">
                               <p className={`text-xs sm:text-sm ${textColorMuted} mb-1`}>Due Date</p>
                               <p className={`text-base sm:text-lg font-medium ${
                                 overdue ? (theme === 'dark' ? 'text-red-300' : 'text-red-700') : textColor
@@ -270,47 +457,139 @@ const EmployeeTask = ({employee}) => {
                 <div className="space-y-4 sm:space-y-6 md:space-y-8">
                   {completed
                     .sort((a, b) => new Date(a.due) - new Date(b.due))
-                    .map((task) => (
-                      <div 
-                        key={task.taskId}
-                        className={`backdrop-blur-sm rounded-xl sm:rounded-2xl border-2 p-4 sm:p-6 md:p-8 w-full transition-all hover:border-emerald-500/30 ${cardStyles} ${completedCardStyles}`}
-                      >
-                        <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-6">
-                          <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                              <span className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20' : 'bg-emerald-100'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full`}>
-                                {task.taskId}
-                              </span>
-                              <span className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${
-                                theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-200 text-emerald-800'
-                              }`}>
-                                {task.status}
-                              </span>
+                    .map((task) => {
+                      const attachments = taskAttachments[task.taskId] || [];
+                      const isLoading = loadingAttachments[task.taskId];
+                      const isExpanded = expandedTask === task.taskId;
+                      
+                      return (
+                        <div 
+                          key={task.taskId}
+                          className={`backdrop-blur-sm rounded-xl sm:rounded-2xl border-2 p-4 sm:p-6 md:p-8 w-full transition-all hover:border-emerald-500/30 ${cardStyles} ${completedCardStyles}`}
+                        >
+                          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
+                            <div className="flex-1 w-full">
+                              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+                                <span className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20' : 'bg-emerald-100'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full`}>
+                                  {task.taskId}
+                                </span>
+                                <span className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${
+                                  theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-200 text-emerald-800'
+                                }`}>
+                                  {task.status}
+                                </span>
+                                {/* Attachment indicator for completed tasks */}
+                                {task.hasAttachments && (
+                                  <button
+                                    onClick={() => toggleTaskExpansion(task.taskId)}
+                                    className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 ${
+                                      theme === 'dark' 
+                                        ? 'bg-blue-900/50 text-blue-300 hover:bg-blue-800/50' 
+                                        : 'bg-blue-200 text-blue-800 hover:bg-blue-300'
+                                    }`}
+                                  >
+                                    <span><CgAttachment className="h-3 w-3 sm:h-4 sm:w-4" /></span>
+                                    <span>{task.attachmentCount} file{task.attachmentCount !== 1 ? 's' : ''}</span>
+                                    <svg 
+                                      xmlns="http://www.w3.org/2000/svg" 
+                                      className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+                                      viewBox="0 0 20 20" 
+                                      fill="currentColor"
+                                    >
+                                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
+                              <h2 className={`text-xl sm:text-2xl font-semibold mb-2 sm:mb-4 ${textColor}`}>{task.title}</h2>
+                              <p className={`${textColorSecondary} text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed`}>{task.description}</p>
+
+                              {/* Attachments Section for Completed Tasks */}
+                              {isExpanded && task.hasAttachments && (
+                                <div className="mt-6 mb-6">
+                                  <h3 className={`text-lg font-semibold mb-4 ${textColor} flex items-center gap-2`}>
+                                    <span><CgAttachment className="h-3 w-3 sm:h-4 sm:w-4" /></span>
+                                    <span>Attachments ({attachments.length})</span>
+                                  </h3>
+                                  
+                                  {isLoading ? (
+                                    <div className="flex items-center justify-center py-4">
+                                      <div className={`animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
+                                      <span className="ml-3 text-neutral-500">Loading files...</span>
+                                    </div>
+                                  ) : attachments.length === 0 ? (
+                                    <div className={`text-center py-6 rounded-lg ${theme === 'dark' ? 'bg-neutral-800/50' : 'bg-neutral-100'}`}>
+                                      <p className={textColorSecondary}>No files attached to this task</p>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-3">
+                                      {attachments.map((file, index) => (
+                                        <div 
+                                          key={index}
+                                          className={`flex flex-col xs:flex-row items-start sm:max-w-[700px] xs:items-center justify-between p-3 rounded-lg ${theme === 'dark' ? 'bg-neutral-800/50 hover:bg-neutral-800' : 'bg-neutral-100 hover:bg-neutral-200'} transition-colors gap-3 xs:gap-4`}
+                                        >
+                                          <div className="flex items-center gap-3 flex-1 min-w-0 w-full xs:w-auto">
+                                            <span className="text-xl flex-shrink-0">
+                                              {getFileIcon(file.fileType, file.mimetype)}
+                                            </span>
+                                            <div className="min-w-0 flex-1">
+                                              <p className={`font-medium ${textColor} truncate`}>{file.filename}</p>
+                                              <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 mt-1">
+                                                <span>{formatFileSize(file.size)}</span>
+                                                <span>•</span>
+                                                <span className="capitalize">{file.fileType}</span>
+                                                {file.uploadedAt && (
+                                                  <>
+                                                    <span>•</span>
+                                                    <span className="hidden xs:inline">Added {formatDate(file.uploadedAt)}</span>
+                                                    <span className="xs:hidden">{formatDate(file.uploadedAt)}</span>
+                                                  </>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <button
+                                            onClick={() => handleDownload(file.url, file.filename)}
+                                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap w-full xs:w-auto sm:w-44 mt-2 xs:mt-0 flex-shrink-0 ${
+                                              theme === 'dark' 
+                                                ? 'bg-emerald-800 hover:bg-emerald-700 text-emerald-100' 
+                                                : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                            }`}
+                                          >
+                                            Download
+                                          </button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                                <button
+                                  disabled
+                                  className={`${theme === 'dark' ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-800'} px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center justify-center text-base sm:text-lg w-full sm:w-80 cursor-not-allowed opacity-70`}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                  <span className="truncate">Task Completed</span>
+                                </button>
+                              </div>
                             </div>
-                            <h2 className={`text-xl sm:text-2xl font-semibold mb-2 sm:mb-4 ${textColor}`}>{task.title}</h2>
-                            <p className={`${textColorSecondary} text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed`}>{task.description}</p>
-                            <button
-                              disabled
-                              className={`${theme === 'dark' ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-800'} px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-medium mt-4 sm:mt-6 flex items-center justify-center text-base sm:text-lg min-w-72 sm:min-w-60 cursor-not-allowed opacity-70`}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                              Task Completed 
-                            </button>
-                          </div>
-                          
-                          <div className="flex flex-col items-end w-full md:w-auto md:min-w-[200px] mt-4 md:mt-0">
-                            <div className="text-right">
-                              <p className={`text-xs sm:text-sm ${textColorMuted} mb-1`}>Due Date</p>
-                              <p className={`text-base sm:text-lg font-medium ${textColor}`}>
-                                {formatDueDate(task.due)}
-                              </p>
+                            
+                            <div className="flex flex-col items-start lg:items-end w-full lg:w-auto lg:min-w-[180px] mt-4 lg:mt-0">
+                              <div className="text-left lg:text-right w-full">
+                                <p className={`text-xs sm:text-sm ${textColorMuted} mb-1`}>Due Date</p>
+                                <p className={`text-base sm:text-lg font-medium ${textColor}`}>
+                                  {formatDueDate(task.due)}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
               </>
             )}
