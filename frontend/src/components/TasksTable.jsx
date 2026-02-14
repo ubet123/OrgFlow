@@ -96,7 +96,7 @@ const TasksTable = () => {
     
     try {
       const response = await axios.delete(
-        `${API_URL}/task/deleteTask/${taskToDelete._id}`,
+        `${API_URL}/task/deleteTask/${taskToDelete.taskId}`,
         { withCredentials: true }
       );
       
@@ -244,8 +244,8 @@ const TasksTable = () => {
 
   return (
     <>
-      <div className={`mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] -ml-3 sm:-ml-16 mx-auto ${containerStyles}`}>
-        <div className="py-6 px-4 sm:py-8 sm:px-6 md:px-10 lg:px-16 xl:px-20">
+      <div className={`mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 ${containerStyles}`}>
+        <div className="py-6 px-3 sm:py-8 sm:px-4 md:px-6 lg:px-10 xl:px-12">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
             <h2 className={`text-xl sm:text-2xl font-bold ${accentColor}`}>Assigned Tasks</h2>
             
@@ -288,16 +288,25 @@ const TasksTable = () => {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse hidden sm:table">
+                <table className="w-full table-fixed border-collapse hidden sm:table">
+                  <colgroup>
+                    <col className="w-[10%]" />
+                    <col className="w-[15%]" />
+                    <col className="w-[14%]" />
+                    <col className="w-[22%]" />
+                    <col className="w-[12%]" />
+                    <col className="w-[11%]" />
+                    <col className="w-[16%]" />
+                  </colgroup>
                   <thead>
                     <tr className={`border-b ${tableBorderColor}`}>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task ID</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Title</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Assigned To</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Description</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Due Date</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task Status</th>
-                      <th className={`px-4 py-3 sm:px-6 sm:py-4 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Actions</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task ID</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Title</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Assigned To</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Description</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Due Date</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task Status</th>
+                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Actions</th>
                     </tr>
                   </thead>
                   <tbody className={`divide-y ${theme === 'dark' ? 'divide-neutral-800' : 'divide-neutral-300'}`}>
@@ -310,54 +319,56 @@ const TasksTable = () => {
                           transition-colors
                         `}
                       >
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-mono ${textColor}`}>
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base font-mono ${textColor}`}>
                           {task.taskId}
                         </td>
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base ${textColor}`}>
-                          {task.title}
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${textColor}`}>
+                          <span className="block truncate">
+                            {task.title}
+                          </span>
                         </td>
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base ${textColor}`}>
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${textColor}`}>
                           <div className="flex items-center space-x-2">
                             <span
                               onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                              className={`${employeeBadgeStyles} hover:cursor-pointer font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm`}
+                              className={`${employeeBadgeStyles} hover:cursor-pointer font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm whitespace-normal break-words`}
                             >
                               {task.assigned}
                             </span>
                           </div>
                         </td>
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4`}>
-                          <div className={`text-sm sm:text-base max-h-24 overflow-y-auto pr-2 ${scrollbarStyles} ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8`}>
+                          <div className={`text-sm sm:text-base line-clamp-2 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
                             {task.description}
                           </div>
                         </td>
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm min-w-28 sm:text-base ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
                           {formatDate(task.due)}
                         </td>
                         
                         {task.status === 'Completed' ? (
-                          <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-lg font-semibold text-green-600 ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`}>
+                          <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-lg font-semibold text-green-600 ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`}>
                             {task.status}
                           </td>
                         ) : (
-                          <td className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-lg font-semibold text-yellow-600 ${theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'}`}>
+                          <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-lg font-semibold text-yellow-600 ${theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'}`}>
                             {task.status}
                           </td>
                         )}
                         
-                        <td className={`px-4 py-3 sm:px-6 sm:py-4`}>
-                          <div className="flex space-x-2">
+                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8`}>
+                          <div className="flex flex-wrap gap-2">
                             <button
                               onClick={() => handleEdit(task)}
-                              className={`px-3 py-1 rounded text-sm font-medium ${editButtonStyles}`}
+                              className={`w-24 px-3 py-1 rounded text-sm font-medium ${editButtonStyles}`}
                             >
-                              <div className='flex flex-row items-center justify-around gap-1'>
+                              <div className='flex flex-row items-center justify-center gap-2'>
                                 <MdEdit /> Edit
                               </div>
                             </button>
                             <button
                               onClick={() => handleDeleteClick(task.taskId)}
-                              className={`px-3 py-1 rounded text-sm font-medium ${deleteButtonStyles}`}
+                              className={`w-24 px-3 py-1 rounded text-sm font-medium ${deleteButtonStyles}`}
                             >
                             <div className='flex flex-row items-center justify-around gap-1'>
                                 <MdDelete /> Delete
@@ -430,7 +441,7 @@ const TasksTable = () => {
                           onClick={() => handleEdit(task)}
                           className={`flex-1 px-2 py-1.5 rounded text-xs font-medium ${editButtonStyles}`}
                         >
-                          <div className='flex flex-row items-center justify-center gap-1'>
+                          <div className='flex flex-row items-center justify-center gap-1 '>
                             <MdEdit /> Edit
                           </div>
                         </button>
