@@ -6,6 +6,8 @@ import Afternoon from './Afternoon';
 import Evening from './Evening';
 import { useTheme } from '../context/themeContext';
 import Switch from './Switch';
+import { IoChatbubblesOutline } from "react-icons/io5";
+
 
 const EmployeeHeader = ({ onLogout, employee }) => {
   const navigate = useNavigate();
@@ -24,6 +26,9 @@ const EmployeeHeader = ({ onLogout, employee }) => {
   
   const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-800';
   const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
+  const chatButtonStyles = theme === 'dark'
+    ? 'bg-neutral-800/80 border-neutral-700 text-emerald-300 hover:bg-neutral-700/80'
+    : 'bg-white border-neutral-200 text-emerald-700 hover:bg-emerald-50';
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -105,6 +110,17 @@ const EmployeeHeader = ({ onLogout, employee }) => {
             onChange={toggleTheme}
           />
         </div>
+
+        {/* Chat Button */}
+        <button
+          type="button"
+          onClick={() => navigate('/chat')}
+          className={`border px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto text-sm sm:text-base ${chatButtonStyles}`}
+          aria-label="Open chat"
+        >
+         <IoChatbubblesOutline className={`h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 ${accentColor}`} />
+          <span className="whitespace-nowrap">Chat</span>
+        </button>
 
         {/* Logout Button */}
         <button

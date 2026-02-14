@@ -3,9 +3,11 @@ import axios from 'axios';
 import { useTheme } from '../../context/themeContext';
 import { useNavigate } from 'react-router-dom';
 import useConversation from '../../statemanagement/useConversation';
+import { useSocket } from '../../context/socketContext';
 
 const User = ({ searchTerm = '', userRole = '' }) => {
   const { theme } = useTheme();
+  const { onlineUsers } = useSocket();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -82,6 +84,7 @@ const User = ({ searchTerm = '', userRole = '' }) => {
             .join('')
         : 'U';
       const isSelected = selectedConversation?._id === user._id;
+      const isOnline = Array.isArray(onlineUsers) && onlineUsers.includes(user._id);
 
       return (
         <div
@@ -94,18 +97,20 @@ const User = ({ searchTerm = '', userRole = '' }) => {
         >
           <div className="relative">
             <div className={`h-11 w-11 rounded-full flex items-center justify-center text-sm font-semibold ${avatarStyles}`}>
-              {initials}
+              {user.role === 'manager' ? 'M' : initials}
             </div>
-            <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 ${statusBorder}`} />
+            {isOnline && (
+              <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 ${statusBorder}`} />
+            )}
           </div>
           <div className="leading-tight">
-            <p className={`text-sm font-semibold ${nameStyles}`}>{user.name}</p>
-            <p className={`text-xs ${subTextStyles}`}>Online</p>
+            <p className={`text-sm font-semibold ${nameStyles}`}>{user.role==='manager' ? 'Manager' : user.name}</p>
+           {isOnline && <p className={`text-xs ${subTextStyles}`}>Online</p>}
           </div>
         </div>
       );
     });
-  }, [avatarStyles, cardHover, cardSelected, filteredUsers, nameStyles, navigate, selectedConversation, setSelectedConversation, statusBorder, subTextStyles]);
+  }, [avatarStyles, cardHover, cardSelected, filteredUsers, nameStyles, navigate, onlineUsers, selectedConversation, setSelectedConversation, statusBorder, subTextStyles]);
 
   if (loading) {
     return <div className={`px-3 py-4 text-sm ${subTextStyles}`}>Loading users...</div>;

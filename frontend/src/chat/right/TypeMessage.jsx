@@ -8,10 +8,10 @@ const TypeMessage = ({ className = '' }) => {
   const [messageText, setMessageText] = useState('');
 
   const wrapperStyles = theme === 'dark'
-    ? 'bg-neutral-950 border-neutral-800'
-    : 'bg-white border-neutral-200';
+    ? 'bg-neutral-950/80 border-neutral-800/80'
+    : 'bg-white/80 border-neutral-200';
   const inputStyles = theme === 'dark'
-    ? 'bg-neutral-900 text-white placeholder-neutral-500 border-neutral-800'
+    ? 'bg-neutral-900/80 text-white placeholder-neutral-500 border-neutral-800'
     : 'bg-neutral-50 text-neutral-900 placeholder-neutral-500 border-neutral-200';
   const buttonStyles = theme === 'dark'
     ? 'bg-emerald-700 hover:bg-emerald-600 text-white'
@@ -34,7 +34,7 @@ const TypeMessage = ({ className = '' }) => {
   };
 
   return (
-    <div className={`border-t px-4 py-3 ${wrapperStyles} ${className}`}>
+    <div className={`border-t px-5 py-4 ${wrapperStyles} ${className}`}>
       <div className="flex items-center gap-3">
         <input
           type="text"
@@ -42,7 +42,7 @@ const TypeMessage = ({ className = '' }) => {
           value={messageText}
           onChange={(event) => setMessageText(event.target.value)}
           onKeyDown={handleKeyDown}
-          className={`flex-1 rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${inputStyles}`}
+          className={`flex-1 rounded-2xl border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${inputStyles}`}
         />
         <button
           type="button"

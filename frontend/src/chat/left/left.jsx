@@ -14,12 +14,14 @@ export default function Left() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const containerStyles = theme === 'dark'
-    ? 'bg-black text-white border-white'
-    : 'bg-white text-neutral-900 border-neutral-200';
-  const dividerStyles = theme === 'dark' ? 'border-neutral-700' : 'border-neutral-200';
+    ? 'bg-neutral-950/80 text-white border-neutral-800/80 shadow-xl shadow-emerald-900/10'
+    : 'bg-white/90 text-neutral-900 border-neutral-200 shadow-lg shadow-emerald-200/40';
+  const headerStyles = theme === 'dark' ? 'bg-neutral-950/80' : 'bg-white/90';
+  const dividerStyles = theme === 'dark' ? 'border-neutral-800' : 'border-neutral-200';
   const backButtonStyles = theme === 'dark'
-    ? 'text-emerald-300 bg-neutral-900/70 border border-emerald-400/20 hover:bg-neutral-800'
+    ? 'text-emerald-200 bg-neutral-900/60 border border-emerald-400/20 hover:bg-neutral-800/80'
     : 'text-emerald-700 bg-white border border-emerald-200 hover:bg-neutral-100';
+  const subtitleStyles = theme === 'dark' ? 'text-neutral-400' : 'text-neutral-500';
   const backButtonText = loadingRole ? 'Loading...' : 'Back to Dashboard';
 
   const handleBackToDashboard = () => {
@@ -30,8 +32,9 @@ export default function Left() {
   return (
     <>
    
-    <div className={`w-[30%]  overflow-auto custom-scrollbar ${containerStyles}`}>
-        <div className="px-3 pt-3">
+    <div className={`w-full md:flex-none md:basis-[34%] lg:basis-[30%] xl:basis-[28%] md:min-w-[320px] h-full rounded-2xl border overflow-hidden backdrop-blur flex flex-col ${containerStyles}`}>
+      <div className={`sticky top-0 z-10 ${headerStyles}`}>
+        <div className="px-4 pt-4">
           <button
             type="button"
             onClick={handleBackToDashboard}
@@ -53,10 +56,18 @@ export default function Left() {
             <span>{backButtonText}</span>
           </button>
         </div>
-         <h1 className="font-bold text-3xl px-3 mb-3 mt-7">My Chats</h1>
-       <Search value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
-       <hr className={`mb-3 mt-2 border-t ${dividerStyles}`} />
-       <User searchTerm={searchTerm} userRole={userRole} />
+        <div className="px-4 pt-6">
+          <p className={`text-xs uppercase tracking-[0.2em] ${subtitleStyles}`}>Workspace</p>
+          <h1 className="mt-2 text-2xl font-semibold">My Chats</h1>
+        </div>
+        <div className="px-4 py-4">
+          <Search value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
+        </div>
+        <hr className={`border-t ${dividerStyles}`} />
+      </div>
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <User searchTerm={searchTerm} userRole={userRole} />
+      </div>
     </div>
     </>
   );

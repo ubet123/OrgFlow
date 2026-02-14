@@ -1,8 +1,10 @@
 const express = require('express');
-const app = express();
+// const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const {app,server} = require('./SocketIO/server.js');
+
 
 // Route imports
 const loginroute = require('./routes/login');
@@ -44,4 +46,4 @@ app.use('/message', messageRoute);
 // Error handler
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Server started at ${port}`));
+server.listen(port, () => console.log(`Server started at ${port}`));
