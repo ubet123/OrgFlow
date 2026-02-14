@@ -2,83 +2,24 @@ const { json } = require('express');
 const Tasks = require('../models/task');
 const Users = require('../models/user');
 const { cloudinary } = require('../config/cloudinary');
-const { sendTaskAssignmentEmail, sendTaskCompletionEmail } = require('../services/nodemail');
-
-
-//send email to employee when *Task is Assigned*
-const mailToEmp = async (task, employeeName) => {
-  try {
-    console.log('Sending task assignment email to:', employeeName);
-    
-    const employee = await Users.findOne({ name: employeeName });
-    if (!employee) {
-      console.log('Employee not found:', employeeName);
-      return false; // Don't throw error, just return false
-    }
-
-    const email = employee.email; 
-    if (!email) {
-      console.log('No email found for employee:', employeeName);
-      return false;
-    }
-
-    // Check if task.dueDate exists and is valid
-    let readableDate = 'Not specified';
-    if (task.dueDate) {
-      const isoDate = task.dueDate;
-      readableDate = new Date(isoDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
-
-    // Prepare task data for email
-    const taskData = {
-      taskId: task.taskId || 'N/A',
-      title: task.title || 'New Task',
-      description: task.description || 'No description provided',
-      readableDate: readableDate
-    };
-
-    await sendTaskAssignmentEmail(email, taskData);
-
-    console.log('Task assignment email sent successfully to:', email);
-    return true;
-
-  } catch (error) {
-    console.error('Mail error in mailToEmp:', error);
-    // Don't throw error, just return false
-    return false;
-  }
-};
 
 
 
 // Create Task controller (updated for attachments)
 const createTask = async (req, res) => {
     try {
-        // Debug: Log what's being received
-        console.log('=== CREATE TASK REQUEST DEBUG ===');
-        console.log('req.body:', req.body);
-        console.log('req.files:', req.files);
-        
         // Extract data from req.body (text fields are parsed by multer)
         const { taskId, title, description, assignedTo, dueDate } = req.body;
-        
-        console.log('Extracted fields:', { taskId, title, description, assignedTo, dueDate });
         
         // Filter files from req.files (if any)
         let files = [];
         if (req.files && req.files.length > 0) {
-            // You can filter files if needed, but .any() accepts all files
-            files = req.files;
-            console.log(`Found ${files.length} files`);
+          // You can filter files if needed, but .any() accepts all files
+          files = req.files;
         }
         
         // Validate required fields
         if (!taskId || !title || !description || !assignedTo || !dueDate) {
-            console.log('Missing fields:', { taskId, title, description, assignedTo, dueDate });
             return res.status(400).json({ 
                 success: false,
                 message: 'All required fields must be provided'
@@ -95,12 +36,8 @@ const createTask = async (req, res) => {
             createdBy: req.user.id
         };
 
-        console.log('Task data prepared:', taskData);
-
         // Add attachments if files were uploaded
         if (files.length > 0) {
-            console.log(`Processing ${files.length} files`);
-            
             taskData.attachments = files.map(file => ({
                 public_id: file.filename,
                 url: file.path,
@@ -109,29 +46,10 @@ const createTask = async (req, res) => {
                 size: file.size,
                 uploadedBy: req.user.id
             }));
-            
-            console.log('Sample attachment:', taskData.attachments[0]);
         }
 
         // Create task
-        console.log('Creating task in database...');
         const task = await Tasks.create(taskData);
-
-        console.log('Task created successfully:', task.taskId);
-
-        // Send email
-        try {
-            await mailToEmp({
-                taskId: task.taskId,
-                title: task.title,
-                description: task.description,
-                assignedTo: task.assigned,
-                dueDate: task.due
-            }, task.assigned);
-            console.log('Task creation email sent successfully');
-        } catch (emailError) {
-            console.error('Email failed but task was created:', emailError);
-        }
 
         return res.json({ 
             success: true,
@@ -149,24 +67,16 @@ const createTask = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('=== CREATE TASK ERROR ===');
-        console.error('Error name:', error.name);
-        console.error('Error message:', error.message);
-        
-        if (error.name === 'ValidationError') {
-            console.error('Validation errors:', error.errors);
-        }
+        console.error('Error creating task:', error);
         
         // Clean up uploaded files if error occurs
         if (req.files && req.files.length > 0) {
             try {
-                console.log('Cleaning up uploaded files...');
                 await Promise.all(
                     req.files.map(file => 
                         cloudinary.uploader.destroy(file.filename)
                     )
                 );
-                console.log('Files cleaned up');
             } catch (cleanupError) {
                 console.error('Error cleaning up files:', cleanupError);
             }
@@ -257,24 +167,6 @@ const completeTask = async (req, res) => {
       { taskId: taskId }, 
       { $set: { status: 'Completed' } }
     );
-    
-    const taskInfo = await Tasks.findOne({ taskId: taskId });
-
-    // Send completion email 
-    try {
-      const taskData = {
-        taskId: taskId,
-        assigned: taskInfo.assigned
-      };
-
-      // Send email to manager
-      await sendTaskCompletionEmail('dmelloserene08@gmail.com', taskData);
-      console.log(' Task completion email sent successfully');
-      
-    } catch (emailError) {
-      console.error(' Completion email failed:', emailError.message);
-      // Don't throw error - task was completed successfully
-    }
 
     res.json({
       success: true,

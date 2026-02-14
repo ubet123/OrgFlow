@@ -10,7 +10,6 @@ const {app,server} = require('./SocketIO/server.js');
 const loginroute = require('./routes/login');
 const taskroute = require('./routes/task');
 const userroute = require('./routes/user');
-const testRoute = require('./routes/test');
 const attachmentRoute = require('./routes/attachment');
 const messageRoute = require('./routes/message');
 
@@ -40,7 +39,6 @@ app.use('/auth', loginroute);
 app.use('/task', taskroute);
 app.use('/attachment', attachmentRoute);
 app.use('/user', userroute);
-app.use('/test', testRoute);
 app.use('/message', messageRoute);
 
 // Error handler

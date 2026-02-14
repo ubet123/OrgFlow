@@ -1,26 +1,24 @@
-# 🏢 OrgFlow - Employee Task Management System  
+# 🏢 OrgFlow - Task & Chat Workspace
 
-**OrgFlow** is a **MERN stack application** that streamlines task assignment, tracking, and completion within organizations. With its **dark/light themed UI**, **mobile responsiveness**, and **data-driven analytics**, it provides managers, employees, and admins with an intuitive platform for efficient workflow management.  
+**OrgFlow** is a **MERN-based work management platform** for assigning tasks, tracking progress, and collaborating in real time. It combines role-based task workflows, file attachments, analytics, and a clean chat experience with a modern, professional UI.
 
-👉 **[Live Demo](https://org-flow-six.vercel.app/)** 
-
----
-
-## 🎯 Project Purpose  
-
-This system enables organizations to:  
-- **Digitize task management** from assignment to completion  
-- **Improve accountability** with clear task ownership  
-- **Track progress & productivity** through visual analytics  
-- **Enhance efficiency** with email notifications and alerts  
-- **Maintain records** of all task activities  
+👉 **[Live Demo](https://org-flow-six.vercel.app/)**
 
 ---
 
+## 🎯 Purpose
 
-## 🛠️ Technology Stack  
+OrgFlow helps teams:
+- **Assign and track work** with clear ownership
+- **Keep accountability visible** through status and due dates
+- **Centralize collaboration** with built-in chat
+- **Stay organized** with attachments and activity history
 
-### Frontend  
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
 <table>
   <tr>
     <td align="center">
@@ -41,7 +39,7 @@ This system enables organizations to:
   </tr>
 </table>
 
-### Backend  
+### Backend
 <table>
   <tr>
     <td align="center">
@@ -62,19 +60,19 @@ This system enables organizations to:
   </tr>
 </table>
 
-### Additional Integrations  
+### Realtime + Storage
 <table>
   <tr>
     <td align="center">
-      <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" width="40" height="40" alt="Nodemailer" /><br/>Nodemailer
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/socketio/socketio-original.svg" width="40" height="40" alt="Socket.IO" /><br/>Socket.IO
     </td>
     <td align="center">
-      <img src="./tech-svgs/material-ui-svgrepo-com.svg" width="40" height="40" alt="Recharts" /><br/>Material UI - Charts
+      <img src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/1/cloudinary-icon-ug0qqy8ms6ozyzy6cntbll.png/cloudinary-icon-hz05evx1htrghud89kpab4.png?_a=DATAiZAAZAA0" width="40" height="40" alt="Cloudinary" /><br/>Cloudinary
     </td>
   </tr>
 </table>
 
-### Development Tools  
+### Development Tools
 <table>
   <tr>
     <td align="center">
@@ -84,7 +82,7 @@ This system enables organizations to:
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="40" height="40" alt="Git" /><br/>Git
     </td>
     <td align="center">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="40" height="40" alt="GitHub" /><br/>GitHub
+      <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="40" height="40" alt="GitHub" /><br/>GitHub
     </td>
     <td align="center">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" width="40" height="40" alt="ESLint" /><br/>ESLint
@@ -94,65 +92,55 @@ This system enables organizations to:
 
 ---
 
-## 👥 User Roles & Features  
+## 👥 Roles & Core Features
 
-### 👨‍💼 Manager Dashboard  
-- ✅ Create tasks with titles, descriptions, and due dates  
-- ✅ Assign tasks to specific employees (**email notifications included**)  
-- ✅ View & track all tasks with **status indicators**  
-- ✅ Monitor overdue tasks visually  
-- ✅ Personal chat with employees *(Upcoming)*  
+### 👨‍💼 Manager Dashboard
+- Create, edit, and delete tasks
+- Assign tasks with due dates and attachments
+- View employee task lists and analytics
+- Manage employees
+- Open chat with any employee
 
-### 👩‍💻 Employee Dashboard  
-- ✅ View assigned tasks  
-- ✅ Mark tasks as complete  
-- ✅ See pending vs. completed tasks  
-- ✅ Get **visual alerts** for overdue tasks  
-- ✅ Receive **task assignment notifications** via email  
+### 👩‍💻 Employee Dashboard
+- View assigned tasks (pending + completed)
+- Mark tasks as complete
+- Access task attachments
+- Chat with manager
 
-### 🔐 Authentication System  
-- ✅ Secure login using **JWT authentication** for managers, employees, and admins  
-- ✅ Role-based access control  
-
-### 🛠️ Admin Features  
-- ✅ Employee management (create/delete/edit)  
-- ✅ Task oversight  
-- ✅ System-wide controls  
-- ✅ **Analytics Dashboard** with **pie chart & bar graph** for:  
-  - Task completion rates  
-  - Pending vs completed tasks distribution  
-- ✅ **Email notifications** when employees mark tasks as complete  
+### 🔐 Authentication
+- JWT-based auth
+- Role-aware routing and access controls
 
 ---
 
-## 🎨 UI & Experience  
-
-- 🌗 **Dark/Light mode toggle** with local-storage-based theme persistence  
-- 📱 **Mobile-responsive design** (optimized for all devices)  
-- ⚡ **Smooth UX** with animations & instant feedback  
-
----
-
-## 🖥️ Screenshots  
-
-| Page | Preview |  
-|------|---------|  
-| **Login Page** | ![Login Page](./screenshots/Screenshot%202025-06-15%20170810.png) |  
-| **Task Creation** | ![Task Creation](./screenshots/Screenshot%202025-06-15%20170828.png) |  
-| **Task View** | ![Task View](./screenshots/Screenshot%202025-07-19%20210155.png) |  
-| **Employee Creation** | ![Employee Creation](./screenshots/Screenshot%202025-06-15%20170847.png) |  
-| **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-07-19%20210230.png) |  
-| **Employee View** | ![Employee View](./screenshots/Screenshot%202025-06-15%20170954.png) |  
-
+## 💬 Chat
+- Real-time messaging with Socket.IO
+- Online presence indicator
+- Mobile-first chat view (list view and conversation view)
 
 ---
 
-## ⏰ Upcoming Features  
-- Real-time chat (employee ↔ manager)  
-- Task Delete/Edit option ✅
-- Due Date Reminder for Employee
-- Task Completion Material Upload (for Employee) - ✅
-- Analytics download feature - ✅
-- Fix Email feature using Email.js library - ⏰
-- Move the backend logic to controllers folder - ✅
-- Improve Admin Authorization in backend for admin operations - ✅
+## 🎨 UI & Experience
+- Dark/light theme support
+- Polished, minimal layout designed for professional use
+- Responsive across desktop, tablet, and mobile
+
+---
+
+## 🖥️ Screenshots
+
+| Page | Preview |
+|------|---------|
+| **Login Page** | ![Login Page](./screenshots/Screenshot%202025-06-15%20170810.png) |
+| **Task Creation** | ![Task Creation](./screenshots/Screenshot%202025-06-15%20170828.png) |
+| **Task View** | ![Task View](./screenshots/Screenshot%202025-07-19%20210155.png) |
+| **Employee Creation** | ![Employee Creation](./screenshots/Screenshot%202025-06-15%20170847.png) |
+| **Employee Directory** | ![Employee Directory](./screenshots/Screenshot%202025-07-19%20210230.png) |
+| **Employee View** | ![Employee View](./screenshots/Screenshot%202025-06-15%20170954.png) |
+
+---
+
+## ⏰ Next Up
+- Frontend email notifications via EmailJS
+- File upload for task completion (employee)
+- Analytics export
