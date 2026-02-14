@@ -29,6 +29,23 @@ const getAllEmployees = async (req, res) => {
   }
 };
 
+//get manager for employee
+const getManager = async (req, res) => {
+  try {
+    const manager = await User.findOne({ role: 'manager' });
+    if (!manager) {
+      return res.status(404).json({ message: 'No manager found' });
+    }
+    res.json({ manager });
+  } catch (error) {
+    console.error('Error fetching manager:', error);
+    return res.status(500).json({
+      msg: 'Error Fetching Manager',
+      error: error.message
+    });
+  }
+};
+
 //create employee 
 const createEmployee = async (req, res) => {
   const { name, email, employeeId, password, role } = req.body;
@@ -94,6 +111,7 @@ const updateEmployee = async (req, res) => {
 module.exports = {
   getEmployees,
   getAllEmployees,
+  getManager,
   createEmployee,
   deleteEmployee,
   updateEmployee

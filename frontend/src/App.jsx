@@ -13,8 +13,10 @@ import Analytics from './components/charts/Analytics';
 import axios from 'axios';
 import LoadingScreen from './components/LoadingScreen';
 import ChatPage from './chat/ChatPage';
+import useAuth from './statemanagement/useAuth';
 
 function App() {
+  const { setUser, clearUser } = useAuth();
   const [authChecked, setAuthChecked] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,9 +32,11 @@ function App() {
         withCredentials: true
       });
       setUserData(response.data.user);
+      setUser(response.data.user);
     } catch (error) {
       console.error('Auth check failed:', error.response?.data || error.message);
       setUserData(null);
+      clearUser();
     } finally {
       setLoading(false);
     }

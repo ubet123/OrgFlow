@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/themeContext';
 import Search from './Search';
 import User from './User';
+import useAuth from '../../statemanagement/useAuth';
 
-export default function Left({ onUserSelect }) {
+export default function Left() {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('');
-  const [loadingRole, setLoadingRole] = useState(true);
+  const { user } = useAuth();
+  const userRole = user?.role || '';
+  const loadingRole = !user;
   const [searchTerm, setSearchTerm] = useState('');
-  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
   const containerStyles = theme === 'dark'
     ? 'bg-black text-white border-white'
@@ -21,23 +21,6 @@ export default function Left({ onUserSelect }) {
     ? 'text-emerald-300 bg-neutral-900/70 border border-emerald-400/20 hover:bg-neutral-800'
     : 'text-emerald-700 bg-white border border-emerald-200 hover:bg-neutral-100';
   const backButtonText = loadingRole ? 'Loading...' : 'Back to Dashboard';
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/auth/check-auth`, {
-          withCredentials: true
-        });
-        setUserRole(response.data.user?.role || '');
-      } catch (error) {
-        setUserRole('');
-      } finally {
-        setLoadingRole(false);
-      }
-    };
-
-    fetchRole();
-  }, [API_URL]);
 
   const handleBackToDashboard = () => {
     const targetPath = userRole === 'manager' ? '/manager-dashboard' : '/employee-dashboard';
@@ -70,10 +53,10 @@ export default function Left({ onUserSelect }) {
             <span>{backButtonText}</span>
           </button>
         </div>
-         <h1 className="font-bold text-2xl px-3 mt-3">My Chats</h1>
+         <h1 className="font-bold text-3xl px-3 mb-3 mt-7">My Chats</h1>
        <Search value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
        <hr className={`mb-3 mt-2 border-t ${dividerStyles}`} />
-      <User searchTerm={searchTerm} onUserSelect={onUserSelect} />
+       <User searchTerm={searchTerm} userRole={userRole} />
     </div>
     </>
   );

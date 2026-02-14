@@ -4,6 +4,7 @@ const { verifyToken, requireAdmin } = require('../utils/auth');
 const {
   getEmployees,
   getAllEmployees,
+  getManager,
   createEmployee,
   deleteEmployee,
   updateEmployee
@@ -14,6 +15,9 @@ router.get('/employees', requireAdmin, getEmployees);
 
 //get all employees (full details)
 router.get('/allemployees', requireAdmin, getAllEmployees);
+
+//get manager (for employees)
+router.get('/manager', verifyToken, getManager);
 
 //create employee
 router.post('/create', requireAdmin, createEmployee);

@@ -1,36 +1,55 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useTheme } from '../../context/themeContext';
+import { useNavigate } from 'react-router-dom';
+import useConversation from '../../statemanagement/useConversation';
 
-const User = ({ searchTerm = '', onUserSelect }) => {
+const User = ({ searchTerm = '', userRole = '' }) => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
+  const { selectedConversation, setSelectedConversation } = useConversation();
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/user/allemployees`, {
-          withCredentials: true
-        });
+        let response;
 
-        const rawUsers = response.data.users || response.data.employees || [];
-        const filteredUsers = rawUsers.filter((user) => user.role !== 'manager');
-        setUsers(filteredUsers);
+        if (userRole === 'manager') {
+          // Managers can chat with all employees
+          response = await axios.get(`${API_URL}/user/allemployees`, {
+            withCredentials: true
+          });
+          const rawUsers = response.data.users || response.data.employees || [];
+          const filteredUsers = rawUsers.filter((user) => user.role !== 'manager');
+          setUsers(filteredUsers);
+        } else {
+          // Non-managers (employees) can only chat with their manager
+          response = await axios.get(`${API_URL}/user/manager`, {
+            withCredentials: true
+          });
+          const manager = response.data.manager ? [response.data.manager] : [];
+          setUsers(manager);
+        }
       } catch (err) {
         console.error('Error fetching users:', err);
-        setError('Failed to load users');
+        setError(err.response?.status === 403 ? 'Access denied' : 'Failed to load users');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
-  }, [API_URL]);
+    if (userRole) {
+      fetchUsers();
+    }
+  }, [API_URL, userRole]);
 
   const cardHover = theme === 'dark' ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-300';
+  const cardSelected = theme === 'dark' ? 'bg-neutral-800/80' : 'bg-emerald-50';
   const avatarStyles = theme === 'dark'
     ? 'bg-neutral-700 text-white'
     : 'bg-emerald-100 text-emerald-700';
@@ -62,12 +81,16 @@ const User = ({ searchTerm = '', onUserSelect }) => {
             .map((part) => part[0].toUpperCase())
             .join('')
         : 'U';
+      const isSelected = selectedConversation?._id === user._id;
 
       return (
         <div
-          onClick={() => onUserSelect?.(user)}
+          onClick={() => {
+            setSelectedConversation(user);
+            navigate(`/chat/${user._id}`);
+          }}
           key={user._id}
-          className={`flex items-center gap-3 px-3 py-4 cursor-pointer ${cardHover}`}
+          className={`flex items-center gap-3 px-3 py-4 cursor-pointer ${isSelected ? cardSelected : ''} ${cardHover}`}
         >
           <div className="relative">
             <div className={`h-11 w-11 rounded-full flex items-center justify-center text-sm font-semibold ${avatarStyles}`}>
@@ -82,7 +105,7 @@ const User = ({ searchTerm = '', onUserSelect }) => {
         </div>
       );
     });
-  }, [filteredUsers, avatarStyles, cardHover, nameStyles, statusBorder, subTextStyles]);
+  }, [avatarStyles, cardHover, cardSelected, filteredUsers, nameStyles, navigate, selectedConversation, setSelectedConversation, statusBorder, subTextStyles]);
 
   if (loading) {
     return <div className={`px-3 py-4 text-sm ${subTextStyles}`}>Loading users...</div>;

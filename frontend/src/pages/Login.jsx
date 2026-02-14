@@ -89,20 +89,30 @@ const Login = ({ onLogin }) => {
               <label htmlFor="password" className="block text-sm font-medium text-neutral-300 mb-1">
                 Password
               </label>
-            <div className="flex flex-row items-center gap-3">
- <input
-  id="password"
-  type={showPassword ? "text" : "password"}
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-  className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white placeholder-neutral-500 transition-all"
-  placeholder="••••••••"
-  required
-/>
-
-  {showPassword?<GoEyeClosed title='Hide' onClick={()=>setShowPassword(prev=>!prev)} className="text-neutral-500 cursor-pointer text-2xl"/>:<GoEye title='Show' onClick={()=>setShowPassword(prev=>!prev)} className="text-neutral-500 cursor-pointer text-2xl"/>}
-  
-</div>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 pr-12 rounded-lg bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-white placeholder-neutral-500 transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  title={showPassword ? 'Hide' : 'Show'}
+                >
+                  {showPassword ? (
+                    <GoEyeClosed className="text-2xl" />
+                  ) : (
+                    <GoEye className="text-2xl" />
+                  )}
+                </button>
+              </div>
 
               
             </div>

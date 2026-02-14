@@ -244,7 +244,7 @@ const TasksTable = () => {
 
   return (
     <>
-      <div className={`mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] -ml-3 sm:-ml-16 mx-auto ${containerStyles}`}>
+      <div className={`mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden w-full max-w-6xl mx-auto px-3 sm:px-6 ${containerStyles}`}>
         <div className="py-6 px-4 sm:py-8 sm:px-6 md:px-10 lg:px-16 xl:px-20">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
             <h2 className={`text-xl sm:text-2xl font-bold ${accentColor}`}>Assigned Tasks</h2>
