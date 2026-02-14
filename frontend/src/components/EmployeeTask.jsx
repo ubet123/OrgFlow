@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useTheme } from '../context/themeContext';
 import { CgAttachment } from "react-icons/cg";
+import useEmail from '../hooks/useEmail';
 
 const EmployeeTask = ({employee}) => {
   const [tasks, setTasks] = useState([]);
@@ -14,6 +15,7 @@ const EmployeeTask = ({employee}) => {
   const [taskAttachments, setTaskAttachments] = useState({});
   const [loadingAttachments, setLoadingAttachments] = useState({});
   const { theme } = useTheme();
+  const { sendTaskCompletedEmail } = useEmail();
 
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -180,6 +182,9 @@ const EmployeeTask = ({employee}) => {
         withCredentials: true 
       });
       
+      // Find the completed task for email notification
+      const completedTask = tasks.find(task => task.taskId === taskId);
+      
       setTasks(tasks.map(task => 
         task.taskId === taskId ? { ...task, status: 'Completed' } : task
       ));
@@ -188,6 +193,20 @@ const EmployeeTask = ({employee}) => {
         position: "top-right",
         autoClose: 3000,
       });
+
+      // Send email notification to admin
+      if (completedTask) {
+        sendTaskCompletedEmail({
+          taskId: completedTask.taskId,
+          title: completedTask.title,
+          employeeName: employee?.name || 'Employee',
+          completedDate: new Date().toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          })
+        });
+      }
 
     } catch (error) {
       console.error('Error marking task complete:', error);

@@ -1,6 +1,6 @@
 import React, { useMemo , useRef , useEffect } from 'react';
 import { useTheme } from '../../context/themeContext';
-import useGetMessage from '../../context/useGetMessage';
+import useGetMessage from '../../hooks/useGetMessage';
 import useAuth from '../../statemanagement/useAuth';
 import useGetSocketMessage from '../../context/useGetSocketMessage';
 

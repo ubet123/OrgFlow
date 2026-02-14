@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../context/themeContext';
 import { IoSend } from "react-icons/io5";
-import useSendMessage from '../../context/useSendMessage';
+import useSendMessage from '../../hooks/useSendMessage';
 const TypeMessage = ({ className = '' }) => {
   const { theme } = useTheme();
   const { sendMessage, loading } = useSendMessage();

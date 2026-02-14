@@ -4,7 +4,7 @@ const Tasks = require('../models/task');
 //get all employees 
 const getEmployees = async (req, res) => {
   try {
-    const users = await User.find({}, 'id name role'); 
+    const users = await User.find({}, 'id name role email'); 
     res.json({ users }); 
   } catch (error) {
     console.error('Error fetching employees:', error);

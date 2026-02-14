@@ -4,6 +4,7 @@ import { useTheme } from '../context/themeContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useEmail from '../hooks/useEmail';
 
 const TaskCreate = () => {
   const [employees, setEmployees] = useState([]);
@@ -12,6 +13,7 @@ const TaskCreate = () => {
   const [uploadProgress, setUploadProgress] = useState({});
   const fileInputRef = useRef(null);
   const { theme } = useTheme();
+  const { sendTaskAssignedEmail } = useEmail();
 
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -118,6 +120,15 @@ const TaskCreate = () => {
     return (bytes / 1048576).toFixed(1) + ' MB';
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
   const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitting(true);
@@ -169,6 +180,25 @@ const TaskCreate = () => {
     // Show attachment count if any
     if (files.length > 0 && response.data.task?.attachments?.length > 0) {
       toast.info(`${response.data.task.attachments.length} file(s) attached to the task`);
+    }
+
+    // Send email notification to assigned employee
+    console.log('Looking for employee:', taskForm.assignedTo);
+    console.log('Available employees:', employees);
+    const assignedEmployee = employees.find(emp => emp.name === taskForm.assignedTo);
+    console.log('Found employee:', assignedEmployee);
+    
+    if (assignedEmployee?.email) {
+      console.log('Attempting to send email to:', assignedEmployee.email);
+      sendTaskAssignedEmail(assignedEmployee.email, {
+        taskId: response.data.task.taskId,
+        title: response.data.task.title,
+        description: response.data.task.description,
+        dueDate: formatDate(response.data.task.dueDate),
+        employeeName: assignedEmployee.name
+      });
+    } else {
+      console.log('No email found for employee or employee not found');
     }
 
     // Reset form
