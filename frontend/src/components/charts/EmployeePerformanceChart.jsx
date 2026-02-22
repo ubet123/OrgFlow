@@ -142,8 +142,8 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
       id="employee-performance-chart"
       sx={{
         width: '100%',
-        borderRadius: '12px',
-        p: 3,
+        borderRadius: { xs: '8px', sm: '12px' },
+        p: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         position: 'relative',
         ...containerStyles,
@@ -156,11 +156,11 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
   onClick={downloadPDF}
   sx={{
     position: 'absolute',
-    top: 16,
-    right: 16,
+    top: { xs: 8, sm: 12, md: 16 },
+    right: { xs: 8, sm: 12, md: 16 },
     minWidth: 'auto',
-    width: 40,
-    height: 40,
+    width: { xs: 32, sm: 36, md: 40 },
+    height: { xs: 32, sm: 36, md: 40 },
     borderRadius: '8px',
     backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
     color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
@@ -184,13 +184,19 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
 >
   <DownloadIcon 
     sx={{ 
-      fontSize: 20,
+      fontSize: { xs: 16, sm: 18, md: 20 },
       color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
     }} 
   />
 </Button>
 
-      <h1 className={`text-2xl font-bold mb-4 ml-2 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'}`}>
+      <h1 style={{
+        fontSize: 'clamp(1.125rem, 4vw, 1.5rem)',
+        fontWeight: 'bold',
+        marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
+        marginLeft: 'clamp(0.25rem, 1vw, 0.5rem)',
+        color: theme === 'dark' ? '#34d399' : '#059669'
+      }}>
         Employee Performance
       </h1>
       {employeePerformance.length > 0 ? (
@@ -198,12 +204,12 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
           dataset={employeePerformance}
           xAxis={chartData.xAxis}
           series={chartData.series}
-          height={350}
+          height={window.innerWidth < 640 ? 250 : window.innerWidth < 1024 ? 300 : 350}
           slotProps={{
             legend: {
               labelStyle: {
                 fill: textColor,
-                fontSize: 14,
+                fontSize: window.innerWidth < 640 ? 11 : 14,
               },
             },
           }}
@@ -213,15 +219,27 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
             },
             '& .MuiChartsAxis-root .MuiChartsAxis-tickLabel': {
               fill: textColor,
-              fontSize: 12,
+              fontSize: { xs: 10, sm: 11, md: 12 },
+              angle: window.innerWidth < 768 ? -45 : 0,
             },
             '& .MuiChartsAxis-root .MuiChartsAxis-line': {
               stroke: textColor,
             },
           }}
+          margin={{
+            left: window.innerWidth < 640 ? 40 : 50,
+            right: window.innerWidth < 640 ? 10 : 20,
+            top: window.innerWidth < 640 ? 60 : 70,
+            bottom: window.innerWidth < 768 ? 80 : 50,
+          }}
         />
       ) : (
-        <div className={`text-center py-8 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
+        <div style={{
+          textAlign: 'center',
+          padding: 'clamp(1rem, 3vw, 2rem)',
+          color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+          fontSize: 'clamp(0.875rem, 2.5vw, 1rem)'
+        }}>
           No task data available for employees
         </div>
       )}

@@ -237,7 +237,7 @@ OrgFlow is a comprehensive workplace solution designed for modern teams to:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/orgflow.git
+git clone https://github.com/ubet123/orgflow.git
 cd orgflow
 ```
 
@@ -524,10 +524,6 @@ OrgFlow/
 - [ ] **Task Comments**: Thread-based discussions on tasks
 - [ ] **File Uploads on Completion**: Employees upload deliverables
 - [ ] **Push Notifications**: Browser notifications for task events
-- [ ] **Analytics Export**: Download reports as PDF/CSV
-- [ ] **Task Templates**: Reusable task structures
-- [ ] **Calendar View**: Visual timeline of tasks
-- [ ] **Activity Logs**: Audit trail of all actions
 - [ ] **Bulk Operations**: Multi-select task actions
 - [ ] **Advanced Search**: Filter tasks by multiple criteria
 - [ ] **User Profiles**: Avatar, bio, contact info

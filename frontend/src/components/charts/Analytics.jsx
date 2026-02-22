@@ -3,6 +3,9 @@ import axios from 'axios';
 import PieChartAdmin from './PieChartAdmin';
 import EmployeePerformanceChart from './EmployeePerformanceChart';
 import TasksTimelineChart from './TasksTimelineChart';
+import TaskCompletionRateChart from './TaskCompletionRateChart';
+import OverdueTasksGauge from './OverdueTasksGauge';
+import SummaryStatisticsCards from './SummaryStatisticsCards';
 import { useTheme } from '../../context/themeContext';
 
 const Analytics = () => {
@@ -40,7 +43,7 @@ const Analytics = () => {
     };
 
     fetchAndProcessTasks();
-  }, []);
+  }, [API_URL]);
 
   // Custom styles for theme
   const containerStyles = theme === 'dark'
@@ -52,13 +55,13 @@ const Analytics = () => {
   const dividerColor = theme === 'dark' ? 'bg-white/20' : 'bg-neutral-400/30';
 
   return (
-    <div className={`p-4 rounded-lg border backdrop-blur-sm w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] mx-auto mt-10 ${containerStyles}`}>
+    <div className={`p-2 sm:p-4 rounded-lg border backdrop-blur-sm w-[98vw] sm:w-[95vw] md:w-[90vw] lg:w-[85vw] xl:w-[80vw] mx-auto mt-4 sm:mt-6 md:mt-10 ${containerStyles}`}>
       
-      <h1 className={`text-xl sm:text-4xl font-bold ml-3 mb-4 mt-6 sm:mb-6 ${accentColor}`}>
+      <h1 className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold ml-1 sm:ml-2 md:ml-3 mb-3 sm:mb-4 md:mb-6 mt-4 sm:mt-6 ${accentColor}`}>
         Analytics
       </h1>
 
-      <div className="relative mt-6 mb-14">
+      <div className="relative mt-4 sm:mt-6 mb-8 sm:mb-10 md:mb-14">
         <div className={`absolute bottom-0 left-0 w-full h-px ${dividerColor}`}></div>
       </div>
 
@@ -67,22 +70,43 @@ const Analytics = () => {
           <div className={`animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-t-2 border-b-2 ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
         </div>
       ) : (
-        <div className="flex flex-col  gap-6">
-          {/* Task Status Pie Chart */}
-          <div className="lg:col-span-2">
-            <PieChartAdmin completed={complete} pending={pending} />
+        <div className="flex flex-col gap-4 sm:gap-6">
+          {/* Summary Statistics Cards - Full Width */}
+          <div className="w-full">
+            <SummaryStatisticsCards 
+              tasks={tasksData} 
+              employees={employeesData} 
+            />
+          </div>
+
+          {/* Two Column Grid for Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            {/* Task Status Pie Chart */}
+            <div>
+              <PieChartAdmin completed={complete} pending={pending} />
+            </div>
+            
+            {/* Overdue Tasks Gauge */}
+            <div>
+              <OverdueTasksGauge tasks={tasksData} />
+            </div>
+          </div>
+
+          {/* Task Completion Rate Line Chart - Full Width */}
+          <div className="w-full">
+            <TaskCompletionRateChart tasks={tasksData} />
           </div>
           
-          {/* Employee Performance Bar Chart */}
-          <div className="lg:col-span-1">
+          {/* Employee Performance Bar Chart - Full Width */}
+          <div className="w-full">
             <EmployeePerformanceChart 
               tasks={tasksData} 
               employees={employeesData} 
             />
           </div>
           
-          {/* Tasks Timeline Chart */}
-          <div className="lg:col-span-1">
+          {/* Tasks Timeline Chart - Full Width */}
+          <div className="w-full">
             <TasksTimelineChart tasks={tasksData} />
           </div>
         </div>

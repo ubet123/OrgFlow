@@ -127,8 +127,8 @@ function PieChartAdmin({ completed, pending }) {
       id="pie-chart-admin"
       sx={{
         width: '100%',
-        borderRadius: '12px',
-        p: 3,
+        borderRadius: { xs: '8px', sm: '12px' },
+        p: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         position: 'relative',
         ...containerStyles,
@@ -141,11 +141,11 @@ function PieChartAdmin({ completed, pending }) {
         onClick={downloadPDF}
         sx={{
           position: 'absolute',
-          top: 16,
-          right: 16,
+          top: { xs: 8, sm: 12, md: 16 },
+          right: { xs: 8, sm: 12, md: 16 },
           minWidth: 'auto',
-          width: 40,
-          height: 40,
+          width: { xs: 32, sm: 36, md: 40 },
+          height: { xs: 32, sm: 36, md: 40 },
           borderRadius: '8px',
           backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
           color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
@@ -169,63 +169,69 @@ function PieChartAdmin({ completed, pending }) {
       >
         <DownloadIcon 
           sx={{ 
-            fontSize: 20,
+            fontSize: { xs: 16, sm: 18, md: 20 },
             color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
           }} 
         />
       </Button>
 
       <h1
-        className={`text-2xl font-bold mb-2 ml-2 ${
-          theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'
-        }`}
+        style={{
+          fontSize: 'clamp(1.125rem, 4vw, 1.5rem)',
+          fontWeight: 'bold',
+          marginBottom: 'clamp(0.5rem, 2vw, 1rem)',
+          marginLeft: 'clamp(0.25rem, 1vw, 0.5rem)',
+          color: theme === 'dark' ? '#34d399' : '#059669'
+        }}
       >
         Task Status
       </h1>
-      <PieChart
-        series={[
-          {
-            data: tasksStatus,
-            innerRadius: 50,
-            arcLabel: (params) => params.label ?? '',
-            arcLabelMinAngle: 20,
-            valueFormatter,
-            highlightScope: { faded: 'global', highlight: 'item' },
-            faded: {
-              innerRadius: 30,
-              additionalRadius: -30,
-              color: theme === 'dark' ? '#404040' : '#d4d4d4',
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <PieChart
+          series={[
+            {
+              data: tasksStatus,
+              innerRadius: window.innerWidth < 640 ? 30 : 50,
+              arcLabel: (params) => params.label ?? '',
+              arcLabelMinAngle: 20,
+              valueFormatter,
+              highlightScope: { faded: 'global', highlight: 'item' },
+              faded: {
+                innerRadius: window.innerWidth < 640 ? 20 : 30,
+                additionalRadius: -30,
+                color: theme === 'dark' ? '#404040' : '#d4d4d4',
+              },
             },
-          },
-        ]}
-        slotProps={{
-          legend: {
-            labelStyle: {
+          ]}
+          slotProps={{
+            legend: {
+              labelStyle: {
+                fill: textColor,
+                fontSize: window.innerWidth < 640 ? 11 : 14,
+              },
+              itemMarkWidth: window.innerWidth < 640 ? 8 : 10,
+              itemMarkHeight: window.innerWidth < 640 ? 8 : 10,
+              markGap: window.innerWidth < 640 ? 4 : 5,
+              itemGap: window.innerWidth < 640 ? 8 : 10,
+            },
+          }}
+          sx={{
+            '& .MuiChartsLegend-root': {
+              color: `${textColor} !important`,
+            },
+            '& .MuiChartsLegend-series text': {
+              fill: `${textColor} !important`,
+            },
+            '& .MuiChartsArc-label': {
               fill: textColor,
-              fontSize: 14,
+              fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.8rem' },
+              fontWeight: 'bold',
             },
-            itemMarkWidth: 10,
-            itemMarkHeight: 10,
-            markGap: 5,
-            itemGap: 10,
-          },
-        }}
-        sx={{
-          '& .MuiChartsLegend-root': {
-            color: `${textColor} !important`,
-          },
-          '& .MuiChartsLegend-series text': {
-            fill: `${textColor} !important`,
-          },
-          '& .MuiChartsArc-label': {
-            fill: textColor,
-            fontSize: '0.8rem',
-            fontWeight: 'bold',
-          },
-        }}
-        height={300}
-        width={300}
-      />
+          }}
+          height={window.innerWidth < 640 ? 220 : window.innerWidth < 1024 ? 260 : 300}
+          width={Math.min(300, window.innerWidth - 60)}
+        />
+      </div>
     </Box>
   );
 }
