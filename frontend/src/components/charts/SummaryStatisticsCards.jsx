@@ -9,6 +9,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleIcon from '@mui/icons-material/People';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SpeedIcon from '@mui/icons-material/Speed';
+import { GiConfirmed } from "react-icons/gi";
 
 const SummaryStatisticsCards = () => {
   const { theme } = useTheme();
@@ -223,7 +224,8 @@ const SummaryStatisticsCards = () => {
           gap: 'clamp(4px, 1.5vw, 6px)',
           lineHeight: 1.4
         }}>
-          <span style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>💡</span>
+        
+        <GiConfirmed style={{ color: theme === 'dark' ? '#34d399' : '#059669', fontSize: '1.25rem' }} />
           <span>
             <strong style={{ color: textColor }}>{completedTasks}</strong> of <strong style={{ color: textColor }}>{totalTasks}</strong> tasks completed
             {overdueTasks > 0 && (
