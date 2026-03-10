@@ -390,6 +390,67 @@ const addTaskAttachments = async (req, res) => {
     }
 };
 
+// Get analytics statistics
+const getAnalyticsStats = async (req, res) => {
+  try {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const [tasks, employees] = await Promise.all([
+      Tasks.find({}),
+      Users.find({ role: { $ne: 'manager' } }, 'name')
+    ]);
+
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.status === 'Completed').length;
+    const inProgressTasks = tasks.filter(t => t.status === 'In Progress').length;
+    const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    const overdueTasks = tasks.filter(t => {
+      const dueDate = new Date(t.due);
+      dueDate.setHours(0, 0, 0, 0);
+      return t.status !== 'Completed' && dueDate < now;
+    }).length;
+
+    // Average completion time in days
+    const completedWithDates = tasks.filter(t =>
+      t.status === 'Completed' && t.createdAt && t.updatedAt
+    );
+    const avgCompletionTime = completedWithDates.length > 0
+      ? Math.round(
+          completedWithDates.reduce((acc, t) => {
+            const days = Math.max(0, Math.ceil((new Date(t.updatedAt) - new Date(t.createdAt)) / (1000 * 60 * 60 * 24)));
+            return acc + days;
+          }, 0) / completedWithDates.length
+        )
+      : 0;
+
+    // Active employees (those with at least one task)
+    const assignedNames = new Set(tasks.map(t => t.assigned));
+    const activeEmployees = employees.filter(e => assignedNames.has(e.name)).length;
+
+    res.json({
+      success: true,
+      stats: {
+        totalTasks,
+        completedTasks,
+        inProgressTasks,
+        completionRate,
+        overdueTasks,
+        avgCompletionTime,
+        activeEmployees
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching analytics stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching analytics stats',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   createTask,
   getAllTasks,
@@ -398,5 +459,6 @@ module.exports = {
   getAdminEmpTasks,
   editTask,
   deleteTask,
-  addTaskAttachments
+  addTaskAttachments,
+  getAnalyticsStats
 };

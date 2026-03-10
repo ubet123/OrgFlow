@@ -156,6 +156,7 @@ const TasksTimelineChart = ({ tasks }) => {
       id="tasks-timeline-chart"
       sx={{
         width: '100%',
+        overflow: 'hidden',
         borderRadius: { xs: '8px', sm: '12px' },
         p: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
@@ -217,36 +218,42 @@ const TasksTimelineChart = ({ tasks }) => {
         <LineChart
           xAxis={chartData.xAxis}
           series={chartData.series}
-          height={window.innerWidth < 640 ? 250 : window.innerWidth < 1024 ? 300 : 350}
+          height={300}
           slotProps={{
             legend: {
               labelStyle: {
                 fill: textColor,
-                fontSize: window.innerWidth < 640 ? 11 : 14,
+                fontSize: 12,
               },
             },
           }}
           sx={{
+            maxWidth: '100%',
             '& .MuiChartsLegend-root': {
               color: `${textColor} !important`,
             },
+            '& .MuiChartsLegend-series text': {
+              fill: `${textColor} !important`,
+            },
             '& .MuiChartsAxis-root .MuiChartsAxis-tickLabel': {
-              fill: textColor,
-              fontSize: { xs: 10, sm: 11, md: 12 },
-              angle: window.innerWidth < 768 ? -45 : 0,
+              fill: `${textColor} !important`,
+              fontSize: { xs: 9, sm: 10, md: 12 },
             },
             '& .MuiChartsAxis-root .MuiChartsAxis-line': {
-              stroke: textColor,
+              stroke: `${textColor} !important`,
+            },
+            '& .MuiChartsAxis-root .MuiChartsAxis-tick': {
+              stroke: `${textColor} !important`,
             },
             '& .MuiMarkElement-root': {
               strokeWidth: 2,
             },
           }}
           margin={{
-            left: window.innerWidth < 640 ? 40 : 50,
-            right: window.innerWidth < 640 ? 10 : 20,
-            top: window.innerWidth < 640 ? 60 : 70,
-            bottom: window.innerWidth < 768 ? 80 : 50,
+            left: 45,
+            right: 15,
+            top: 60,
+            bottom: 70,
           }}
         />
       ) : (

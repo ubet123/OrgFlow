@@ -10,7 +10,8 @@ const {
   getAdminEmpTasks,
   editTask,
   deleteTask,
-  addTaskAttachments
+  addTaskAttachments,
+  getAnalyticsStats
 } = require('../controllers/taskController');
 
 // Create Task with attachments
@@ -45,5 +46,8 @@ router.put('/edittask/:taskId', requireAdmin, editTask);
 
 // Delete Task by Admin
 router.delete('/deleteTask/:taskId', requireAdmin, deleteTask);
+
+// Get analytics statistics
+router.get('/analytics/stats', requireAdmin, getAnalyticsStats);
 
 module.exports = router;

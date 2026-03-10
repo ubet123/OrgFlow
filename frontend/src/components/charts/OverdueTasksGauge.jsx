@@ -105,6 +105,7 @@ const OverdueTasksGauge = ({ tasks }) => {
       id="overdue-tasks-gauge"
       sx={{
         ...containerStyles,
+        overflow: 'hidden',
         borderRadius: { xs: '8px', sm: '12px' },
         padding: { xs: '12px', sm: '16px', md: '20px' },
         boxShadow: theme === 'dark' 
@@ -114,14 +115,14 @@ const OverdueTasksGauge = ({ tasks }) => {
     >
       <div style={{ 
         display: 'flex', 
-        flexDirection: window.innerWidth < 640 ? 'column' : 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-between', 
-        alignItems: window.innerWidth < 640 ? 'flex-start' : 'center',
+        alignItems: 'center',
         marginBottom: 'clamp(12px, 3vw, 16px)',
         gap: '8px'
       }}>
         <h2 style={{ 
-          color: textColor, 
+          color: theme === 'dark' ? '#34d399' : '#059669', 
           fontSize: 'clamp(1rem, 4vw, 1.25rem)',
           fontWeight: 'bold',
           margin: 0,
@@ -154,21 +155,25 @@ const OverdueTasksGauge = ({ tasks }) => {
         </Button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(12px, 3vw, 20px)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(12px, 3vw, 20px)', overflow: 'hidden', width: '100%' }}>
         <Gauge
           value={overduePercentage}
           valueMax={100}
           startAngle={-110}
           endAngle={110}
-          width={Math.min(280, window.innerWidth - 80)}
-          height={Math.min(200, window.innerWidth * 0.55)}
+          width={250}
+          height={180}
           text={({ value }) => `${value}%`}
           sx={{
+            maxWidth: '100%',
             [`& .${gaugeClasses.valueText}`]: {
-              fontSize: { xs: 28, sm: 34, md: 40 },
+              fontSize: 36,
               transform: 'translate(0px, 0px)',
-              fill: textColor,
+              fill: `${textColor} !important`,
               fontWeight: 'bold',
+            },
+            [`& .${gaugeClasses.valueText} text`]: {
+              fill: `${textColor} !important`,
             },
             [`& .${gaugeClasses.valueArc}`]: {
               fill: gaugeColor,

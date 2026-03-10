@@ -127,6 +127,7 @@ function PieChartAdmin({ completed, pending }) {
       id="pie-chart-admin"
       sx={{
         width: '100%',
+        overflow: 'hidden',
         borderRadius: { xs: '8px', sm: '12px' },
         p: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
@@ -186,18 +187,17 @@ function PieChartAdmin({ completed, pending }) {
       >
         Task Status
       </h1>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
         <PieChart
           series={[
             {
               data: tasksStatus,
-              innerRadius: window.innerWidth < 640 ? 30 : 50,
-              arcLabel: (params) => params.label ?? '',
-              arcLabelMinAngle: 20,
+              innerRadius: 30,
+              arcLabel: () => null,
               valueFormatter,
               highlightScope: { faded: 'global', highlight: 'item' },
               faded: {
-                innerRadius: window.innerWidth < 640 ? 20 : 30,
+                innerRadius: 20,
                 additionalRadius: -30,
                 color: theme === 'dark' ? '#404040' : '#d4d4d4',
               },
@@ -207,12 +207,12 @@ function PieChartAdmin({ completed, pending }) {
             legend: {
               labelStyle: {
                 fill: textColor,
-                fontSize: window.innerWidth < 640 ? 11 : 14,
+                fontSize: 12,
               },
-              itemMarkWidth: window.innerWidth < 640 ? 8 : 10,
-              itemMarkHeight: window.innerWidth < 640 ? 8 : 10,
-              markGap: window.innerWidth < 640 ? 4 : 5,
-              itemGap: window.innerWidth < 640 ? 8 : 10,
+              itemMarkWidth: 8,
+              itemMarkHeight: 8,
+              markGap: 4,
+              itemGap: 8,
             },
           }}
           sx={{
@@ -223,13 +223,12 @@ function PieChartAdmin({ completed, pending }) {
               fill: `${textColor} !important`,
             },
             '& .MuiChartsArc-label': {
-              fill: textColor,
+              fill: `${textColor} !important`,
               fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.8rem' },
               fontWeight: 'bold',
             },
           }}
-          height={window.innerWidth < 640 ? 220 : window.innerWidth < 1024 ? 260 : 300}
-          width={Math.min(300, window.innerWidth - 60)}
+          height={260}
         />
       </div>
     </Box>

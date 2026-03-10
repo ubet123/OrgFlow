@@ -122,6 +122,7 @@ const TaskCompletionRateChart = ({ tasks }) => {
       id="task-completion-rate-chart"
       sx={{
         ...containerStyles,
+        overflow: 'hidden',
         borderRadius: { xs: '8px', sm: '12px' },
         padding: { xs: '12px', sm: '16px', md: '20px' },
         boxShadow: theme === 'dark' 
@@ -131,14 +132,14 @@ const TaskCompletionRateChart = ({ tasks }) => {
     >
       <div style={{ 
         display: 'flex', 
-        flexDirection: window.innerWidth < 640 ? 'column' : 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-between', 
-        alignItems: window.innerWidth < 640 ? 'flex-start' : 'center',
+        alignItems: 'center',
         marginBottom: 'clamp(12px, 3vw, 16px)',
         gap: '8px'
       }}>
         <h2 style={{ 
-          color: textColor, 
+          color: theme === 'dark' ? '#34d399' : '#059669', 
           fontSize: 'clamp(1rem, 4vw, 1.25rem)',
           fontWeight: 'bold',
           margin: 0
@@ -172,8 +173,7 @@ const TaskCompletionRateChart = ({ tasks }) => {
           data: monthlyData.map(d => d.label),
           tickLabelStyle: {
             fill: textColor,
-            fontSize: window.innerWidth < 640 ? 10 : 12,
-            angle: window.innerWidth < 640 ? -45 : 0,
+            fontSize: 10,
           }
         }]}
         series={[
@@ -186,26 +186,27 @@ const TaskCompletionRateChart = ({ tasks }) => {
             showMark: true,
           },
         ]}
-        height={window.innerWidth < 640 ? 250 : window.innerWidth < 1024 ? 280 : 300}
+        height={280}
         margin={{ 
-          left: window.innerWidth < 640 ? 40 : 50, 
-          right: window.innerWidth < 640 ? 10 : 20, 
+          left: 45, 
+          right: 15, 
           top: 20, 
-          bottom: window.innerWidth < 640 ? 60 : 50 
+          bottom: 55 
         }}
         sx={{
+          maxWidth: '100%',
           '& .MuiChartsAxis-line': {
-            stroke: textColor,
+            stroke: `${textColor} !important`,
           },
           '& .MuiChartsAxis-tick': {
-            stroke: textColor,
+            stroke: `${textColor} !important`,
           },
           '& .MuiChartsAxis-tickLabel': {
-            fill: textColor,
+            fill: `${textColor} !important`,
           },
           '& .MuiChartsLegend-series text': {
             fill: `${textColor} !important`,
-            fontSize: { xs: '0.75rem', sm: '0.875rem' }
+            fontSize: '0.8rem',
           },
         }}
         slotProps={{
@@ -215,7 +216,7 @@ const TaskCompletionRateChart = ({ tasks }) => {
             padding: 0,
             labelStyle: {
               fill: textColor,
-              fontSize: window.innerWidth < 640 ? 11 : 14,
+              fontSize: 12,
             },
           },
         }}

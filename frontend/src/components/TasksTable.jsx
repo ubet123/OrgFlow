@@ -21,6 +21,7 @@ const TasksTable = () => {
   const [employees, setEmployees] = useState([]);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('All');
   const navigate = useNavigate();
   const { theme } = useTheme();
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -124,20 +125,25 @@ const TasksTable = () => {
   };
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setFilteredTasks(tasks);
-    } else {
+    let filtered = tasks;
+
+    if (statusFilter !== 'All') {
+      filtered = filtered.filter(task => task.status === statusFilter);
+    }
+
+    if (searchTerm.trim() !== '') {
       const lowercasedSearch = searchTerm.toLowerCase();
-      const filtered = tasks.filter(task => 
+      filtered = filtered.filter(task => 
         task.taskId.toLowerCase().includes(lowercasedSearch) ||
         task.assigned.toLowerCase().includes(lowercasedSearch) ||
         task.title.toLowerCase().includes(lowercasedSearch) ||
         task.description.toLowerCase().includes(lowercasedSearch)
       );
-      setFilteredTasks(filtered);
     }
+
+    setFilteredTasks(filtered);
     setCurrentPage(1);
-  }, [searchTerm, tasks]);
+  }, [searchTerm, statusFilter, tasks]);
 
   const sortedTasks = [...filteredTasks].sort((a, b) => {
     const now = new Date();
@@ -249,8 +255,18 @@ const TasksTable = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
             <h2 className={`text-xl sm:text-2xl font-bold ${accentColor}`}>Assigned Tasks</h2>
             
-            <div className="w-full sm:w-64">
-              <div className="relative">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className={`px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors cursor-pointer ${searchInputStyles}`}
+              >
+                <option value="All">All Tasks</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+
+              <div className="relative w-full sm:w-64">
                 <input
                   type="text"
                   placeholder="Search tasks..."
@@ -460,44 +476,62 @@ const TasksTable = () => {
               </div>
 
               {totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-neutral-700 gap-4">
-                  <div className={`text-sm ${textColor}`}>
+                <div className="flex flex-col items-center justify-between mt-6 pt-4 border-t border-neutral-700 gap-3 sm:flex-row">
+                  <div className={`text-xs sm:text-sm ${textColor}`}>
                     Showing {indexOfFirstTask + 1}-{Math.min(indexOfLastTask, sortedTasks.length)} of {sortedTasks.length} tasks
                   </div>
                   
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 sm:space-x-2 flex-wrap justify-center">
                     <button
                       onClick={prevPage}
                       disabled={currentPage === 1}
-                      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
                         currentPage === 1 
                           ? 'opacity-50 cursor-not-allowed' 
                           : `${paginationButtonStyles} hover:scale-105`
                       }`}
                     >
-                      Previous
+                      Prev
                     </button>
 
                     <div className="flex space-x-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                        <button
-                          key={number}
-                          onClick={() => paginate(number)}
-                          className={`w-8 h-8 rounded-lg border text-sm font-medium transition-colors ${
-                            currentPage === number 
-                              ? activePageStyles 
-                              : paginationButtonStyles
-                          } hover:scale-105`}
-                        >
-                          {number}
-                        </button>
-                      ))}
+                      {(() => {
+                        let pages = [];
+                        if (totalPages <= 5) {
+                          pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+                        } else {
+                          pages.push(1);
+                          if (currentPage > 3) pages.push('...');
+                          for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+                            pages.push(i);
+                          }
+                          if (currentPage < totalPages - 2) pages.push('...');
+                          pages.push(totalPages);
+                        }
+                        return pages.map((number, idx) => 
+                          number === '...' ? (
+                            <span key={`ellipsis-${idx}`} className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm ${textColor}`}>…</span>
+                          ) : (
+                            <button
+                              key={number}
+                              onClick={() => paginate(number)}
+                              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
+                                currentPage === number 
+                                  ? activePageStyles 
+                                  : paginationButtonStyles
+                              } hover:scale-105`}
+                            >
+                              {number}
+                            </button>
+                          )
+                        );
+                      })()}
                     </div>
 
                     <button
                       onClick={nextPage}
                       disabled={currentPage === totalPages}
-                      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
                         currentPage === totalPages 
                           ? 'opacity-50 cursor-not-allowed' 
                           : `${paginationButtonStyles} hover:scale-105`

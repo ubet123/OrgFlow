@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import { useTheme } from '../../context/themeContext';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -8,46 +10,38 @@ import PeopleIcon from '@mui/icons-material/People';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 
-const SummaryStatisticsCards = ({ tasks, employees }) => {
+const SummaryStatisticsCards = () => {
   const { theme } = useTheme();
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
-  // Calculate statistics
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(task => task.status === 'Completed').length;
-  const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const [stats, setStats] = useState({
+    totalTasks: 0,
+    completedTasks: 0,
+    completionRate: 0,
+    overdueTasks: 0,
+    avgCompletionTime: 0,
+    activeEmployees: 0,
+    inProgressTasks: 0
+  });
+  const [loading, setLoading] = useState(true);
 
-  // Calculate overdue tasks
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const overdueTasks = tasks.filter(task => {
-    const dueDate = new Date(task.due);
-    dueDate.setHours(0, 0, 0, 0);
-    return task.status !== 'Completed' && dueDate < now;
-  }).length;
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/task/analytics/stats`, { withCredentials: true });
+        if (res.data.success) {
+          setStats(res.data.stats);
+        }
+      } catch (error) {
+        console.error('Error fetching analytics stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, [API_URL]);
 
-  // Calculate average completion time (in days)
-  const completedTasksWithDates = tasks.filter(task => 
-    task.status === 'Completed' && task.createdAt && task.updatedAt
-  );
-  
-  const avgCompletionTime = completedTasksWithDates.length > 0
-    ? Math.round(
-        completedTasksWithDates.reduce((acc, task) => {
-          const created = new Date(task.createdAt);
-          const completed = new Date(task.updatedAt);
-          const days = Math.max(0, Math.ceil((completed - created) / (1000 * 60 * 60 * 24)));
-          return acc + days;
-        }, 0) / completedTasksWithDates.length
-      )
-    : 0;
-
-  // Active employees (employees with tasks)
-  const activeEmployees = employees.filter(emp => 
-    tasks.some(task => task.assigned === emp.name)
-  ).length;
-
-  // Tasks in progress
-  const inProgressTasks = tasks.filter(task => task.status === 'In Progress').length;
+  const { totalTasks, completedTasks, completionRate, overdueTasks, avgCompletionTime, activeEmployees, inProgressTasks } = stats;
 
   const containerStyles = theme === 'dark'
     ? {
@@ -62,7 +56,7 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
   const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
   const subtextColor = theme === 'dark' ? '#a3a3a3' : '#6b7280';
 
-  const stats = [
+  const statCards = [
     {
       icon: AssignmentIcon,
       label: 'Total Tasks',
@@ -117,6 +111,7 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
     <Box
       sx={{
         ...containerStyles,
+        overflow: 'hidden',
         borderRadius: { xs: '8px', sm: '12px' },
         padding: { xs: '12px', sm: '16px', md: '20px' },
         boxShadow: theme === 'dark' 
@@ -125,7 +120,7 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
       }}
     >
       <h2 style={{ 
-        color: textColor, 
+        color: theme === 'dark' ? '#34d399' : '#059669', 
         fontSize: 'clamp(1rem, 4vw, 1.25rem)',
         fontWeight: 'bold',
         marginBottom: 'clamp(12px, 3vw, 20px)',
@@ -134,12 +129,24 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
         Key Metrics Overview
       </h2>
 
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: '50%',
+            border: `3px solid ${theme === 'dark' ? '#34d399' : '#059669'}`,
+            borderTopColor: 'transparent',
+            animation: 'spin 0.8s linear infinite'
+          }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      ) : (
+      <>
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fit, minmax(min(140px, 100%), 1fr))',
         gap: 'clamp(10px, 2vw, 16px)',
       }}>
-        {stats.map((stat, index) => {
+        {statCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div
@@ -210,7 +217,7 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
           color: subtextColor,
           textAlign: 'center',
           display: 'flex',
-          flexDirection: window.innerWidth < 640 ? 'column' : 'row',
+          flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 'clamp(4px, 1.5vw, 6px)',
@@ -225,6 +232,8 @@ const SummaryStatisticsCards = ({ tasks, employees }) => {
           </span>
         </div>
       </div>
+      </>
+      )}
     </Box>
   );
 };

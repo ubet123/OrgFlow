@@ -55,7 +55,7 @@ const Analytics = () => {
   const dividerColor = theme === 'dark' ? 'bg-white/20' : 'bg-neutral-400/30';
 
   return (
-    <div className={`p-2 sm:p-4 rounded-lg border backdrop-blur-sm w-[98vw] sm:w-[95vw] md:w-[90vw] lg:w-[85vw] xl:w-[80vw] mx-auto mt-4 sm:mt-6 md:mt-10 ${containerStyles}`}>
+    <div className={`p-2 sm:p-4 rounded-lg border backdrop-blur-sm w-full max-w-[98vw] sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[85vw] xl:max-w-[80vw] mx-auto mt-4 sm:mt-6 md:mt-10 overflow-x-hidden ${containerStyles}`}>
       
       <h1 className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold ml-1 sm:ml-2 md:ml-3 mb-3 sm:mb-4 md:mb-6 mt-4 sm:mt-6 ${accentColor}`}>
         Analytics
@@ -73,32 +73,29 @@ const Analytics = () => {
         <div className="flex flex-col gap-4 sm:gap-6">
           {/* Summary Statistics Cards - Full Width */}
           <div className="w-full">
-            <SummaryStatisticsCards 
-              tasks={tasksData} 
-              employees={employeesData} 
-            />
+            <SummaryStatisticsCards />
           </div>
 
           {/* Two Column Grid for Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Task Status Pie Chart */}
-            <div>
+            <div className="min-w-0 overflow-hidden">
               <PieChartAdmin completed={complete} pending={pending} />
             </div>
             
             {/* Overdue Tasks Gauge */}
-            <div>
+            <div className="min-w-0 overflow-hidden">
               <OverdueTasksGauge tasks={tasksData} />
             </div>
           </div>
 
           {/* Task Completion Rate Line Chart - Full Width */}
-          <div className="w-full">
+          <div className="w-full min-w-0 overflow-hidden">
             <TaskCompletionRateChart tasks={tasksData} />
           </div>
           
           {/* Employee Performance Bar Chart - Full Width */}
-          <div className="w-full">
+          <div className="w-full min-w-0 overflow-hidden">
             <EmployeePerformanceChart 
               tasks={tasksData} 
               employees={employeesData} 
@@ -106,7 +103,7 @@ const Analytics = () => {
           </div>
           
           {/* Tasks Timeline Chart - Full Width */}
-          <div className="w-full">
+          <div className="w-full min-w-0 overflow-hidden">
             <TasksTimelineChart tasks={tasksData} />
           </div>
         </div>

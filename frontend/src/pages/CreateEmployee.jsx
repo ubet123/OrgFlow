@@ -21,7 +21,7 @@ const CreateEmployee = () => {
   return (
     <div className={`min-h-screen pt-4 ${containerStyles}`}>
       {/* Back Button */}
-      <div className="absolute top-0 right-0 mt-3 mr-2 sm:mt-4 sm:mr-3 md:mt-5 md:mr-4">
+      <div className="flex justify-end px-2 sm:px-3 md:px-4 mb-2">
         <button onClick={() => navigate('/manager-dashboard')}>
           <div className={`inline-block px-5 py-2.5 text-base font-medium rounded-lg cursor-pointer transition-colors duration-200 ${backButtonStyles}`}>
             <div className="flex items-center justify-center gap-2">
