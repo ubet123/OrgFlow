@@ -521,13 +521,24 @@ OrgFlow/
 ## 🚧 Future Enhancements
 
 ### Planned Features
-- [ ] **Task Comments**: Thread-based discussions on tasks
-- [ ] **File Uploads on Completion**: Employees upload deliverables
-- [ ] **Push Notifications**: Browser notifications for task events
-- [ ] **Bulk Operations**: Multi-select task actions
-- [ ] **User Profiles**: Avatar, bio, contact info
-- [ ] **Team Workspaces**: Multi-organization support
-- [ ] **Mobile App**: React Native version
+
+#### Employee Experience
+- [ ] **Employee Dashboard Summary** — Stats cards showing total assigned, completed, pending, overdue tasks, personal completion rate, and upcoming deadlines
+- [ ] **Employee Task Activity Log** — Timestamped log of task events (assigned, started, completed, edited) visible to the employee
+
+#### Task Workflow
+- [ ] **Task Comments** — Thread-based discussions on individual tasks between manager and assigned employee
+- [ ] **Multi-Step Task Status** — Expand status flow from `Pending → Completed` to `Pending → In Progress → Under Review → Completed` for better workflow visibility
+- [ ] **Deadline Extension Requests** — Employees can request due date extensions with a reason; manager approves or rejects
+- [ ] **Bulk Task Actions** — Multi-select tasks via checkboxes for bulk delete, reassign, or status change
+
+#### Communication & Notifications
+- [ ] **In-App Notification Center** — Bell icon with unread badge; real-time notifications for task assignments, completions, approaching deadlines, and new messages via Socket.IO
+- [ ] **Task Due Date Reminders** — Automated reminder emails/notifications 24 hours before a task is due using a backend cron job
+- [ ] **Group Chat / Team Channel** — Team-wide chat room for announcements and group discussion alongside existing 1-on-1 DMs
+
+#### Visualization
+- [ ] **Kanban Board View** — Drag-and-drop board as an alternate to the task table, with columns for each status
 
 
 

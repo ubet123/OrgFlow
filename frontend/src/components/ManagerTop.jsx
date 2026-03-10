@@ -106,7 +106,7 @@ const ManagerTop = ({ onLogout }) => {
           <h1 className={`text-base sm:text-xl lg:text-2xl font-bold tracking-tight flex items-center gap-1 whitespace-nowrap ${textColor}`}>
             {getGreeting()},
           </h1>
-          <span className={`${accentColor} font-extrabold sm:ml-0 sm:text-2xl ml-20 text-xl lg:text-3xl leading-none whitespace-nowrap`}>
+          <span className={`${accentColor} font-extrabold text-xl sm:text-2xl lg:text-3xl sm:ml-0 ml-[4rem] leading-none whitespace-nowrap`}>
             Manager
           </span>
         </div>

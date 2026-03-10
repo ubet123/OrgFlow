@@ -347,7 +347,8 @@ const TasksTable = () => {
                           <div className="flex items-center space-x-2">
                             <span
                               onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                              className={`${employeeBadgeStyles} hover:cursor-pointer font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm whitespace-normal break-words`}
+                              className={`${employeeBadgeStyles} hover:cursor-pointer font-bold rounded-lg text-xs sm:text-sm flex items-center justify-center text-center w-[120px] min-h-[38px] sm:w-[150px] sm:min-h-[42px] px-2 py-1 line-clamp-2 overflow-hidden`}
+                              title={task.assigned}
                             >
                               {task.assigned}
                             </span>
