@@ -344,9 +344,13 @@ const AdminEmpTasks = () => {
                           <div className="flex flex-col lg:flex-row justify-between gap-4 sm:gap-6">
                             <div className="flex-1">
                               <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
-                                <span className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full ${taskIdBadge}`}>
+                                <button
+                                  type="button"
+                                  onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                                  className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full transition-colors ${taskIdBadge}`}
+                                >
                                   {task.taskId}
-                                </span>
+                                </button>
                                 <span className={`text-xs px-2 sm:px-3 py-1 rounded-full ${
                                   overdue
                                     ? 'bg-red-700 text-white'
@@ -494,9 +498,13 @@ const AdminEmpTasks = () => {
                           <div className="flex flex-col lg:flex-row justify-between gap-4 sm:gap-6">
                             <div className="flex-1">
                               <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
-                                <span className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full ${taskIdBadge}`}>
+                                <button
+                                  type="button"
+                                  onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                                  className={`font-mono text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full transition-colors ${taskIdBadge}`}
+                                >
                                   {task.taskId}
-                                </span>
+                                </button>
                                 <span className={`text-xs px-2 sm:px-3 py-1 rounded-full ${statusBadgeCompleted}`}>
                                   {task.status}
                                 </span>

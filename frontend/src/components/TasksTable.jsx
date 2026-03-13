@@ -336,7 +336,13 @@ const TasksTable = () => {
                         `}
                       >
                         <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base font-mono ${textColor}`}>
-                          {task.taskId}
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                            className={`rounded-md px-2 py-1 transition-colors ${theme === 'dark' ? 'hover:bg-emerald-900/30' : 'hover:bg-emerald-100'}`}
+                          >
+                            {task.taskId}
+                          </button>
                         </td>
                         <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${textColor}`}>
                           <span className="block truncate">
@@ -412,9 +418,13 @@ const TasksTable = () => {
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
                           <h3 className={`${accentColor} font-medium text-sm truncate`}>{task.title}</h3>
-                          <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'} font-mono truncate`}>
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                            className={`text-xs mt-1 font-mono truncate rounded px-1.5 py-0.5 transition-colors ${theme === 'dark' ? 'text-neutral-400 hover:bg-emerald-900/30' : 'text-neutral-600 hover:bg-emerald-100'}`}
+                          >
                             ID: {task.taskId}
-                          </p>
+                          </button>
                         </div>
                         <span
                           onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}

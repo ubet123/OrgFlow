@@ -11,6 +11,7 @@ const {
   editTask,
   deleteTask,
   addTaskAttachments,
+  getTaskDetails,
   getAnalyticsStats
 } = require('../controllers/taskController');
 
@@ -46,6 +47,9 @@ router.put('/edittask/:taskId', requireAdmin, editTask);
 
 // Delete Task by Admin
 router.delete('/deleteTask/:taskId', requireAdmin, deleteTask);
+
+// Get single task details with timeline
+router.get('/detail/:taskId', verifyToken, getTaskDetails);
 
 // Get analytics statistics
 router.get('/analytics/stats', requireAdmin, getAnalyticsStats);

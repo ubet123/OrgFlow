@@ -1,5 +1,37 @@
 const mongoose = require('mongoose')
 
+const activityLogSchema = new mongoose.Schema({
+    action: {
+        type: String,
+        enum: ['created', 'updated', 'status_changed', 'assigned_changed', 'due_changed', 'attachment_added'],
+        required: true
+    },
+    message: {
+        type: String,
+        required: true,
+        trim: true,
+        maxLength: 300
+    },
+    actorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+    actorName: {
+        type: String,
+        default: 'System'
+    },
+    actorRole: {
+        type: String,
+        enum: ['manager', 'employee', 'system'],
+        default: 'system'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+}, { _id: false });
+
 const taskSchema = new mongoose.Schema({
     taskId:{
         type:String,
@@ -39,6 +71,10 @@ const taskSchema = new mongoose.Schema({
         },
         uploadedAt: { type: Date, default: Date.now }
     }],
+    activityLogs: {
+        type: [activityLogSchema],
+        default: []
+    },
     createdBy: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'

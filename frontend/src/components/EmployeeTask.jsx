@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/themeContext';
 import { CgAttachment } from "react-icons/cg";
 import useEmail from '../hooks/useEmail';
@@ -14,6 +15,7 @@ const EmployeeTask = ({employee}) => {
   const [expandedTask, setExpandedTask] = useState(null);
   const [taskAttachments, setTaskAttachments] = useState({});
   const [loadingAttachments, setLoadingAttachments] = useState({});
+  const navigate = useNavigate();
   const { theme } = useTheme();
   const { sendTaskCompletedEmail } = useEmail();
 
@@ -288,9 +290,13 @@ const EmployeeTask = ({employee}) => {
                         <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
                           <div className="flex-1 w-full">
                             <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                              <span className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20' : 'bg-emerald-100'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full`}>
+                              <button
+                                type="button"
+                                onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                                className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20 hover:bg-emerald-900/40' : 'bg-emerald-100 hover:bg-emerald-200'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full transition-colors`}
+                              >
                                 {task.taskId}
-                              </span>
+                              </button>
                               <span className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${
                                 overdue 
                                   ? (theme === 'dark' ? 'bg-red-900/50 text-red-300' : 'bg-red-200 text-red-800') 
@@ -489,9 +495,13 @@ const EmployeeTask = ({employee}) => {
                           <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
                             <div className="flex-1 w-full">
                               <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                                <span className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20' : 'bg-emerald-100'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full`}>
+                                <button
+                                  type="button"
+                                  onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                                  className={`font-mono text-sm sm:text-base md:text-lg ${accentColor} ${theme === 'dark' ? 'bg-emerald-900/20 hover:bg-emerald-900/40' : 'bg-emerald-100 hover:bg-emerald-200'} px-3 py-1 sm:px-4 sm:py-1.5 rounded-full transition-colors`}
+                                >
                                   {task.taskId}
-                                </span>
+                                </button>
                                 <span className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${
                                   theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-200 text-emerald-800'
                                 }`}>

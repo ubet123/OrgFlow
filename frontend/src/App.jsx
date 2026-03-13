@@ -14,6 +14,7 @@ import axios from 'axios';
 import LoadingScreen from './components/LoadingScreen';
 import ChatPage from './chat/ChatPage';
 import useAuth from './statemanagement/useAuth';
+import TaskDetails from './pages/TaskDetails';
 
 function App() {
   const { setUser, clearUser } = useAuth();
@@ -83,6 +84,7 @@ function App() {
             <Route path="/employee-dashboard" element={<EmployeeDash onLogout={() => setAuthChecked(prev => !prev)} userData={userData} />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/chat/:userId" element={<ChatPage />} />
+            <Route path="/task/:taskId" element={<TaskDetails />} />
           </Route>
           
           {/* Redirect to login by default */}

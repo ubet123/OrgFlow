@@ -3,6 +3,64 @@ const Tasks = require('../models/task');
 const Users = require('../models/user');
 const { cloudinary } = require('../config/cloudinary');
 
+const formatDateForLog = (dateValue) => {
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return 'Invalid date';
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+};
+
+const createActivityLog = (req, action, message) => ({
+  action,
+  message,
+  actorId: req?.user?.id || null,
+  actorName: req?.user?.name || 'System',
+  actorRole: req?.user?.role || 'system',
+  createdAt: new Date()
+});
+
+const createLegacyTaskBackfillLogs = (task) => {
+  const logs = [];
+  const createdAt = task.createdAt ? new Date(task.createdAt) : new Date();
+  const updatedAt = task.updatedAt ? new Date(task.updatedAt) : createdAt;
+
+  logs.push({
+    action: 'created',
+    message: `Task created and assigned to ${task.assigned} with due date ${formatDateForLog(task.due)}`,
+    actorId: task.createdBy || null,
+    actorName: 'System',
+    actorRole: 'system',
+    createdAt
+  });
+
+  if (Array.isArray(task.attachments) && task.attachments.length > 0) {
+    logs.push({
+      action: 'attachment_added',
+      message: `${task.attachments.length} attachment${task.attachments.length > 1 ? 's' : ''} associated with task`,
+      actorId: null,
+      actorName: 'System',
+      actorRole: 'system',
+      createdAt
+    });
+  }
+
+  if (task.status === 'Completed') {
+    logs.push({
+      action: 'status_changed',
+      message: 'Status changed to Completed',
+      actorId: null,
+      actorName: 'System',
+      actorRole: 'system',
+      createdAt: updatedAt > createdAt ? updatedAt : createdAt
+    });
+  }
+
+  return logs;
+};
+
 
 
 // Create Task controller (updated for attachments)
@@ -33,7 +91,14 @@ const createTask = async (req, res) => {
             assigned: assignedTo.trim(),
             due: new Date(dueDate),
             description: description.trim(),
-            createdBy: req.user.id
+            createdBy: req.user.id,
+            activityLogs: [
+              createActivityLog(
+                req,
+                'created',
+                `Task created and assigned to ${assignedTo.trim()} with due date ${formatDateForLog(dueDate)}`
+              )
+            ]
         };
 
         // Add attachments if files were uploaded
@@ -46,6 +111,10 @@ const createTask = async (req, res) => {
                 size: file.size,
                 uploadedBy: req.user.id
             }));
+
+          taskData.activityLogs.push(
+            createActivityLog(req, 'attachment_added', `${files.length} attachment${files.length > 1 ? 's' : ''} added during task creation`)
+          );
         }
 
         // Create task
@@ -161,12 +230,23 @@ const getEmpTasks = async (req, res) => {
 const completeTask = async (req, res) => {
   try {
     const { taskId } = req.body;
-    
-    // Update task status first
-    await Tasks.updateOne(
-      { taskId: taskId }, 
-      { $set: { status: 'Completed' } }
-    );
+
+    const task = await Tasks.findOne({ taskId: taskId });
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found'
+      });
+    }
+
+    if (task.status !== 'Completed') {
+      task.status = 'Completed';
+      task.activityLogs = task.activityLogs || [];
+      task.activityLogs.push(
+        createActivityLog(req, 'status_changed', `Status changed to Completed`)
+      );
+      await task.save();
+    }
 
     res.json({
       success: true,
@@ -231,24 +311,67 @@ const editTask = async (req, res) => {
         }
 
         // Check if user has permission to edit
-        if (req.user.role !== 'manager' && task.createdBy.toString() !== userId) {
+        if (req.user.role !== 'manager' && (!task.createdBy || task.createdBy.toString() !== String(userId))) {
             return res.status(403).json({ 
                 success: false,
                 message: 'You do not have permission to edit this task' 
             });
         }
 
-        // Update basic task info
-        const updatedTask = await Tasks.findOneAndUpdate(
-            { taskId: taskId },
-            { $set: updated },
-            { new: true, runValidators: true }
-        );
+        const changeLogs = [];
+
+        if (typeof updated.title === 'string' && updated.title.trim() && updated.title.trim() !== task.title) {
+          changeLogs.push(createActivityLog(req, 'updated', `Title updated from "${task.title}" to "${updated.title.trim()}"`));
+          task.title = updated.title.trim();
+        }
+
+        if (typeof updated.description === 'string' && updated.description.trim() && updated.description.trim() !== task.description) {
+          changeLogs.push(createActivityLog(req, 'updated', 'Task description updated'));
+          task.description = updated.description.trim();
+        }
+
+        if (typeof updated.assigned === 'string' && updated.assigned.trim() && updated.assigned.trim() !== task.assigned) {
+          changeLogs.push(
+            createActivityLog(req, 'assigned_changed', `Task reassigned from ${task.assigned} to ${updated.assigned.trim()}`)
+          );
+          task.assigned = updated.assigned.trim();
+        }
+
+        if (updated.due) {
+          const newDue = new Date(updated.due);
+          if (!Number.isNaN(newDue.getTime())) {
+            const oldDue = new Date(task.due);
+            if (oldDue.getTime() !== newDue.getTime()) {
+              changeLogs.push(
+                createActivityLog(
+                  req,
+                  'due_changed',
+                  `Due date changed from ${formatDateForLog(oldDue)} to ${formatDateForLog(newDue)}`
+                )
+              );
+              task.due = newDue;
+            }
+          }
+        }
+
+        if (typeof updated.status === 'string' && updated.status !== task.status) {
+          changeLogs.push(
+            createActivityLog(req, 'status_changed', `Status changed from ${task.status} to ${updated.status}`)
+          );
+          task.status = updated.status;
+        }
+
+        if (changeLogs.length > 0) {
+          task.activityLogs = task.activityLogs || [];
+          task.activityLogs.push(...changeLogs);
+        }
+
+        await task.save();
 
         res.status(200).json({
             success: true,
             message: `Task ${taskId} updated successfully`,
-            task: updatedTask
+          task
         });
 
     } catch (error) {
@@ -353,6 +476,10 @@ const addTaskAttachments = async (req, res) => {
 
         // Add attachments to task
         task.attachments.push(...newAttachments);
+        task.activityLogs = task.activityLogs || [];
+        task.activityLogs.push(
+          createActivityLog(req, 'attachment_added', `${newAttachments.length} attachment${newAttachments.length > 1 ? 's' : ''} added`)
+        );
         await task.save();
 
         res.status(200).json({
@@ -388,6 +515,52 @@ const addTaskAttachments = async (req, res) => {
             error: error.message
         });
     }
+};
+
+// Get task details with activity logs
+const getTaskDetails = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+
+    const task = await Tasks.findOne({ taskId });
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found'
+      });
+    }
+
+    // Managers can access all tasks. Employees only access their own tasks.
+    if (req.user.role !== 'manager' && task.assigned !== req.user.name) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to view this task'
+      });
+    }
+
+    if (!Array.isArray(task.activityLogs) || task.activityLogs.length === 0) {
+      task.activityLogs = createLegacyTaskBackfillLogs(task);
+      await task.save();
+    }
+
+    const sortedActivityLogs = [...(task.activityLogs || [])]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.status(200).json({
+      success: true,
+      task: {
+        ...task.toObject(),
+        activityLogs: sortedActivityLogs
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching task details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching task details',
+      error: error.message
+    });
+  }
 };
 
 // Get analytics statistics
@@ -460,5 +633,6 @@ module.exports = {
   editTask,
   deleteTask,
   addTaskAttachments,
+  getTaskDetails,
   getAnalyticsStats
 };
