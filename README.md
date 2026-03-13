@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**OrgFlow** is a full-stack **MERN work management platform** that combines task assignment, real-time chat, file attachments, analytics, and automated email notifications in a sleek, professional interface.
+**OrgFlow** is a full-stack **MERN work management platform** that combines task assignment, real-time chat with task references, per-task activity logs, file attachments, analytics, and automated email notifications in a sleek, professional interface.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-059669?style=for-the-badge&logo=vercel)](https://org-flow-six.vercel.app/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
@@ -32,7 +32,9 @@
 
 OrgFlow is a comprehensive workplace solution designed for modern teams to:
 - ✅ **Assign & track tasks** with clear ownership and due dates
+- � **Inspect task history** via per-task activity logs with a dedicated Task Details page
 - 💬 **Collaborate in real-time** with built-in WebSocket chat
+- 🔗 **Reference tasks in chat** — attach a task chip to any message that links directly to its details page
 - 📎 **Attach files** to tasks using cloud storage
 - 📧 **Receive email notifications** for task assignments and completions
 - 📊 **Visualize progress** through interactive analytics
@@ -51,6 +53,10 @@ OrgFlow is a comprehensive workplace solution designed for modern teams to:
 - **Attachment viewer** with download and preview capabilities
 - **Task filtering** by status and employee
 - **Edit & delete** with role-based permissions
+- **Task Details page** (`/task/:taskId`) — full task info with assigned, due date, description, and attachments list
+- **Activity Log timeline** — auto-generated, chronological log of every task event (created, edited, status changed, assignee changed, due date changed, attachment added); newest-first vertical timeline with color-coded event nodes
+- **Navigable task ID badges** — click any task ID badge across all task views to jump directly to its details page
+- **Role-based task detail access** — employees can only view their own tasks; managers can view any task
 
 ### 💬 Real-Time Chat
 - **WebSocket-powered messaging** using Socket.IO
@@ -60,6 +66,7 @@ OrgFlow is a comprehensive workplace solution designed for modern teams to:
 - **Notification sound** on new message arrival
 - **Date-stamped messages** with time formatting
 - **Glass-morphism UI** with gradient effects
+- **Task reference chips** — tap the `@` button to open a searchable task picker; selected task attaches as a chip on the message; recipients can click the chip to navigate directly to the Task Details page
 
 ### 📧 Email Notifications
 - **Task assigned emails** sent to employees via EmailJS
@@ -168,8 +175,8 @@ OrgFlow is a comprehensive workplace solution designed for modern teams to:
 
 ### Database Schema
 - **Users**: `_id`, `name`, `email`, `password`, `role`, `employeeId`
-- **Tasks**: `taskId`, `title`, `description`, `assigned`, `assignedUserId`, `dueDate`, `status`, `attachments`, `createdAt`
-- **Messages**: `senderId`, `receiverId`, `message`, `createdAt`
+- **Tasks**: `taskId`, `title`, `description`, `assigned`, `assignedUserId`, `dueDate`, `status`, `attachments`, `activityLogs[]`, `createdAt`
+- **Messages**: `senderId`, `receiverId`, `message`, `taskRef { taskId, title }`, `createdAt`
 - **Conversations**: `participants`, `messages[]`
 
 ---
@@ -273,7 +280,7 @@ npm run dev
 
 ### Backend (`backend/.env`)
 ```env
-MONGO_URI=your_mongodb_connection_string
+MONGO_CONNECTION=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 PORT=3001
 FRONTEND_URL=http://localhost:5173
@@ -321,11 +328,14 @@ VITE_EMAILJS_TEMPLATE_TASK_COMPLETED=your_task_completed_template_id
 | Method | Endpoint | Description | Auth Required | Role |
 |--------|----------|-------------|---------------|------|
 | POST | `/task/create` | Create new task with files | Yes | Manager |
-| GET | `/task/emp` | Get employee's tasks | Yes | Employee |
+| GET | `/task/alltasks` | Get all tasks | Yes | Manager |
+| GET | `/task/emptasks` | Get employee's tasks | Yes | Employee |
 | GET | `/task/admin/:employeeId` | Get tasks by employee ID | Yes | Manager |
+| GET | `/task/detail/:taskId` | Get full task details + activity log | Yes | Both |
 | PATCH | `/task/complete` | Mark task as complete | Yes | Employee |
 | PATCH | `/task/edit` | Edit task details | Yes | Manager |
 | DELETE | `/task/delete/:taskId` | Delete task | Yes | Manager |
+| POST | `/task/:taskId/add-attachments` | Add attachments to task | Yes | Manager |
 
 ### User Management
 | Method | Endpoint | Description | Auth Required | Role |
@@ -479,7 +489,7 @@ OrgFlow/
 │   │   ├── chat/                  # Chat components
 │   │   │   ├── ChatPage.jsx
 │   │   │   ├── left/              # User list sidebar
-│   │   │   └── right/             # Message view
+│   │   │   └── right/             # Message view + task ref picker
 │   │   ├── components/            # Reusable UI components
 │   │   │   ├── TaskCreate.jsx     # Task creation form
 │   │   │   ├── TasksTable.jsx     # Task list view
@@ -499,7 +509,8 @@ OrgFlow/
 │   │   ├── pages/                 # Route pages
 │   │   │   ├── Login.jsx
 │   │   │   ├── ManagerDash.jsx
-│   │   │   └── EmployeeDash.jsx
+│   │   │   ├── EmployeeDash.jsx
+│   │   │   └── TaskDetails.jsx    # Task details + activity log timeline
 │   │   ├── statemanagement/       # Zustand stores
 │   │   │   ├── useAuth.js         # Auth state
 │   │   │   └── useConversation.js # Chat state
@@ -522,12 +533,8 @@ OrgFlow/
 
 ### Planned Features
 
-#### Employee Experience
-- [ ] **Employee Dashboard Summary** — Stats cards showing total assigned, completed, pending, overdue tasks, personal completion rate, and upcoming deadlines
-- [ ] **Employee Task Activity Log** — Timestamped log of task events (assigned, started, completed, edited) visible to the employee
 
 #### Task Workflow
-- [ ] **Task Comments** — Thread-based discussions on individual tasks between manager and assigned employee
 - [ ] **Multi-Step Task Status** — Expand status flow from `Pending → Completed` to `Pending → In Progress → Under Review → Completed` for better workflow visibility
 - [ ] **Deadline Extension Requests** — Employees can request due date extensions with a reason; manager approves or rejects
 - [ ] **Bulk Task Actions** — Multi-select tasks via checkboxes for bulk delete, reassign, or status change
