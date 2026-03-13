@@ -1,5 +1,6 @@
 import React, { useMemo , useRef , useEffect } from 'react';
 import { useTheme } from '../../context/themeContext';
+import { useNavigate } from 'react-router-dom';
 import useGetMessage from '../../hooks/useGetMessage';
 import useAuth from '../../statemanagement/useAuth';
 import useGetSocketMessage from '../../context/useGetSocketMessage';
@@ -7,6 +8,7 @@ import useGetSocketMessage from '../../context/useGetSocketMessage';
 
 const Messages = ({ className = '' }) => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const lastMessageRef = useRef(null);
   const { messages, loading } = useGetMessage();
   useGetSocketMessage();
@@ -27,6 +29,12 @@ const Messages = ({ className = '' }) => {
     : 'bg-emerald-600 text-white border-emerald-500';
   const timeStylesLeft = theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600';
   const timeStylesRight = 'text-white';
+  const taskChipMine = theme === 'dark'
+    ? 'bg-emerald-800/50 border-emerald-600/50 text-emerald-200 hover:bg-emerald-800/80'
+    : 'bg-emerald-100 border-emerald-300 text-emerald-800 hover:bg-emerald-200';
+  const taskChipTheirs = theme === 'dark'
+    ? 'bg-neutral-700/60 border-neutral-600 text-neutral-300 hover:bg-neutral-700'
+    : 'bg-neutral-100 border-neutral-300 text-neutral-700 hover:bg-neutral-200';
 
   const formattedMessages = useMemo(() => {
     return safeMessages.map((message) => {
@@ -76,6 +84,17 @@ const Messages = ({ className = '' }) => {
                   message.isMine ? rightBubbleStyles : leftBubbleStyles
                 }`}
               >
+                {message.taskRef?.taskId && (
+                  <button
+                    onClick={() => navigate(`/task/${encodeURIComponent(message.taskRef.taskId)}`)}
+                    className={`flex items-center gap-1.5 mb-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors w-full text-left ${message.isMine ? taskChipMine : taskChipTheirs}`}
+                  >
+                    <span className="font-mono font-semibold shrink-0">@ {message.taskRef.taskId}</span>
+                    {message.taskRef.title && (
+                      <span className="truncate opacity-80">· {message.taskRef.title}</span>
+                    )}
+                  </button>
+                )}
                 <p>{message.message}</p>
                 <span className={`mt-1 block text-[11px] ${message.isMine ? timeStylesRight : timeStylesLeft} ${message.isMine ? 'text-right' : ''}`}>
                   {message.timeLabel}

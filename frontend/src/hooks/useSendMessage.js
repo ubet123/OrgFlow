@@ -7,15 +7,19 @@ function useSendMessage() {
     const [loading, setLoading] = useState(false);
     const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
-    const sendMessage = async (messageText) => {
+    const sendMessage = async (messageText, taskRef = null) => {
         if (!selectedConversation || !selectedConversation._id) {
             return;
         }
 
         setLoading(true);
         try {
+            const body = { message: messageText };
+            if (taskRef && taskRef.taskId) {
+                body.taskRef = taskRef;
+            }
             const response = await axios.post(`${API_URL}/message/send/${selectedConversation._id}`,
-                { message: messageText },
+                body,
                 { withCredentials: true }
             );
             const newMessage = response.data?.data;

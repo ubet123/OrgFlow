@@ -26,6 +26,10 @@ const messageSchema = new mongoose.Schema(
                 message: "Message cannot be empty or whitespace only",
             },
         },
+        taskRef: {
+            taskId: { type: String, default: null },
+            title:  { type: String, default: null },
+        },
        
     },
     { timestamps: true }

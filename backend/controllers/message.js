@@ -7,7 +7,7 @@ exports.sendMessage = async (req, res) => {
     
     try {
         const { id: receiverId } = req.params;
-        const { message: messageContent } = req.body;
+        const { message: messageContent, taskRef } = req.body;
         const senderId = req.user.id;  
      
         let conversation = await Conversation.findOne({
@@ -20,11 +20,20 @@ exports.sendMessage = async (req, res) => {
             });
         }
 
-        const newMessage = await Message.create({
+        const messageData = {
             senderId,
             receiverId,
             message: messageContent,
-        });
+        };
+
+        if (taskRef && typeof taskRef.taskId === 'string' && taskRef.taskId.trim()) {
+            messageData.taskRef = {
+                taskId: taskRef.taskId.trim(),
+                title: typeof taskRef.title === 'string' ? taskRef.title.trim() : null,
+            };
+        }
+
+        const newMessage = await Message.create(messageData);
 
         if (newMessage) {
             conversation.messages.push(newMessage._id);

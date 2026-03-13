@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../context/themeContext';
 import { IoSend } from "react-icons/io5";
+import { MdAlternateEmail } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 import useSendMessage from '../../hooks/useSendMessage';
+import TaskRefPicker from './TaskRefPicker';
+
 const TypeMessage = ({ className = '' }) => {
   const { theme } = useTheme();
   const { sendMessage, loading } = useSendMessage();
   const [messageText, setMessageText] = useState('');
+  const [pendingTaskRef, setPendingTaskRef] = useState(null);
+  const [showPicker, setShowPicker] = useState(false);
 
   const wrapperStyles = theme === 'dark'
     ? 'bg-neutral-950/80 border-neutral-800/80'
@@ -16,14 +22,24 @@ const TypeMessage = ({ className = '' }) => {
   const buttonStyles = theme === 'dark'
     ? 'bg-emerald-700 hover:bg-emerald-600 text-white'
     : 'bg-emerald-600 hover:bg-emerald-700 text-white';
+  const atButtonStyles = theme === 'dark'
+    ? 'text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800'
+    : 'text-neutral-500 hover:text-emerald-600 hover:bg-neutral-100';
+  const chipStyles = theme === 'dark'
+    ? 'bg-emerald-900/40 border-emerald-700/50 text-emerald-300'
+    : 'bg-emerald-50 border-emerald-200 text-emerald-700';
+  const chipCloseStyles = theme === 'dark'
+    ? 'text-emerald-500 hover:text-emerald-300'
+    : 'text-emerald-500 hover:text-emerald-700';
 
   const handleSend = async () => {
     const trimmed = messageText.trim();
     if (!trimmed || loading) {
       return;
     }
-    await sendMessage(trimmed);
+    await sendMessage(trimmed, pendingTaskRef);
     setMessageText('');
+    setPendingTaskRef(null);
   };
 
   const handleKeyDown = (event) => {
@@ -35,7 +51,35 @@ const TypeMessage = ({ className = '' }) => {
 
   return (
     <div className={`border-t px-5 py-4 ${wrapperStyles} ${className}`}>
-      <div className="flex items-center gap-3">
+      {/* Task ref chip */}
+      {pendingTaskRef && (
+        <div className={`flex items-center gap-2 mb-2.5 px-3 py-1.5 rounded-xl border w-fit max-w-full ${chipStyles}`}>
+          <span className="text-xs font-mono font-semibold truncate">@ {pendingTaskRef.taskId}</span>
+          {pendingTaskRef.title && (
+            <span className="text-xs truncate max-w-[160px] opacity-75">· {pendingTaskRef.title}</span>
+          )}
+          <button
+            type="button"
+            onClick={() => setPendingTaskRef(null)}
+            className={`shrink-0 transition-colors ${chipCloseStyles}`}
+            aria-label="Remove task reference"
+          >
+            <IoClose size={14} />
+          </button>
+        </div>
+      )}
+
+      <div className="flex items-center gap-2">
+        {/* @ button */}
+        <button
+          type="button"
+          onClick={() => setShowPicker(true)}
+          title="Reference a task"
+          className={`rounded-xl p-2 transition-colors ${atButtonStyles}`}
+        >
+          <MdAlternateEmail size={20} />
+        </button>
+
         <input
           type="text"
           placeholder="Type your message..."
@@ -61,6 +105,13 @@ const TypeMessage = ({ className = '' }) => {
           )}
         </button>
       </div>
+
+      {showPicker && (
+        <TaskRefPicker
+          onSelect={(ref) => setPendingTaskRef(ref)}
+          onClose={() => setShowPicker(false)}
+        />
+      )}
     </div>
   );
 };
