@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/themeContext';
 import { CgAttachment } from "react-icons/cg";
@@ -191,10 +191,7 @@ const EmployeeTask = ({employee}) => {
         task.taskId === taskId ? { ...task, status: 'Completed' } : task
       ));
 
-      toast.success(`${response.data.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success(`${response.data.message}`);
 
       // Send email notification to admin
       if (completedTask) {

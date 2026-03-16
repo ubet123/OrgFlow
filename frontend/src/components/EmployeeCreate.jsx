@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from '../context/themeContext';
 
@@ -42,10 +41,7 @@ const EmployeeCreate = () => {
         withCredentials: true
       });
 
-      toast.success('Employee created successfully!', {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success('Employee created successfully!');
 
       setEmployeeForm({
         name: '',
@@ -61,10 +57,7 @@ const EmployeeCreate = () => {
         error.response?.data?.message || 
         error.message || 
         'Failed to create employee',
-        {
-          position: "top-right",
-          autoClose: 5000,
-        }
+        { duration: 5000 }
       );
     } finally {
       setIsSubmitting(false);

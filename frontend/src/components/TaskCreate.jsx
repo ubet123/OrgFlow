@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from '../context/themeContext';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast from 'react-hot-toast';
 import useEmail from '../hooks/useEmail';
 
 const TaskCreate = () => {
@@ -179,7 +178,7 @@ const TaskCreate = () => {
     
     // Show attachment count if any
     if (files.length > 0 && response.data.task?.attachments?.length > 0) {
-      toast.info(`${response.data.task.attachments.length} file(s) attached to the task`);
+      toast.success(`${response.data.task.attachments.length} file(s) attached to the task`);
     }
 
     // Send email notification to assigned employee

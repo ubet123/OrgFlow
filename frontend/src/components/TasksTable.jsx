@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/themeContext';
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast from 'react-hot-toast';
 import EditTaskForm from './EditTaskForm';
 
 const TasksTable = () => {

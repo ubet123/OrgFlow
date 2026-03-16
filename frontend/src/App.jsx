@@ -4,8 +4,7 @@ import Login from "./pages/Login";
 import ManagerDash from "./pages/ManagerDash";
 import EmployeeDash from "./pages/EmployeeDash";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'react-hot-toast';
 import CreateEmployee from './pages/CreateEmployee';
 import AdminEmpTasks from './components/AdminEmpTasks';
 import { ThemeProvider } from './context/themeContext';
@@ -26,7 +25,7 @@ function App() {
  useEffect(() => {
   const checkAuth = async () => {
     try {
-      console.log('Checking cookies:', document.cookie); // Add this line
+      console.log('Checking cookies:', document.cookie); 
       console.log('Making request to:', `${API_URL}/auth/check-auth`);
       
       const response = await axios.get(`${API_URL}/auth/check-auth`, {
@@ -52,18 +51,7 @@ function App() {
   return (
     <>
       <ThemeProvider>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <BrowserRouter>
         <Routes>
           {/* Public routes */}

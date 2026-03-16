@@ -22,7 +22,7 @@ const CreateEmployee = () => {
     <div className={`min-h-screen pt-4 ${containerStyles}`}>
       {/* Back Button */}
       <div className="flex justify-end px-2 sm:px-3 md:px-4 mb-2">
-        <button onClick={() => navigate('/manager-dashboard')}>
+        <button onClick={() => navigate(-1)}>
           <div className={`inline-block px-5 py-2.5 text-base font-medium rounded-lg cursor-pointer transition-colors duration-200 ${backButtonStyles}`}>
             <div className="flex items-center justify-center gap-2">
               <span className="text-xl"><IoIosArrowBack /></span>

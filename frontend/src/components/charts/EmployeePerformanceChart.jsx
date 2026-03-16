@@ -29,6 +29,10 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
   // Sort by completion rate (descending)
   employeePerformance.sort((a, b) => b.completionRate - a.completionRate);
 
+  // Compute minimum chart width so every employee gets enough bar space
+  const MIN_WIDTH_PER_EMPLOYEE = 90;
+  const chartMinWidth = Math.max(employeePerformance.length * MIN_WIDTH_PER_EMPLOYEE + 60, 480);
+
   const chartData = {
     series: [
       {
@@ -142,7 +146,7 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
       id="employee-performance-chart"
       sx={{
         width: '100%',
-        overflow: 'hidden',
+        overflow: 'visible',
         borderRadius: { xs: '8px', sm: '12px' },
         p: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
@@ -201,11 +205,13 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
         Employee Performance
       </h1>
       {employeePerformance.length > 0 ? (
-        <BarChart
-          dataset={employeePerformance}
-          xAxis={chartData.xAxis}
-          series={chartData.series}
-          height={300}
+        <div style={{ overflowX: 'auto', overflowY: 'hidden', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: chartMinWidth }}>
+            <BarChart
+              dataset={employeePerformance}
+              xAxis={chartData.xAxis}
+              series={chartData.series}
+              height={300}
           slotProps={{
             legend: {
               labelStyle: {
@@ -240,6 +246,8 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
             bottom: 70,
           }}
         />
+          </div>
+        </div>
       ) : (
         <div style={{
           textAlign: 'center',
