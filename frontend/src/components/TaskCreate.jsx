@@ -4,6 +4,7 @@ import { useTheme } from '../context/themeContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import useEmail from '../hooks/useEmail';
+import { FaFilePdf, FaFileImage, FaFileWord, FaFileExcel, FaFilePowerpoint, FaFileAlt, FaFile, FaUpload, FaSpinner, FaPlus } from 'react-icons/fa';
 
 const TaskCreate = () => {
   const [employees, setEmployees] = useState([]);
@@ -47,7 +48,7 @@ const TaskCreate = () => {
 
   const handleFileSelect = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    
+
     // Check total files limit
     if (files.length + selectedFiles.length > 5) {
       toast.error('Maximum 5 files allowed per task');
@@ -92,7 +93,7 @@ const TaskCreate = () => {
     }));
 
     setFiles(prev => [...prev, ...newFiles]);
-    
+
     // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -104,13 +105,14 @@ const TaskCreate = () => {
   };
 
   const getFileIcon = (type) => {
-    if (type.includes('image')) return '🖼️';
-    if (type.includes('pdf')) return '📄';
-    if (type.includes('word') || type.includes('document')) return '📝';
-    if (type.includes('excel') || type.includes('spreadsheet')) return '📊';
-    if (type.includes('powerpoint') || type.includes('presentation')) return '📈';
-    if (type.includes('text')) return '📃';
-    return '📎';
+    const iconClass = "text-lg text-emerald-500 flex-shrink-0";
+    if (type.includes('image')) return <FaFileImage className={iconClass} />;
+    if (type.includes('pdf')) return <FaFilePdf className={iconClass} />;
+    if (type.includes('word') || type.includes('document')) return <FaFileWord className={iconClass} />;
+    if (type.includes('excel') || type.includes('spreadsheet')) return <FaFileExcel className={iconClass} />;
+    if (type.includes('powerpoint') || type.includes('presentation')) return <FaFilePowerpoint className={iconClass} />;
+    if (type.includes('text')) return <FaFileAlt className={iconClass} />;
+    return <FaFile className={iconClass} />;
   };
 
   const formatFileSize = (bytes) => {
@@ -129,154 +131,154 @@ const TaskCreate = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Validate required fields
-  if (!taskForm.title || !taskForm.description || !taskForm.assignedTo || !taskForm.dueDate) {
-    toast.error('Please fill all required fields');
-    setIsSubmitting(false);
-    return;
-  }
-
-  // Create FormData object with correct field names
-  const formData = new FormData();
-  formData.append('taskId', taskForm.taskId);
-  formData.append('title', taskForm.title);
-  formData.append('description', taskForm.description);
-  formData.append('assignedTo', taskForm.assignedTo); // Keep as assignedTo
-  formData.append('dueDate', taskForm.dueDate);       // Keep as dueDate
-
-  // Append files if any
-  files.forEach(file => {
-    formData.append('files', file.file);
-  });
-
-  try {
-    // Update files to uploading status
-    setFiles(prev => prev.map(file => ({ ...file, status: 'uploading' })));
-
-    // Create task with files
-    const response = await axios.post(`${API_URL}/task/create`, formData, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      onUploadProgress: (progressEvent) => {
-        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        setUploadProgress({ overall: progress });
-        
-        // Update individual file progress
-        setFiles(prev => prev.map(file => ({
-          ...file,
-          progress: progress
-        })));
-      }
-    });
-
-    toast.success('Task created successfully!');
-    
-    // Show attachment count if any
-    if (files.length > 0 && response.data.task?.attachments?.length > 0) {
-      toast.success(`${response.data.task.attachments.length} file(s) attached to the task`);
+    // Validate required fields
+    if (!taskForm.title || !taskForm.description || !taskForm.assignedTo || !taskForm.dueDate) {
+      toast.error('Please fill all required fields');
+      setIsSubmitting(false);
+      return;
     }
 
-    // Send email notification to assigned employee
-    console.log('Looking for employee:', taskForm.assignedTo);
-    console.log('Available employees:', employees);
-    const assignedEmployee = employees.find(emp => emp.name === taskForm.assignedTo);
-    console.log('Found employee:', assignedEmployee);
-    
-    if (assignedEmployee?.email) {
-      console.log('Attempting to send email to:', assignedEmployee.email);
-      sendTaskAssignedEmail(assignedEmployee.email, {
-        taskId: response.data.task.taskId,
-        title: response.data.task.title,
-        description: response.data.task.description,
-        dueDate: formatDate(response.data.task.dueDate),
-        employeeName: assignedEmployee.name
+    // Create FormData object with correct field names
+    const formData = new FormData();
+    formData.append('taskId', taskForm.taskId);
+    formData.append('title', taskForm.title);
+    formData.append('description', taskForm.description);
+    formData.append('assignedTo', taskForm.assignedTo); // Keep as assignedTo
+    formData.append('dueDate', taskForm.dueDate);       // Keep as dueDate
+
+    // Append files if any
+    files.forEach(file => {
+      formData.append('files', file.file);
+    });
+
+    try {
+      // Update files to uploading status
+      setFiles(prev => prev.map(file => ({ ...file, status: 'uploading' })));
+
+      // Create task with files
+      const response = await axios.post(`${API_URL}/task/create`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress({ overall: progress });
+
+          // Update individual file progress
+          setFiles(prev => prev.map(file => ({
+            ...file,
+            progress: progress
+          })));
+        }
       });
-    } else {
-      console.log('No email found for employee or employee not found');
-    }
 
-    // Reset form
-    setTaskForm({
-      taskId: generateShortId(),
-      title: '',
-      description: '',
-      assignedTo: '',
-      dueDate: ''
-    });
-    setFiles([]);
-    setUploadProgress({});
+      toast.success('Task created successfully!');
 
-  } catch (error) {
-    console.error('Error creating task:', error);
-    
-    // Update files to error status
-    setFiles(prev => prev.map(file => ({ ...file, status: 'error' })));
-    
-    // Show appropriate error message
-    if (error.response?.data?.message) {
-      if (error.response.data.details) {
-        // Show validation errors
-        const errorMessages = Object.values(error.response.data.details)
-          .map(err => err.message || err.kind)
-          .join(', ');
-        toast.error(`Validation error: ${errorMessages}`);
-      } else {
-        toast.error(error.response.data.message);
+      // Show attachment count if any
+      if (files.length > 0 && response.data.task?.attachments?.length > 0) {
+        toast.success(`${response.data.task.attachments.length} file(s) attached to the task`);
       }
-    } else if (error.response?.data?.error) {
-      toast.error(error.response.data.error);
-    } else {
-      toast.error(error.response?.data?.msg || 'Failed to create task');
+
+      // Send email notification to assigned employee
+      console.log('Looking for employee:', taskForm.assignedTo);
+      console.log('Available employees:', employees);
+      const assignedEmployee = employees.find(emp => emp.name === taskForm.assignedTo);
+      console.log('Found employee:', assignedEmployee);
+
+      if (assignedEmployee?.email) {
+        console.log('Attempting to send email to:', assignedEmployee.email);
+        sendTaskAssignedEmail(assignedEmployee.email, {
+          taskId: response.data.task.taskId,
+          title: response.data.task.title,
+          description: response.data.task.description,
+          dueDate: formatDate(response.data.task.dueDate),
+          employeeName: assignedEmployee.name
+        });
+      } else {
+        console.log('No email found for employee or employee not found');
+      }
+
+      // Reset form
+      setTaskForm({
+        taskId: generateShortId(),
+        title: '',
+        description: '',
+        assignedTo: '',
+        dueDate: ''
+      });
+      setFiles([]);
+      setUploadProgress({});
+
+    } catch (error) {
+      console.error('Error creating task:', error);
+
+      // Update files to error status
+      setFiles(prev => prev.map(file => ({ ...file, status: 'error' })));
+
+      // Show appropriate error message
+      if (error.response?.data?.message) {
+        if (error.response.data.details) {
+          // Show validation errors
+          const errorMessages = Object.values(error.response.data.details)
+            .map(err => err.message || err.kind)
+            .join(', ');
+          toast.error(`Validation error: ${errorMessages}`);
+        } else {
+          toast.error(error.response.data.message);
+        }
+      } else if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error.response?.data?.msg || 'Failed to create task');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   // Custom styles for theme
-  const containerStyles = theme === 'dark' 
-    ? 'bg-neutral-900/80 text-neutral-300 border-neutral-800' 
-    : 'bg-neutral-100 text-neutral-900 border-neutral-300';
-  
-  const inputStyles = theme === 'dark' 
-    ? 'bg-neutral-800 border-neutral-700 text-white focus:ring-emerald-700' 
-    : 'bg-white border-neutral-300 text-neutral-900 focus:ring-emerald-500';
-  
-  const labelStyles = theme === 'dark' 
-    ? 'text-neutral-300' 
-    : 'text-neutral-900';
-  
-  const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-900';
+  const containerStyles = theme === 'dark'
+    ? 'glass-card-dark shadow-[0_4px_24px_rgba(0,0,0,0.2)]'
+    : 'glass-card-light shadow-[0_2px_16px_rgba(0,0,0,0.03)]';
+
+  const inputStyles = theme === 'dark'
+    ? 'bg-neutral-900/50 border-neutral-800/50 text-white placeholder-neutral-600 focus:border-emerald-500/50 focus:ring-emerald-500/10'
+    : 'bg-white/60 border-neutral-200/50 text-neutral-900 placeholder-neutral-400 focus:border-emerald-500/50 focus:ring-emerald-500/10';
+
+  const labelStyles = theme === 'dark'
+    ? 'text-neutral-500'
+    : 'text-neutral-500';
+
+  const textColor = theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800';
   const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
-  
+
   const filePreviewStyles = theme === 'dark'
-    ? 'bg-neutral-800/50 border-neutral-700 hover:bg-neutral-800'
-    : 'bg-white/50 border-neutral-300 hover:bg-white';
-  
+    ? 'bg-neutral-900/40 border-neutral-800/40 hover:bg-neutral-800/40'
+    : 'bg-white/40 border-neutral-200/40 hover:bg-neutral-50/60';
+
   const removeBtnStyles = theme === 'dark'
-    ? 'text-red-400 hover:text-red-300 hover:bg-neutral-700'
-    : 'text-red-500 hover:text-red-600 hover:bg-neutral-100';
+    ? 'text-neutral-600 hover:text-red-400 hover:bg-neutral-800/60'
+    : 'text-neutral-400 hover:text-red-500 hover:bg-neutral-100/60';
 
   return (
-    <div className={`${containerStyles} backdrop-blur-sm rounded-xl border py-6 px-4 sm:py-8 sm:px-6 md:px-12 lg:px-24 my-4 w-full sm:w-[90vw] md:w-[82vw] max-w-[1800px] mx-auto`}>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <h2 className={`text-xl sm:text-2xl font-semibold ${accentColor}`}>Create New Task</h2>
-        <div className={`text-sm sm:text-md font-medium ${textColor}`}>
-          Task ID: <span className={`font-mono ${accentColor} text-lg sm:text-xl`}>{taskForm.taskId}</span>
+    <div className={`${containerStyles} rounded-2xl p-6 sm:p-8 max-w-[1400px] mx-auto w-full transition-all duration-300 animate-fade-in-up accent-top`}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-5 border-b border-neutral-500/10 gap-4">
+        <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${accentColor}`}>Create New Task</h2>
+        <div className={`text-sm font-medium ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-500'}`}>
+          Task ID: <span className={`font-mono font-semibold px-2.5 py-1 rounded-lg ml-1.5 ${theme === 'dark' ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/15' : 'text-emerald-600 bg-emerald-50/80 border border-emerald-200/40'}`}>{taskForm.taskId}</span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Task Title - Full width */}
           <div className="md:col-span-2">
-            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
-              Task Title <span className='text-red-500'>*</span>
+            <label className={`block text-[11px] font-semibold uppercase tracking-widest ${labelStyles} mb-2`}>
+              Task Title <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
@@ -284,22 +286,22 @@ const TaskCreate = () => {
               value={taskForm.title}
               onChange={handleInputChange}
               required
-              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
+              className={`w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-4 transition-all duration-300 ${inputStyles}`}
               placeholder="Enter task title"
             />
           </div>
 
           {/* Assign To */}
           <div>
-            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
-              Assign To <span className='text-red-500'>*</span>
+            <label className={`block text-[11px] font-semibold uppercase tracking-widest ${labelStyles} mb-2`}>
+              Assign To <span className="text-red-400">*</span>
             </label>
             <select
               name="assignedTo"
               value={taskForm.assignedTo}
               onChange={handleInputChange}
               required
-              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
+              className={`w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-4 transition-all duration-300 ${inputStyles}`}
             >
               <option value="">Select Employee</option>
               {employees.map(emp => (
@@ -312,8 +314,8 @@ const TaskCreate = () => {
 
           {/* Due Date */}
           <div>
-            <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
-              Due Date <span className='text-red-500'>*</span>
+            <label className={`block text-[11px] font-semibold uppercase tracking-widest ${labelStyles} mb-2`}>
+              Due Date <span className="text-red-400">*</span>
             </label>
             <input
               type="date"
@@ -322,39 +324,42 @@ const TaskCreate = () => {
               onChange={handleInputChange}
               required
               min={new Date().toISOString().split('T')[0]}
-              className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
+              className={`w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-4 transition-all duration-300 ${inputStyles}`}
             />
           </div>
         </div>
 
         {/* Task Description */}
         <div>
-          <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
-            Description <span className='text-red-500'>*</span>
+          <label className={`block text-[11px] font-semibold uppercase tracking-widest ${labelStyles} mb-2`}>
+            Description <span className="text-red-400">*</span>
           </label>
           <textarea
             name="description"
             value={taskForm.description}
             onChange={handleInputChange}
             required
-            rows={5}
-            className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg rounded-xl border focus:outline-none focus:ring-2 ${inputStyles}`}
+            rows={4}
+            className={`w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-4 transition-all duration-300 resize-none ${inputStyles}`}
             placeholder="Describe the task details..."
           />
         </div>
 
         {/* File Upload Section */}
         <div>
-          <label className={`block text-lg sm:text-md font-medium ${labelStyles} mb-2`}>
-            Attach Files (Optional)
-            <span className="text-sm font-normal ml-2 text-neutral-500">
-              Max 5 files, 10MB each. Supported: Images, PDF, Word, Excel, PowerPoint, Text
+          <label className={`block text-[11px] font-semibold uppercase tracking-widest ${labelStyles} mb-2 flex items-center justify-between flex-wrap gap-2`}>
+            <span>Attach Files (Optional)</span>
+            <span className="text-[10px] font-normal normal-case tracking-normal opacity-60">
+              Max 5 files, 10MB each
             </span>
           </label>
-          
+
           {/* File Upload Area */}
-          <div 
-            className={`border-2 border-dashed rounded-xl p-6 mb-4 transition-colors cursor-pointer hover:border-emerald-500 ${inputStyles} border-neutral-400/50`}
+          <div
+            className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer group ${theme === 'dark'
+                ? 'border-neutral-800/50 hover:border-emerald-500/40 hover:bg-emerald-500/[0.02]'
+                : 'border-neutral-200/60 hover:border-emerald-500/40 hover:bg-emerald-50/20'
+              }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <input
@@ -365,59 +370,54 @@ const TaskCreate = () => {
               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain"
               className="hidden"
             />
-            <div className="text-center">
-              <div className="flex justify-center mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
-                </svg>
+            <div className="flex flex-col items-center justify-center">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-all duration-300 ${theme === 'dark' ? 'bg-neutral-800/40 group-hover:bg-emerald-500/10' : 'bg-neutral-100/60 group-hover:bg-emerald-50'}`}>
+                <FaUpload className={`h-5 w-5 transition-colors duration-300 ${theme === 'dark' ? 'text-neutral-600 group-hover:text-emerald-400' : 'text-neutral-400 group-hover:text-emerald-500'}`} />
               </div>
-              <p className={`text-lg ${textColor} mb-1`}>
+              <p className={`text-sm font-medium ${textColor} mb-0.5`}>
                 Click to upload files
               </p>
-              <p className="text-sm text-neutral-500">
-                or drag and drop files here
-              </p>
-              <p className="text-xs text-neutral-500 mt-2">
-                {files.length} of 5 files selected
+              <p className={`text-xs ${theme === 'dark' ? 'text-neutral-600' : 'text-neutral-400'}`}>
+                {files.length} of 5 selected
               </p>
             </div>
           </div>
 
           {/* File Previews */}
           {files.length > 0 && (
-            <div className="space-y-3 mb-4">
-              <div className="flex items-center justify-between">
-                <h3 className={`text-md font-medium ${labelStyles}`}>
+            <div className="space-y-3 mt-4">
+              <div className="flex items-center justify-between pb-1">
+                <h3 className={`text-[11px] font-semibold uppercase tracking-widest ${labelStyles}`}>
                   Selected Files ({files.length}/5)
                 </h3>
                 {uploadProgress.overall > 0 && (
-                  <div className={`text-sm ${textColor}`}>
+                  <div className={`text-xs font-semibold text-emerald-500`}>
                     Uploading: {uploadProgress.overall}%
                   </div>
                 )}
               </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {files.map((file) => (
                   <div
                     key={file.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border ${filePreviewStyles} transition-colors`}
+                    className={`flex items-center justify-between p-3 rounded-xl border ${filePreviewStyles} transition-all duration-300`}
                   >
                     <div className="flex items-center space-x-3 min-w-0">
-                      <span className="text-xl">
+                      <div className={`p-1.5 rounded-lg flex-shrink-0 ${theme === 'dark' ? 'bg-emerald-500/10' : 'bg-emerald-50/80'}`}>
                         {getFileIcon(file.type)}
-                      </span>
+                      </div>
                       <div className="min-w-0 flex-1">
-                        <p className={`font-medium truncate ${textColor}`}>
+                        <p className={`text-sm font-medium truncate ${textColor}`}>
                           {file.name}
                         </p>
-                        <p className="text-xs text-neutral-500">
-                          {formatFileSize(file.size)}
+                        <p className={`text-xs flex items-center gap-1.5 mt-0.5 ${theme === 'dark' ? 'text-neutral-600' : 'text-neutral-400'}`}>
+                          <span>{formatFileSize(file.size)}</span>
                           {file.progress > 0 && file.progress < 100 && (
-                            <span className="ml-2">• {file.progress}%</span>
+                            <span>• {file.progress}%</span>
                           )}
                           {file.status === 'error' && (
-                            <span className="ml-2 text-red-500">• Failed</span>
+                            <span className="text-red-500 font-medium">• Failed</span>
                           )}
                         </p>
                       </div>
@@ -425,22 +425,22 @@ const TaskCreate = () => {
                     <button
                       type="button"
                       onClick={() => removeFile(file.id)}
-                      className={`p-1 rounded-full transition-colors ${removeBtnStyles}`}
+                      className={`p-1.5 rounded-lg transition-all duration-200 ${removeBtnStyles}`}
                       disabled={isSubmitting}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
                     </button>
                   </div>
                 ))}
               </div>
-              
+
               {/* Progress Bar */}
               {uploadProgress.overall > 0 && uploadProgress.overall < 100 && (
-                <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2 mt-3">
-                  <div 
-                    className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
+                <div className={`w-full rounded-full h-1 mt-2 overflow-hidden ${theme === 'dark' ? 'bg-neutral-800/50' : 'bg-neutral-200/50'}`}>
+                  <div
+                    className="bg-emerald-500 h-full rounded-full transition-all duration-300"
                     style={{ width: `${uploadProgress.overall}%` }}
                   ></div>
                 </div>
@@ -450,27 +450,21 @@ const TaskCreate = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-2">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`bg-emerald-700 hover:bg-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl transition-colors font-medium flex items-center justify-center w-full text-base sm:text-lg ${
-              isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            className={`bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-6 py-3 rounded-xl transition-all duration-300 font-semibold flex items-center justify-center w-full text-sm border border-emerald-500/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] active:scale-[0.99] ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
           >
             {isSubmitting ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+                <FaSpinner className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" />
                 {files.length > 0 ? 'Creating with Files...' : 'Creating...'}
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-                </svg>
+                <FaPlus className="h-3.5 w-3.5 mr-2" />
                 Create Task {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}
               </>
             )}

@@ -24,15 +24,17 @@ const EmployeeDash = ({ onLogout, userData }) => {
     }
 
     return (
-        <div className={`min-h-screen ${pageBg}`}>
+        <div className={`min-h-screen animate-fade-in ${pageBg}`}>
            <EmployeeHeader 
                onLogout={onLogout} 
                employee={userData} 
            />
-           <EmployeeStats />
-           <EmployeeTask 
-               employee={userData} 
-           />
+           <main className="px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto">
+             <EmployeeStats />
+             <EmployeeTask 
+                 employee={userData} 
+             />
+           </main>
         </div>
     )
 }

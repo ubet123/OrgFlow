@@ -55,16 +55,19 @@ const TaskCompletionRateChart = ({ tasks }) => {
 
   const containerStyles = theme === 'dark'
     ? {
-        backgroundColor: 'rgb(23 23 23 / 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(23, 23, 23, 0.5)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(12px)',
       }
     : {
-        backgroundColor: 'rgba(245, 245, 245, 0.8)',
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        border: '1px solid rgba(0, 0, 0, 0.05)',
+        backdropFilter: 'blur(12px)',
       };
 
   const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
   const accentColor = theme === 'dark' ? '#34d399' : '#059669';
+  const subtextColor = theme === 'dark' ? '#737373' : '#9ca3af';
 
   // Download as PDF function
   const downloadPDF = async () => {
@@ -123,11 +126,11 @@ const TaskCompletionRateChart = ({ tasks }) => {
       sx={{
         ...containerStyles,
         overflow: 'hidden',
-        borderRadius: { xs: '8px', sm: '12px' },
-        padding: { xs: '12px', sm: '16px', md: '20px' },
+        borderRadius: '16px',
+        padding: { xs: '16px', sm: '20px', md: '24px' },
         boxShadow: theme === 'dark' 
-          ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-          : '0 2px 4px rgba(0, 0, 0, 0.1)',
+          ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
+          : '0 2px 16px rgba(0, 0, 0, 0.03)',
       }}
     >
       <div style={{ 
@@ -135,13 +138,14 @@ const TaskCompletionRateChart = ({ tasks }) => {
         flexWrap: 'wrap',
         justifyContent: 'space-between', 
         alignItems: 'center',
-        marginBottom: 'clamp(12px, 3vw, 16px)',
+        marginBottom: 'clamp(16px, 3vw, 20px)',
         gap: '8px'
       }}>
         <h2 style={{ 
           color: theme === 'dark' ? '#34d399' : '#059669', 
           fontSize: 'clamp(1rem, 4vw, 1.25rem)',
-          fontWeight: 'bold',
+          fontWeight: '700',
+          letterSpacing: '-0.01em',
           margin: 0
         }}>
           Task Completion Rate Trend
@@ -152,15 +156,17 @@ const TaskCompletionRateChart = ({ tasks }) => {
           variant="outlined"
           size="small"
           sx={{
-            color: accentColor,
-            borderColor: accentColor,
+            color: theme === 'dark' ? '#a3a3a3' : '#737373',
+            borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+            borderRadius: '10px',
             '&:hover': {
-              borderColor: accentColor,
-              backgroundColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(5, 150, 105, 0.1)',
+              borderColor: theme === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
+              backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
             },
             textTransform: 'none',
-            fontSize: { xs: '0.75rem', sm: '0.875rem' },
-            padding: { xs: '4px 8px', sm: '6px 12px' }
+            fontSize: { xs: '0.75rem', sm: '0.8rem' },
+            padding: { xs: '4px 10px', sm: '5px 12px' },
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           PDF
@@ -196,10 +202,10 @@ const TaskCompletionRateChart = ({ tasks }) => {
         sx={{
           maxWidth: '100%',
           '& .MuiChartsAxis-line': {
-            stroke: `${textColor} !important`,
+            stroke: `${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important`,
           },
           '& .MuiChartsAxis-tick': {
-            stroke: `${textColor} !important`,
+            stroke: `${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important`,
           },
           '& .MuiChartsAxis-tickLabel': {
             fill: `${textColor} !important`,
@@ -224,8 +230,8 @@ const TaskCompletionRateChart = ({ tasks }) => {
       
       <div style={{ 
         marginTop: 'clamp(8px, 2vw, 12px)', 
-        fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)', 
-        color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+        fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)', 
+        color: subtextColor,
         textAlign: 'center',
         lineHeight: 1.4,
         padding: '0 8px'

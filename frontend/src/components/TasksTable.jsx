@@ -198,67 +198,67 @@ const TasksTable = () => {
   };
 
   const containerStyles = theme === 'dark' 
-    ? 'bg-neutral-900/80 border-neutral-800' 
-    : 'bg-neutral-100/80 border-neutral-300';
+    ? 'glass-card-dark shadow-[0_4px_24px_rgba(0,0,0,0.2)]' 
+    : 'glass-card-light shadow-[0_2px_16px_rgba(0,0,0,0.03)]';
   
-  const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-800';
+  const textColor = theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800';
   const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
-  const tableHeaderColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-700';
-  const tableBorderColor = theme === 'dark' ? 'border-neutral-700' : 'border-neutral-300';
-  const tableRowHover = theme === 'dark' ? 'hover:bg-neutral-800/50' : 'hover:bg-neutral-200/50';
+  const tableHeaderColor = theme === 'dark' ? 'text-neutral-500 font-semibold' : 'text-neutral-400 font-semibold';
+  const tableBorderColor = theme === 'dark' ? 'border-neutral-800/40' : 'border-neutral-200/40';
+  const tableRowHover = theme === 'dark' ? 'hover:bg-neutral-800/20' : 'hover:bg-neutral-50/60';
   
   const cardStyles = theme === 'dark' 
-    ? 'bg-neutral-800/50 border-neutral-700' 
-    : 'bg-white border-neutral-300';
+    ? 'bg-neutral-900/30 border-neutral-800/40' 
+    : 'bg-white/50 border-neutral-200/40';
   
   const overdueStyles = theme === 'dark' 
-    ? 'bg-red-950' 
-    : 'bg-red-300';
+    ? 'bg-red-950/10 border-l-2 border-l-red-500/40 text-red-300' 
+    : 'bg-red-50/30 border-l-2 border-l-red-400/40 text-red-800';
   
   const employeeBadgeStyles = theme === 'dark' 
-    ? 'bg-emerald-900/30 hover:bg-emerald-800 text-emerald-300' 
-    : 'bg-emerald-200 hover:bg-emerald-300 text-emerald-700';
+    ? 'bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-400 border border-emerald-500/15' 
+    : 'bg-emerald-50/80 hover:bg-emerald-100/60 text-emerald-700 border border-emerald-200/40';
   
   const scrollbarStyles = theme === 'dark' 
     ? 'custom-scrollbar' 
     : 'custom-scrollbar-light';
 
   const searchInputStyles = theme === 'dark'
-    ? 'bg-neutral-800 border-neutral-700 text-neutral-300 placeholder-neutral-500'
-    : 'bg-white border-neutral-300 text-neutral-800 placeholder-neutral-500';
+    ? 'bg-neutral-900/50 border-neutral-800/50 text-neutral-200 placeholder-neutral-600 focus:border-emerald-500/50 focus:ring-emerald-500/10'
+    : 'bg-white/60 border-neutral-200/50 text-neutral-800 placeholder-neutral-400 focus:border-emerald-500/50 focus:ring-emerald-500/10';
 
   const paginationButtonStyles = theme === 'dark'
-    ? 'bg-neutral-800 border-neutral-700 text-neutral-300 hover:bg-neutral-700'
-    : 'bg-white border-neutral-300 text-neutral-700 hover:bg-neutral-100';
+    ? 'bg-neutral-900/50 border-neutral-800/40 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200'
+    : 'bg-white/60 border-neutral-200/40 text-neutral-500 hover:bg-neutral-50/80 hover:text-neutral-800';
 
   const activePageStyles = theme === 'dark'
-    ? 'bg-emerald-600 border-emerald-500 text-white'
-    : 'bg-emerald-500 border-emerald-400 text-white';
+    ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+    : 'bg-emerald-50 border-emerald-200/50 text-emerald-700';
 
   const editButtonStyles = theme === 'dark'
-    ? 'bg-blue-900/30 hover:bg-blue-800 text-blue-300'
-    : 'bg-blue-200 hover:bg-blue-300 text-blue-700';
+    ? 'bg-blue-500/10 hover:bg-blue-500/15 text-blue-400 border border-blue-500/15 active:scale-95'
+    : 'bg-blue-50/80 hover:bg-blue-100/60 text-blue-600 border border-blue-200/40 active:scale-95';
 
   const deleteButtonStyles = theme === 'dark'
-    ? 'bg-red-600/30 hover:bg-red-800 text-red-300'
-    : 'bg-red-200 hover:bg-red-300 text-red-700';
+    ? 'bg-red-500/10 hover:bg-red-500/15 text-red-400 border border-red-500/15 active:scale-95'
+    : 'bg-red-50/80 hover:bg-red-100/60 text-red-600 border border-red-200/40 active:scale-95';
 
   const modalStyles = theme === 'dark' 
-    ? 'bg-neutral-900/90 border-neutral-800' 
-    : 'bg-white border-neutral-300';
+    ? 'bg-neutral-950/95 border-neutral-800/60 shadow-[0_10px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl' 
+    : 'bg-white/95 border-neutral-200/60 shadow-[0_10px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl';
 
   return (
     <>
-      <div className={`mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-32 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 ${containerStyles}`}>
-        <div className="py-6 px-3 sm:py-8 sm:px-4 md:px-6 lg:px-10 xl:px-12">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
-            <h2 className={`text-xl sm:text-2xl font-bold ${accentColor}`}>Assigned Tasks</h2>
+      <div className={`rounded-2xl overflow-hidden w-full max-w-[1400px] mx-auto transition-all duration-300 animate-fade-in-up accent-top ${containerStyles}`}>
+        <div className="py-6 px-4 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-5 border-b border-neutral-500/10 gap-4">
+            <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${accentColor}`}>Assigned Tasks</h2>
             
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className={`px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors cursor-pointer ${searchInputStyles}`}
+                className={`px-3.5 py-2 rounded-xl border text-sm focus:outline-none focus:ring-4 transition-all duration-300 cursor-pointer ${searchInputStyles}`}
               >
                 <option value="All">All Tasks</option>
                 <option value="Pending">Pending</option>
@@ -271,10 +271,10 @@ const TasksTable = () => {
                   placeholder="Search tasks..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`w-full px-4 py-2 pl-10 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors ${searchInputStyles}`}
+                  className={`w-full px-4 py-2 pl-10 rounded-xl border text-sm focus:outline-none focus:ring-4 transition-all duration-300 ${searchInputStyles}`}
                 />
                 <svg 
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" 
+                  className={`absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 ${theme === 'dark' ? 'text-neutral-600' : 'text-neutral-400'}`}
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -282,7 +282,7 @@ const TasksTable = () => {
                   <path 
                     strokeLinecap="round" 
                     strokeLinejoin="round" 
-                    strokeWidth={2} 
+                    strokeWidth={1.5} 
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
                   />
                 </svg>
@@ -291,13 +291,13 @@ const TasksTable = () => {
           </div>
           
           {loading ? (
-            <div className="flex justify-center py-8">
-              <div className={`animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-t-2 border-b-2 ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
+            <div className="flex justify-center py-12">
+              <div className={`animate-spin rounded-full h-8 w-8 border-2 border-t-transparent ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
             </div>
           ) : sortedTasks.length === 0 ? (
-            <div className={`rounded-lg p-8 text-center ${theme === 'dark' ? 'bg-neutral-800/50' : 'bg-neutral-200/50'}`}>
-              <p className={textColor}>
-                {searchTerm ? 'No tasks found matching your search' : 'No tasks found'}
+            <div className={`rounded-2xl p-10 text-center border border-dashed ${theme === 'dark' ? 'border-neutral-800/40 text-neutral-500' : 'border-neutral-200/40 text-neutral-400'}`}>
+              <p className="text-sm font-medium">
+                {searchTerm ? 'No tasks found matching your search' : 'No tasks assigned yet'}
               </p>
             </div>
           ) : (
@@ -306,199 +306,222 @@ const TasksTable = () => {
                 <table className="w-full table-fixed border-collapse hidden sm:table">
                   <colgroup>
                     <col className="w-[10%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[14%]" />
-                    <col className="w-[22%]" />
-                    <col className="w-[12%]" />
+                    <col className="w-[18%]" />
+                    <col className="w-[13%]" />
+                    <col className="w-[21%]" />
                     <col className="w-[11%]" />
-                    <col className="w-[16%]" />
+                    <col className="w-[12%]" />
+                    <col className="w-[15%]" />
                   </colgroup>
                   <thead>
                     <tr className={`border-b ${tableBorderColor}`}>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task ID</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Title</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Assigned To</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Description</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Due Date</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Task Status</th>
-                      <th className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-left text-sm sm:text-lg font-medium ${tableHeaderColor}`}>Actions</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Task ID</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Title</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Assigned To</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Description</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Due Date</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Status</th>
+                      <th className={`px-2 xl:px-3 py-3.5 text-left text-[11px] uppercase tracking-widest ${tableHeaderColor}`}>Actions</th>
                     </tr>
                   </thead>
-                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-neutral-800' : 'divide-neutral-300'}`}>
-                    {currentTasks.map((task) => (
-                      <tr 
-                        key={task.taskId} 
-                        className={`
-                          ${(new Date(task.due) < new Date()) && (task.status === 'Pending') ? overdueStyles : ''} 
-                          ${tableRowHover}
-                          transition-colors
-                        `}
-                      >
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base font-mono ${textColor}`}>
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
-                            className={`rounded-md px-2 py-1 transition-colors ${theme === 'dark' ? 'hover:bg-emerald-900/30' : 'hover:bg-emerald-100'}`}
-                          >
-                            {task.taskId}
-                          </button>
-                        </td>
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${textColor}`}>
-                          <span className="block truncate">
-                            {task.title}
-                          </span>
-                        </td>
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${textColor}`}>
-                          <div className="flex items-center space-x-2">
-                            <span
-                              onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                              className={`${employeeBadgeStyles} hover:cursor-pointer font-bold rounded-lg text-xs sm:text-sm flex items-center justify-center text-center w-[120px] min-h-[38px] sm:w-[150px] sm:min-h-[42px] px-2 py-1 line-clamp-2 overflow-hidden`}
-                              title={task.assigned}
+                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-neutral-800/30' : 'divide-neutral-100/60'}`}>
+                    {currentTasks.map((task) => {
+                      const isOverdue = (new Date(task.due) < new Date()) && (task.status === 'Pending');
+                      return (
+                        <tr 
+                          key={task.taskId} 
+                          className={`
+                            ${isOverdue ? overdueStyles : ''} 
+                            ${tableRowHover}
+                            transition-all duration-200
+                          `}
+                        >
+                          <td className="px-2 xl:px-3 py-4 text-sm font-mono">
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                              className={`rounded-lg px-2 py-1 font-semibold text-xs border transition-all duration-200 ${
+                                theme === 'dark' 
+                                  ? 'bg-emerald-500/10 border-emerald-500/15 text-emerald-400 hover:bg-emerald-500/15' 
+                                  : 'bg-emerald-50/80 border-emerald-200/40 text-emerald-700 hover:bg-emerald-100/60'
+                              }`}
                             >
-                              {task.assigned}
+                              {task.taskId}
+                            </button>
+                          </td>
+                          <td className={`px-2 xl:px-3 py-4 text-sm font-medium ${textColor}`}>
+                            <span className="block truncate" title={task.title}>
+                              {task.title}
                             </span>
-                          </div>
-                        </td>
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8`}>
-                          <div className={`text-sm sm:text-base line-clamp-2 ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
-                            {task.description}
-                          </div>
-                        </td>
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-base ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'}`}>
-                          {formatDate(task.due)}
-                        </td>
-                        
-                        {task.status === 'Completed' ? (
-                          <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-lg font-semibold text-green-600 ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`}>
-                            {task.status}
                           </td>
-                        ) : (
-                          <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-sm sm:text-lg font-semibold text-yellow-600 ${theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'}`}>
-                            {task.status}
+                          <td className="px-2 xl:px-3 py-4 text-sm">
+                            <div className="flex items-center">
+                              <span
+                                onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
+                                className={`${employeeBadgeStyles} hover:cursor-pointer font-semibold rounded-lg text-xs flex items-center justify-center text-center w-full px-1.5 py-1.5 truncate transition-all duration-200`}
+                                title={task.assigned}
+                              >
+                                {task.assigned}
+                              </span>
+                            </div>
                           </td>
-                        )}
-                        
-                        <td className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8`}>
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              onClick={() => handleEdit(task)}
-                              className={`w-24 px-3 py-1 rounded text-sm font-medium ${editButtonStyles}`}
-                            >
-                              <div className='flex flex-row items-center justify-center gap-2'>
-                                <MdEdit /> Edit
-                              </div>
-                            </button>
-                            <button
-                              onClick={() => handleDeleteClick(task.taskId)}
-                              className={`w-24 px-3 py-1 rounded text-sm font-medium ${deleteButtonStyles}`}
-                            >
-                            <div className='flex flex-row items-center justify-around gap-1'>
-                                <MdDelete /> Delete
-                              </div>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="px-2 xl:px-3 py-4">
+                            <div className={`text-sm truncate ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-500'}`} title={task.description}>
+                              {task.description}
+                            </div>
+                          </td>
+                          <td className={`px-2 xl:px-3 py-4 text-sm ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-500'}`}>
+                            {formatDate(task.due)}
+                          </td>
+                          <td className="px-2 xl:px-3 py-4">
+                            {task.status === 'Completed' ? (
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+                                theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/15' : 'bg-emerald-50/80 text-emerald-700 border border-emerald-200/40'
+                              }`}>
+                                Completed
+                              </span>
+                            ) : (
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+                                theme === 'dark' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/15' : 'bg-amber-50/80 text-amber-700 border border-amber-200/40'
+                              }`}>
+                                Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-2 xl:px-3 py-4">
+                            <div className="flex items-center gap-1 xl:gap-1.5 flex-wrap xl:flex-nowrap">
+                              <button
+                                onClick={() => handleEdit(task)}
+                                className={`px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 flex-1 ${editButtonStyles}`}
+                                title="Edit Task"
+                              >
+                                <div className="flex items-center justify-center gap-1">
+                                  <MdEdit className="text-sm" /> Edit
+                                </div>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteClick(task.taskId)}
+                                className={`px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 flex-1 ${deleteButtonStyles}`}
+                                title="Delete Task"
+                              >
+                                <div className="flex items-center justify-center gap-1">
+                                  <MdDelete className="text-sm" /> Delete
+                                </div>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
 
+                {/* Mobile Cards View */}
                 <div className="sm:hidden space-y-3">
-                  {currentTasks.map((task) => (
-                    <div 
-                      key={task.taskId} 
-                      className={`
-                        ${(task.status === 'Pending') && (new Date() > new Date(task.due)) ? overdueStyles : cardStyles}
-                        rounded-lg p-3 border
-                        ${theme === 'dark' ? 'border-neutral-700' : 'border-neutral-300'}
-                        w-full max-w-full overflow-hidden
-                      `}
-                    >
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`${accentColor} font-medium text-sm truncate`}>{task.title}</h3>
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
-                            className={`text-xs mt-1 font-mono truncate rounded px-1.5 py-0.5 transition-colors ${theme === 'dark' ? 'text-neutral-400 hover:bg-emerald-900/30' : 'text-neutral-600 hover:bg-emerald-100'}`}
+                  {currentTasks.map((task) => {
+                    const isOverdue = (task.status === 'Pending') && (new Date() > new Date(task.due));
+                    return (
+                      <div 
+                        key={task.taskId} 
+                        className={`
+                          ${isOverdue ? `${overdueStyles} rounded-2xl` : cardStyles}
+                          rounded-2xl p-4 border transition-all duration-300 
+                          w-full max-w-full overflow-hidden
+                        `}
+                      >
+                        <div className="flex justify-between items-start gap-2 mb-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className={`${textColor} font-semibold text-base truncate`}>{task.title}</h3>
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/task/${encodeURIComponent(task.taskId)}`)}
+                              className={`font-mono text-xs font-semibold mt-1.5 px-2 py-0.5 rounded-lg border transition-colors duration-200 ${
+                                theme === 'dark' 
+                                  ? 'bg-emerald-500/10 border-emerald-500/15 text-emerald-400 hover:bg-emerald-500/15' 
+                                  : 'bg-emerald-50/80 border-emerald-200/40 text-emerald-700 hover:bg-emerald-100/60'
+                              }`}
+                            >
+                              ID: {task.taskId}
+                            </button>
+                          </div>
+                          <span
+                            onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
+                            className={`${employeeBadgeStyles} px-2.5 py-1 rounded-lg text-xs font-semibold hover:cursor-pointer flex-shrink-0 max-w-28 truncate transition-all duration-200`}
+                            title={task.assigned}
                           >
-                            ID: {task.taskId}
+                            {task.assigned}
+                          </span>
+                        </div>
+                        
+                        <div className="mb-3">
+                          <p className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-500'} break-words line-clamp-2`}>
+                            {task.description}
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-between items-center pt-3 border-t border-neutral-500/10 gap-2">
+                          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                            <span className={`text-xs ${theme === 'dark' ? 'text-neutral-600' : 'text-neutral-400'}`}>Due:</span>
+                            <span className={`text-xs font-medium truncate ${isOverdue ? 'text-red-400 font-semibold' : textColor}`}>
+                              {formatDate(task.due)}
+                            </span>
+                          </div>
+                          
+                          <div className="flex-shrink-0">
+                            {task.status === 'Completed' ? (
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/15' : 'bg-emerald-50/80 text-emerald-700 border border-emerald-200/40'
+                              }`}>
+                                Completed
+                              </span>
+                            ) : (
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                theme === 'dark' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/15' : 'bg-amber-50/80 text-amber-700 border border-amber-200/40'
+                              }`}>
+                                Pending
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2 mt-3">
+                          <button
+                            onClick={() => handleEdit(task)}
+                            className={`flex-1 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${editButtonStyles}`}
+                          >
+                            <div className="flex items-center justify-center gap-1">
+                              <MdEdit className="text-sm" /> Edit
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(task.taskId)}
+                            className={`flex-1 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${deleteButtonStyles}`}
+                          >
+                            <div className="flex items-center justify-center gap-1">
+                              <MdDelete className="text-sm" /> Delete
+                            </div>
                           </button>
                         </div>
-                        <span
-                          onClick={() => navigate(`/manager-dashboard/employee-tasks/${encodeURIComponent(task.assigned)}`)}
-                          className={`${employeeBadgeStyles} px-2 py-1 rounded-md text-xs font-bold hover:cursor-pointer flex-shrink-0 max-w-20 truncate`}
-                          title={task.assigned}
-                        >
-                          {task.assigned}
-                        </span>
                       </div>
-                      
-                      <div className="mt-2">
-                        <p className={`text-sm ${theme === 'dark' ? 'text-neutral-300' : 'text-neutral-700'} break-words line-clamp-2 max-h-10 overflow-hidden`}>
-                          {task.description}
-                        </p>
-                      </div>
-                      
-                      <div className='flex justify-between items-center mt-2 gap-2'>
-                        <div className="flex justify-start gap-2 items-center flex-1 min-w-0">
-                          <span className={`text-xs ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-600'} flex-shrink-0`}>
-                            Due:
-                          </span>
-                          <span className={`text-xs ${theme === 'dark' ? 'text-neutral-300' : 'text-neutral-800'} truncate`}>
-                            {formatDate(task.due)}
-                          </span>
-                        </div>
-                        <div className='flex-shrink-0'>
-                          {task.status === 'Completed' ? (
-                            <div className={`text-sm font-bold ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`}>
-                              {task.status}
-                            </div>
-                          ) : (
-                            <div className={`text-sm font-bold ${theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'}`}>
-                              {task.status}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="flex space-x-2 mt-3 pt-3 border-t border-neutral-700">
-                        <button
-                          onClick={() => handleEdit(task)}
-                          className={`flex-1 px-2 py-1.5 rounded text-xs font-medium ${editButtonStyles}`}
-                        >
-                          <div className='flex flex-row items-center justify-center gap-1 '>
-                            <MdEdit /> Edit
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(task.taskId)}
-                          className={`flex-1 px-2 py-1.5 rounded text-xs font-medium ${deleteButtonStyles}`}
-                        >
-                          <div className='flex flex-row items-center justify-center gap-1'>
-                            <MdDelete /> Delete
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
               {totalPages > 1 && (
-                <div className="flex flex-col items-center justify-between mt-6 pt-4 border-t border-neutral-700 gap-3 sm:flex-row">
-                  <div className={`text-xs sm:text-sm ${textColor}`}>
+                <div className="flex flex-col items-center justify-between mt-6 pt-5 border-t border-neutral-500/10 gap-4 sm:flex-row">
+                  <div className={`text-xs sm:text-sm font-medium ${theme === 'dark' ? 'text-neutral-500' : 'text-neutral-400'}`}>
                     Showing {indexOfFirstTask + 1}-{Math.min(indexOfLastTask, sortedTasks.length)} of {sortedTasks.length} tasks
                   </div>
                   
-                  <div className="flex items-center space-x-1 sm:space-x-2 flex-wrap justify-center">
+                  <div className="flex items-center space-x-1.5 flex-wrap justify-center">
                     <button
                       onClick={prevPage}
                       disabled={currentPage === 1}
-                      className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
+                      className={`px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-200 ${
                         currentPage === 1 
-                          ? 'opacity-50 cursor-not-allowed' 
-                          : `${paginationButtonStyles} hover:scale-105`
+                          ? 'opacity-30 cursor-not-allowed' 
+                          : `${paginationButtonStyles}`
                       }`}
                     >
                       Prev
@@ -520,16 +543,16 @@ const TasksTable = () => {
                         }
                         return pages.map((number, idx) => 
                           number === '...' ? (
-                            <span key={`ellipsis-${idx}`} className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm ${textColor}`}>…</span>
+                            <span key={`ellipsis-${idx}`} className={`w-8 h-8 flex items-center justify-center text-xs sm:text-sm ${theme === 'dark' ? 'text-neutral-600' : 'text-neutral-400'}`}>…</span>
                           ) : (
                             <button
                               key={number}
                               onClick={() => paginate(number)}
-                              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
+                              className={`w-8 h-8 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-200 ${
                                 currentPage === number 
                                   ? activePageStyles 
                                   : paginationButtonStyles
-                              } hover:scale-105`}
+                              }`}
                             >
                               {number}
                             </button>
@@ -541,10 +564,10 @@ const TasksTable = () => {
                     <button
                       onClick={nextPage}
                       disabled={currentPage === totalPages}
-                      className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border text-xs sm:text-sm font-medium transition-colors ${
+                      className={`px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-200 ${
                         currentPage === totalPages 
-                          ? 'opacity-50 cursor-not-allowed' 
-                          : `${paginationButtonStyles} hover:scale-105`
+                          ? 'opacity-30 cursor-not-allowed' 
+                          : `${paginationButtonStyles}`
                       }`}
                     >
                       Next
@@ -567,52 +590,59 @@ const TasksTable = () => {
       )}
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`backdrop-blur-sm rounded-xl border p-4 sm:p-6 w-full max-w-md ${modalStyles}`}>
-            <div className="flex items-start mb-4">
-              <div className="bg-red-900/30 p-2 rounded-lg mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className={`rounded-2xl border p-6 w-full max-w-md ${modalStyles}`}>
+            <div className="flex items-start mb-5">
+              <div className={`p-3 rounded-xl mr-3 flex-shrink-0 ${theme === 'dark' ? 'bg-red-500/10' : 'bg-red-50/80'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <div>
-                <h3 className={`text-lg font-semibold mb-1 ${textColor}`}>Delete Task</h3>
-                <p className={`text-sm sm:text-base ${textColor}`}>
-                  Are you sure you want to permanently delete task <span className={`font-medium ${accentColor}`}>"{taskToDelete?.title}"</span>?
+              <div className="min-w-0">
+                <h3 className={`text-lg font-bold mb-1.5 ${textColor}`}>Delete Task</h3>
+                <p className={`text-sm ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-500'} leading-relaxed`}>
+                  Are you sure you want to permanently delete task <span className="font-semibold text-emerald-500">"{taskToDelete?.title}"</span>?
                 </p>
-                <p className={`text-sm ${theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'} mt-1`}>
-                  Task ID: <span className="font-mono">{taskToDelete?.taskId}</span>
-                </p>
-                <p className={`text-sm text-amber-500 mt-2 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>
-                  Note: This action cannot be undone.
+                <div className={`mt-3 py-2 px-3 rounded-lg font-mono text-xs flex justify-between items-center ${theme === 'dark' ? 'bg-neutral-900/40 text-neutral-500' : 'bg-neutral-50/60 text-neutral-400'}`}>
+                  <span>Task ID:</span>
+                  <span className="font-semibold">{taskToDelete?.taskId}</span>
+                </div>
+                <p className={`text-xs mt-3 font-medium ${theme === 'dark' ? 'text-red-400/70' : 'text-red-400/70'}`}>
+                  * This action cannot be undone.
                 </p>
               </div>
             </div>
             
-            <div className="flex justify-end space-x-3 mt-4 sm:mt-6">
+            <div className="flex justify-end space-x-2.5 pt-3 border-t border-neutral-500/10">
               <button
                 onClick={handleDeleteCancel}
                 disabled={deleting}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border transition-colors text-sm sm:text-base ${
-                  theme === 'dark' ? 'border-neutral-700 text-neutral-300 hover:bg-neutral-800' : 'border-neutral-300 text-neutral-700 hover:bg-neutral-100'
-                } ${deleting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                  theme === 'dark' 
+                    ? 'border-neutral-800/50 text-neutral-400 hover:bg-neutral-800/40 hover:text-neutral-200' 
+                    : 'border-neutral-200/50 text-neutral-500 hover:bg-neutral-50/60'
+                } ${deleting ? 'opacity-40 cursor-not-allowed' : ''}`}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 disabled={deleting}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors flex items-center justify-center text-sm sm:text-base disabled:opacity-70 disabled:cursor-not-allowed"
+                className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97] ${
+                  theme === 'dark' 
+                    ? 'bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/20' 
+                    : 'bg-red-50 hover:bg-red-100/80 text-red-600 border border-red-200/50'
+                }`}
               >
                 {deleting ? (
                   <>
-                    <div className={`animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-white mr-2`}></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent border-red-400 mr-2"></div>
                     Deleting...
                   </>
                 ) : (
                   <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                     Delete
                   </>

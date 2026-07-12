@@ -29,16 +29,19 @@ const OverdueTasksGauge = ({ tasks }) => {
 
   const containerStyles = theme === 'dark'
     ? {
-        backgroundColor: 'rgb(23 23 23 / 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(23, 23, 23, 0.5)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(12px)',
       }
     : {
-        backgroundColor: 'rgba(245, 245, 245, 0.8)',
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        border: '1px solid rgba(0, 0, 0, 0.05)',
+        backdropFilter: 'blur(12px)',
       };
 
   const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
   const accentColor = theme === 'dark' ? '#34d399' : '#059669';
+  const subtextColor = theme === 'dark' ? '#737373' : '#9ca3af';
   
   // Determine gauge color based on percentage
   const getGaugeColor = () => {
@@ -106,11 +109,11 @@ const OverdueTasksGauge = ({ tasks }) => {
       sx={{
         ...containerStyles,
         overflow: 'hidden',
-        borderRadius: { xs: '8px', sm: '12px' },
-        padding: { xs: '12px', sm: '16px', md: '20px' },
+        borderRadius: '16px',
+        padding: { xs: '16px', sm: '20px', md: '24px' },
         boxShadow: theme === 'dark' 
-          ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-          : '0 2px 4px rgba(0, 0, 0, 0.1)',
+          ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
+          : '0 2px 16px rgba(0, 0, 0, 0.03)',
       }}
     >
       <div style={{ 
@@ -118,20 +121,21 @@ const OverdueTasksGauge = ({ tasks }) => {
         flexWrap: 'wrap',
         justifyContent: 'space-between', 
         alignItems: 'center',
-        marginBottom: 'clamp(12px, 3vw, 16px)',
+        marginBottom: 'clamp(16px, 3vw, 20px)',
         gap: '8px'
       }}>
         <h2 style={{ 
           color: theme === 'dark' ? '#34d399' : '#059669', 
           fontSize: 'clamp(1rem, 4vw, 1.25rem)',
-          fontWeight: 'bold',
+          fontWeight: '700',
+          letterSpacing: '-0.01em',
           margin: 0,
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
           flexWrap: 'wrap'
         }}>
-          <WarningAmberIcon sx={{ color: gaugeColor, fontSize: { xs: '1.25rem', sm: '1.5rem' } }} />
+          <WarningAmberIcon sx={{ color: gaugeColor, fontSize: { xs: '1.25rem', sm: '1.5rem' }, opacity: 0.9 }} />
           <span>Overdue Tasks Monitor</span>
         </h2>
         <Button
@@ -140,15 +144,17 @@ const OverdueTasksGauge = ({ tasks }) => {
           variant="outlined"
           size="small"
           sx={{
-            color: accentColor,
-            borderColor: accentColor,
+            color: theme === 'dark' ? '#a3a3a3' : '#737373',
+            borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+            borderRadius: '10px',
             '&:hover': {
-              borderColor: accentColor,
-              backgroundColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(5, 150, 105, 0.1)',
+              borderColor: theme === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
+              backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
             },
             textTransform: 'none',
-            fontSize: { xs: '0.75rem', sm: '0.875rem' },
-            padding: { xs: '4px 8px', sm: '6px 12px' }
+            fontSize: { xs: '0.75rem', sm: '0.8rem' },
+            padding: { xs: '4px 10px', sm: '5px 12px' },
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           PDF
@@ -179,7 +185,7 @@ const OverdueTasksGauge = ({ tasks }) => {
               fill: gaugeColor,
             },
             [`& .${gaugeClasses.referenceArc}`]: {
-              fill: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+              fill: theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)',
             },
           }}
         />
@@ -188,32 +194,34 @@ const OverdueTasksGauge = ({ tasks }) => {
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(3, 1fr)', 
-          gap: 'clamp(8px, 2vw, 16px)',
+          gap: 'clamp(8px, 2vw, 12px)',
           width: '100%',
-          marginTop: 'clamp(4px, 2vw, 10px)'
+          marginTop: 'clamp(4px, 2vw, 8px)'
         }}>
           <div style={{
             textAlign: 'center',
-            padding: 'clamp(8px, 2vw, 12px)',
-            backgroundColor: theme === 'dark' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)',
-            borderRadius: 'clamp(6px, 1.5vw, 8px)',
-            border: `1px solid ${theme === 'dark' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)'}`,
+            padding: 'clamp(10px, 2vw, 14px)',
+            backgroundColor: theme === 'dark' ? 'rgba(239, 68, 68, 0.06)' : 'rgba(239, 68, 68, 0.03)',
+            borderRadius: '12px',
+            border: `1px solid ${theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : 'rgba(239, 68, 68, 0.08)'}`,
           }}>
             <div style={{ 
               fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', 
-              fontWeight: 'bold', 
+              fontWeight: '700', 
               color: '#ef4444',
               marginBottom: '4px',
-              lineHeight: 1
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
             }}>
               {overdueCount}
             </div>
             <div style={{ 
-              fontSize: 'clamp(0.65rem, 2vw, 0.75rem)', 
-              color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+              fontSize: 'clamp(0.6rem, 2vw, 0.7rem)', 
+              color: subtextColor,
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              lineHeight: 1.2
+              letterSpacing: '0.08em',
+              lineHeight: 1.2,
+              fontWeight: '600',
             }}>
               Overdue
             </div>
@@ -221,26 +229,28 @@ const OverdueTasksGauge = ({ tasks }) => {
 
           <div style={{
             textAlign: 'center',
-            padding: 'clamp(8px, 2vw, 12px)',
-            backgroundColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.1)' : 'rgba(251, 191, 36, 0.05)',
-            borderRadius: 'clamp(6px, 1.5vw, 8px)',
-            border: `1px solid ${theme === 'dark' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(251, 191, 36, 0.2)'}`,
+            padding: 'clamp(10px, 2vw, 14px)',
+            backgroundColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.06)' : 'rgba(251, 191, 36, 0.03)',
+            borderRadius: '12px',
+            border: `1px solid ${theme === 'dark' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(251, 191, 36, 0.08)'}`,
           }}>
             <div style={{ 
               fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', 
-              fontWeight: 'bold', 
+              fontWeight: '700', 
               color: '#fbbf24',
               marginBottom: '4px',
-              lineHeight: 1
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
             }}>
               {totalIncompleteTasks}
             </div>
             <div style={{ 
-              fontSize: 'clamp(0.65rem, 2vw, 0.75rem)', 
-              color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+              fontSize: 'clamp(0.6rem, 2vw, 0.7rem)', 
+              color: subtextColor,
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              lineHeight: 1.2
+              letterSpacing: '0.08em',
+              lineHeight: 1.2,
+              fontWeight: '600',
             }}>
               Active
             </div>
@@ -248,26 +258,28 @@ const OverdueTasksGauge = ({ tasks }) => {
 
           <div style={{
             textAlign: 'center',
-            padding: 'clamp(8px, 2vw, 12px)',
-            backgroundColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)',
-            borderRadius: 'clamp(6px, 1.5vw, 8px)',
-            border: `1px solid ${theme === 'dark' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)'}`,
+            padding: 'clamp(10px, 2vw, 14px)',
+            backgroundColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.06)' : 'rgba(34, 197, 94, 0.03)',
+            borderRadius: '12px',
+            border: `1px solid ${theme === 'dark' ? 'rgba(34, 197, 94, 0.12)' : 'rgba(34, 197, 94, 0.08)'}`,
           }}>
             <div style={{ 
               fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', 
-              fontWeight: 'bold', 
+              fontWeight: '700', 
               color: '#22c55e',
               marginBottom: '4px',
-              lineHeight: 1
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
             }}>
               {totalIncompleteTasks - overdueCount}
             </div>
             <div style={{ 
-              fontSize: 'clamp(0.65rem, 2vw, 0.75rem)', 
-              color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+              fontSize: 'clamp(0.6rem, 2vw, 0.7rem)', 
+              color: subtextColor,
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              lineHeight: 1.2
+              letterSpacing: '0.08em',
+              lineHeight: 1.2,
+              fontWeight: '600',
             }}>
               On Track
             </div>
@@ -276,8 +288,8 @@ const OverdueTasksGauge = ({ tasks }) => {
 
         <div style={{ 
           marginTop: 'clamp(8px, 2vw, 8px)', 
-          fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)', 
-          color: theme === 'dark' ? '#a3a3a3' : '#6b7280',
+          fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)', 
+          color: subtextColor,
           textAlign: 'center',
           lineHeight: 1.4,
           padding: '0 8px'

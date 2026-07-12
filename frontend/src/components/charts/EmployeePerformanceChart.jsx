@@ -56,12 +56,14 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
 
   const containerStyles = theme === 'dark'
     ? {
-        backgroundColor: 'rgb(23 23 23 / 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(23, 23, 23, 0.5)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(12px)',
       }
     : {
-        backgroundColor: 'rgba(245, 245, 245, 0.8)',
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        border: '1px solid rgba(0, 0, 0, 0.05)',
+        backdropFilter: 'blur(12px)',
       };
 
   const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
@@ -147,9 +149,11 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
       sx={{
         width: '100%',
         overflow: 'visible',
-        borderRadius: { xs: '8px', sm: '12px' },
-        p: { xs: 1.5, sm: 2, md: 3 },
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        borderRadius: '16px',
+        p: { xs: 2, sm: 2.5, md: 3 },
+        boxShadow: theme === 'dark' 
+          ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
+          : '0 2px 16px rgba(0, 0, 0, 0.03)',
         position: 'relative',
         ...containerStyles,
       }}
@@ -160,44 +164,45 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
   variant="contained"
   onClick={downloadPDF}
   sx={{
-    position: 'absolute',
-    top: { xs: 8, sm: 12, md: 16 },
-    right: { xs: 8, sm: 12, md: 16 },
-    minWidth: 'auto',
-    width: { xs: 32, sm: 36, md: 40 },
-    height: { xs: 32, sm: 36, md: 40 },
-    borderRadius: '8px',
-    backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
-    color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
-    border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.1)',
-    '&:hover': {
-      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.12)',
-      border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid rgba(0, 0, 0, 0.2)',
-      transform: 'translateY(-1px)',
-      boxShadow: theme === 'dark' 
-        ? '0 4px 12px rgba(0, 0, 0, 0.3)' 
-        : '0 4px 12px rgba(0, 0, 0, 0.1)',
-    },
-    zIndex: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    transition: 'all 0.2s ease-in-out',
-  }}
-  size="small"
->
-  <DownloadIcon 
-    sx={{ 
-      fontSize: { xs: 16, sm: 18, md: 20 },
-      color: theme === 'dark' ? '#e5e5e5' : '#1f2937',
-    }} 
-  />
-</Button>
+     position: 'absolute',
+     top: { xs: 12, sm: 16, md: 20 },
+     right: { xs: 12, sm: 16, md: 20 },
+     minWidth: 'auto',
+     width: { xs: 32, sm: 34, md: 36 },
+     height: { xs: 32, sm: 34, md: 36 },
+     borderRadius: '10px',
+     backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
+     color: theme === 'dark' ? '#a3a3a3' : '#737373',
+     border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.06)',
+     '&:hover': {
+       backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
+       border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.1)',
+       transform: 'translateY(-1px)',
+       boxShadow: theme === 'dark' 
+         ? '0 4px 12px rgba(0, 0, 0, 0.3)' 
+         : '0 4px 12px rgba(0, 0, 0, 0.06)',
+     },
+     zIndex: 10,
+     display: 'flex',
+     alignItems: 'center',
+     justifyContent: 'center',
+     padding: 0,
+     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+   }}
+   size="small"
+ >
+   <DownloadIcon 
+     sx={{ 
+       fontSize: { xs: 16, sm: 17, md: 18 },
+       color: theme === 'dark' ? '#a3a3a3' : '#737373',
+     }} 
+   />
+ </Button>
 
       <h1 style={{
-        fontSize: 'clamp(1.125rem, 4vw, 1.5rem)',
-        fontWeight: 'bold',
+        fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+        fontWeight: '700',
+        letterSpacing: '-0.01em',
         marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
         marginLeft: 'clamp(0.25rem, 1vw, 0.5rem)',
         color: theme === 'dark' ? '#34d399' : '#059669'
@@ -233,10 +238,10 @@ const EmployeePerformanceChart = ({ tasks, employees }) => {
               fontSize: { xs: 9, sm: 10, md: 12 },
             },
             '& .MuiChartsAxis-root .MuiChartsAxis-line': {
-              stroke: `${textColor} !important`,
+              stroke: `${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important`,
             },
             '& .MuiChartsAxis-root .MuiChartsAxis-tick': {
-              stroke: `${textColor} !important`,
+              stroke: `${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important`,
             },
           }}
           margin={{

@@ -8,7 +8,7 @@ const AfternoonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 8px;
+  margin: 0 4px;
   
   /* Smooth scaling on hover */
   transition: transform 0.3s ease;

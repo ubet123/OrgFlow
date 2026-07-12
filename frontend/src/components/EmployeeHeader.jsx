@@ -17,45 +17,50 @@ const EmployeeHeader = ({ onLogout, employee }) => {
    
   // Theme-based styles
   const headerStyles = theme === 'dark' 
-    ? 'bg-neutral-900/80 border-neutral-700' 
-    : 'bg-neutral-100/80 border-neutral-300';
+    ? 'bg-neutral-950/70 border-neutral-800/40 shadow-[0_1px_3px_rgba(0,0,0,0.5)]' 
+    : 'bg-white/70 border-neutral-200/60 shadow-[0_1px_8px_rgba(0,0,0,0.04)]';
   
   const iconContainerStyles = theme === 'dark' 
-    ? 'bg-emerald-800/30 border-emerald-700/50' 
-    : 'bg-emerald-100/80 border-emerald-300';
+    ? 'bg-emerald-950/30 border-emerald-800/30 text-emerald-400' 
+    : 'bg-emerald-50/80 border-emerald-200/50 text-emerald-600';
   
-  const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-800';
+  const textColor = theme === 'dark' ? 'text-neutral-200' : 'text-neutral-700';
   const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
+  
   const chatButtonStyles = theme === 'dark'
-    ? 'bg-neutral-800/80 border-neutral-700 text-emerald-300 hover:bg-neutral-700/80'
-    : 'bg-white border-neutral-200 text-emerald-700 hover:bg-emerald-50';
+    ? 'bg-neutral-800/50 border-neutral-700/40 hover:border-neutral-600/50 hover:bg-neutral-800/70 text-neutral-300 active:scale-[0.97]'
+    : 'bg-white/80 border-neutral-200/60 hover:border-neutral-300/60 hover:bg-neutral-50 text-neutral-600 active:scale-[0.97]';
+
+  const logoutBtnStyles = theme === 'dark'
+    ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/20 hover:border-red-500/30 active:scale-[0.97]'
+    : 'bg-red-50 hover:bg-red-100/80 text-red-600 border-red-200/60 hover:border-red-300/60 active:scale-[0.97]';
 
   const getGreeting = () => {
     const hour = new Date().getHours();
     
     if (hour < 12) {
       return (
-        <div className='flex flex-row justify-center items-center gap-1'>
+        <>
           <SunAnimation />
-          <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Morning</span>
-        </div>
+          <span>Good Morning</span>
+        </>
       );
     }
     
     if (hour < 17) {
       return (
-        <div className='flex flex-row justify-center items-center gap-1'>
-          <Afternoon/>
-          <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Afternoon</span>
-        </div>
+        <>
+          <Afternoon />
+          <span>Good Afternoon</span>
+        </>
       );
     }
     
     return (
-      <div className='flex flex-row justify-center items-center gap-1'>
-        <Evening/>
-        <span className={`${textColor} -ml-2 sm:ml-1 sm:text-2xl text-lg`}>Good Evening</span>
-      </div>
+      <>
+        <Evening />
+        <span>Good Evening</span>
+      </>
     );
   };
 
@@ -72,28 +77,28 @@ const EmployeeHeader = ({ onLogout, employee }) => {
   };
 
   return (
-    <header className={`${headerStyles} backdrop-blur-sm border-b p-3 sm:p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-10 gap-3 sm:gap-4 md:gap-0`}>
+    <header className={`${headerStyles} backdrop-blur-xl border-b px-4 py-3.5 sm:py-4 lg:px-8 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50 transition-all duration-300 gap-3 sm:gap-0`}>
       {/* Left Section - Greeting and Employee Name */}
       <div className="flex items-center justify-between w-full sm:w-auto sm:justify-start">
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className={`${iconContainerStyles} p-1.5 sm:p-2 rounded-lg border`}>
-            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 ${accentColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className={`${iconContainerStyles} p-2 rounded-xl border flex-shrink-0 items-center justify-center hidden sm:flex`}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center gap-x-2 sm:ml-3 min-w-0">
+            <div className={`text-sm sm:text-base lg:text-lg font-medium tracking-tight flex items-center gap-1.5 min-w-0 ${textColor}`}>
               {getGreeting()}
-              <span className={textColor}>,</span>
+              <span className="hidden sm:inline opacity-50">,</span>
             </div>
-            <span className={`${accentColor} font-extrabold sm:ml-1 text-xl ml-[54px] -mt-4 sm:mt-0 sm:text-2xl lg:text-3xl`}>
+            <span className={`${accentColor} font-bold text-base sm:text-lg lg:text-xl leading-none`}>
               {employee?.name}
             </span>
           </div>
         </div>
 
         {/* Theme Toggle - Mobile */}
-        <div className="sm:hidden" title="Toggle Theme">
+        <div className="sm:hidden flex items-center" title="Toggle Theme">
           <Switch
             checked={theme === 'light'}
             onChange={toggleTheme}
@@ -101,10 +106,10 @@ const EmployeeHeader = ({ onLogout, employee }) => {
         </div>
       </div>
 
-      {/* Right Section - Theme Toggle and Logout */}
-      <div className="flex items-center justify-between w-full sm:w-auto gap-3 sm:gap-4 md:gap-6">
+      {/* Right Section - Theme Toggle and Actions */}
+      <div className="flex items-center justify-between w-full sm:w-auto gap-2.5 sm:gap-3">
         {/* Theme Toggle - Desktop */}
-        <div className="hidden sm:flex" title="Toggle Theme">
+        <div className="hidden sm:flex items-center mr-2" title="Toggle Theme">
           <Switch
             checked={theme === 'light'}
             onChange={toggleTheme}
@@ -115,19 +120,19 @@ const EmployeeHeader = ({ onLogout, employee }) => {
         <button
           type="button"
           onClick={() => navigate('/chat')}
-          className={`border px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto text-sm sm:text-base ${chatButtonStyles}`}
+          className={`border px-4 py-2 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium w-full sm:w-auto ${chatButtonStyles}`}
           aria-label="Open chat"
         >
-         <IoChatbubblesOutline className={`h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 ${accentColor}`} />
+          <IoChatbubblesOutline className="h-4 w-4" />
           <span className="whitespace-nowrap">Chat</span>
         </button>
 
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto text-sm sm:text-base"
+          className={`${logoutBtnStyles} px-4 py-2 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium w-full sm:w-auto`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           <span className="whitespace-nowrap">Logout</span>

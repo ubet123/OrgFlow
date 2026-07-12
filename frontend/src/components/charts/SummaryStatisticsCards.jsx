@@ -46,16 +46,18 @@ const SummaryStatisticsCards = () => {
 
   const containerStyles = theme === 'dark'
     ? {
-        backgroundColor: 'rgb(23 23 23 / 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(23, 23, 23, 0.5)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(12px)',
       }
     : {
-        backgroundColor: 'rgba(245, 245, 245, 0.8)',
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        border: '1px solid rgba(0, 0, 0, 0.05)',
+        backdropFilter: 'blur(12px)',
       };
 
   const textColor = theme === 'dark' ? '#e5e5e5' : '#1f2937';
-  const subtextColor = theme === 'dark' ? '#a3a3a3' : '#6b7280';
+  const subtextColor = theme === 'dark' ? '#737373' : '#9ca3af';
 
   const statCards = [
     {
@@ -63,48 +65,48 @@ const SummaryStatisticsCards = () => {
       label: 'Total Tasks',
       value: totalTasks,
       color: theme === 'dark' ? '#60a5fa' : '#3b82f6',
-      bgColor: theme === 'dark' ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(96, 165, 250, 0.3)' : 'rgba(59, 130, 246, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(96, 165, 250, 0.08)' : 'rgba(59, 130, 246, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(96, 165, 250, 0.12)' : 'rgba(59, 130, 246, 0.1)',
     },
     {
       icon: CheckCircleIcon,
       label: 'Completion Rate',
       value: `${completionRate}%`,
       color: theme === 'dark' ? '#34d399' : '#059669',
-      bgColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(5, 150, 105, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.3)' : 'rgba(5, 150, 105, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.08)' : 'rgba(5, 150, 105, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.12)' : 'rgba(5, 150, 105, 0.1)',
     },
     {
       icon: AccessTimeIcon,
       label: 'Overdue Tasks',
       value: overdueTasks,
       color: theme === 'dark' ? '#f87171' : '#dc2626',
-      bgColor: theme === 'dark' ? 'rgba(248, 113, 113, 0.1)' : 'rgba(220, 38, 38, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(248, 113, 113, 0.3)' : 'rgba(220, 38, 38, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(248, 113, 113, 0.08)' : 'rgba(220, 38, 38, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(248, 113, 113, 0.12)' : 'rgba(220, 38, 38, 0.1)',
     },
     {
       icon: SpeedIcon,
       label: 'Avg. Completion Time',
       value: `${avgCompletionTime}d`,
       color: theme === 'dark' ? '#a78bfa' : '#7c3aed',
-      bgColor: theme === 'dark' ? 'rgba(167, 139, 250, 0.1)' : 'rgba(124, 58, 237, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(167, 139, 250, 0.3)' : 'rgba(124, 58, 237, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(167, 139, 250, 0.08)' : 'rgba(124, 58, 237, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(167, 139, 250, 0.12)' : 'rgba(124, 58, 237, 0.1)',
     },
     {
       icon: PeopleIcon,
       label: 'Active Employees',
       value: activeEmployees,
       color: theme === 'dark' ? '#fbbf24' : '#d97706',
-      bgColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.1)' : 'rgba(217, 119, 6, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(217, 119, 6, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.08)' : 'rgba(217, 119, 6, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(217, 119, 6, 0.1)',
     },
     {
       icon: TrendingUpIcon,
       label: 'In Progress',
       value: inProgressTasks,
       color: theme === 'dark' ? '#fb923c' : '#ea580c',
-      bgColor: theme === 'dark' ? 'rgba(251, 146, 60, 0.1)' : 'rgba(234, 88, 12, 0.05)',
-      borderColor: theme === 'dark' ? 'rgba(251, 146, 60, 0.3)' : 'rgba(234, 88, 12, 0.2)',
+      bgColor: theme === 'dark' ? 'rgba(251, 146, 60, 0.08)' : 'rgba(234, 88, 12, 0.04)',
+      borderColor: theme === 'dark' ? 'rgba(251, 146, 60, 0.12)' : 'rgba(234, 88, 12, 0.1)',
     },
   ];
 
@@ -113,18 +115,19 @@ const SummaryStatisticsCards = () => {
       sx={{
         ...containerStyles,
         overflow: 'hidden',
-        borderRadius: { xs: '8px', sm: '12px' },
-        padding: { xs: '12px', sm: '16px', md: '20px' },
+        borderRadius: '16px',
+        padding: { xs: '16px', sm: '20px', md: '24px' },
         boxShadow: theme === 'dark' 
-          ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-          : '0 2px 4px rgba(0, 0, 0, 0.1)',
+          ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
+          : '0 2px 16px rgba(0, 0, 0, 0.03)',
       }}
     >
       <h2 style={{ 
         color: theme === 'dark' ? '#34d399' : '#059669', 
         fontSize: 'clamp(1rem, 4vw, 1.25rem)',
-        fontWeight: 'bold',
-        marginBottom: 'clamp(12px, 3vw, 20px)',
+        fontWeight: '700',
+        letterSpacing: '-0.01em',
+        marginBottom: 'clamp(16px, 3vw, 24px)',
         marginTop: '0'
       }}>
         Key Metrics Overview
@@ -133,8 +136,8 @@ const SummaryStatisticsCards = () => {
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
           <div style={{
-            width: 36, height: 36, borderRadius: '50%',
-            border: `3px solid ${theme === 'dark' ? '#34d399' : '#059669'}`,
+            width: 32, height: 32, borderRadius: '50%',
+            border: `2px solid ${theme === 'dark' ? '#34d399' : '#059669'}`,
             borderTopColor: 'transparent',
             animation: 'spin 0.8s linear infinite'
           }} />
@@ -145,7 +148,7 @@ const SummaryStatisticsCards = () => {
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fit, minmax(min(140px, 100%), 1fr))',
-        gap: 'clamp(10px, 2vw, 16px)',
+        gap: 'clamp(10px, 2vw, 14px)',
       }}>
         {statCards.map((stat, index) => {
           const Icon = stat.icon;
@@ -157,20 +160,20 @@ const SummaryStatisticsCards = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: 'clamp(12px, 3vw, 20px)',
+                padding: 'clamp(14px, 3vw, 22px)',
                 backgroundColor: stat.bgColor,
-                borderRadius: 'clamp(8px, 2vw, 12px)',
+                borderRadius: '14px',
                 border: `1px solid ${stat.borderColor}`,
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 cursor: 'default',
                 minHeight: '100px',
               }}
               onMouseEnter={(e) => {
                 if (window.innerWidth >= 768) {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                   e.currentTarget.style.boxShadow = theme === 'dark' 
-                    ? '0 8px 16px rgba(0, 0, 0, 0.4)' 
-                    : '0 4px 8px rgba(0, 0, 0, 0.15)';
+                    ? '0 8px 24px rgba(0, 0, 0, 0.3)' 
+                    : '0 4px 16px rgba(0, 0, 0, 0.08)';
                 }
               }}
               onMouseLeave={(e) => {
@@ -179,25 +182,29 @@ const SummaryStatisticsCards = () => {
               }}
             >
               <Icon sx={{ 
-                fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' }, 
+                fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }, 
                 color: stat.color, 
-                marginBottom: { xs: '4px', sm: '6px', md: '8px' }
+                marginBottom: { xs: '6px', sm: '8px', md: '10px' },
+                opacity: 0.9,
               }} />
               <div style={{ 
-                fontSize: 'clamp(1.25rem, 5vw, 2rem)', 
-                fontWeight: 'bold', 
+                fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', 
+                fontWeight: '700', 
                 color: stat.color,
                 marginBottom: '4px',
-                lineHeight: 1
+                lineHeight: 1,
+                letterSpacing: '-0.02em',
               }}>
                 {stat.value}
               </div>
               <div style={{ 
-                fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)', 
+                fontSize: 'clamp(0.6rem, 2vw, 0.7rem)', 
                 color: subtextColor,
                 textAlign: 'center',
-                fontWeight: '500',
-                lineHeight: 1.2
+                fontWeight: '600',
+                lineHeight: 1.2,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
               }}>
                 {stat.label}
               </div>
@@ -207,14 +214,14 @@ const SummaryStatisticsCards = () => {
       </div>
 
       <div style={{ 
-        marginTop: 'clamp(12px, 3vw, 20px)', 
-        padding: 'clamp(8px, 2vw, 12px)',
-        backgroundColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.05)' : 'rgba(5, 150, 105, 0.03)',
-        borderRadius: 'clamp(6px, 1.5vw, 8px)',
-        border: `1px solid ${theme === 'dark' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(5, 150, 105, 0.1)'}`,
+        marginTop: 'clamp(16px, 3vw, 20px)', 
+        padding: 'clamp(10px, 2vw, 14px)',
+        backgroundColor: theme === 'dark' ? 'rgba(52, 211, 153, 0.04)' : 'rgba(5, 150, 105, 0.02)',
+        borderRadius: '12px',
+        border: `1px solid ${theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(5, 150, 105, 0.06)'}`,
       }}>
         <div style={{ 
-          fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)', 
+          fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)', 
           color: subtextColor,
           textAlign: 'center',
           display: 'flex',
@@ -225,7 +232,7 @@ const SummaryStatisticsCards = () => {
           lineHeight: 1.4
         }}>
         
-        <GiConfirmed style={{ color: theme === 'dark' ? '#34d399' : '#059669', fontSize: '1.25rem' }} />
+        <GiConfirmed style={{ color: theme === 'dark' ? '#34d399' : '#059669', fontSize: '1.1rem' }} />
           <span>
             <strong style={{ color: textColor }}>{completedTasks}</strong> of <strong style={{ color: textColor }}>{totalTasks}</strong> tasks completed
             {overdueTasks > 0 && (

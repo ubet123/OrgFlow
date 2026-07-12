@@ -47,37 +47,34 @@ const Analytics = () => {
 
   // Custom styles for theme
   const containerStyles = theme === 'dark'
-    ? 'bg-neutral-900/80 border-neutral-800'
-    : 'bg-neutral-100/80 border-neutral-300';
+    ? 'glass-card-dark shadow-[0_4px_24px_rgba(0,0,0,0.2)]'
+    : 'glass-card-light shadow-[0_2px_16px_rgba(0,0,0,0.03)]';
 
   const accentColor = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
   const textColor = theme === 'dark' ? 'text-neutral-300' : 'text-neutral-800';
-  const dividerColor = theme === 'dark' ? 'bg-white/20' : 'bg-neutral-400/30';
 
   return (
-    <div className={`p-2 sm:p-4 rounded-lg border backdrop-blur-sm w-full max-w-[98vw] sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[85vw] xl:max-w-[80vw] mx-auto mt-4 sm:mt-6 md:mt-10 overflow-x-hidden ${containerStyles}`}>
+    <div className={`p-4 sm:p-6 md:p-8 rounded-2xl w-full max-w-[1400px] mx-auto overflow-x-hidden animate-fade-in-up accent-top ${containerStyles}`}>
       
-      <h1 className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold ml-1 sm:ml-2 md:ml-3 mb-3 sm:mb-4 md:mb-6 mt-4 sm:mt-6 ${accentColor}`}>
+      <h1 className={`text-xl sm:text-2xl font-bold tracking-tight mb-6 sm:mb-8 mt-2 ${accentColor}`}>
         Analytics
       </h1>
 
-      <div className="relative mt-4 sm:mt-6 mb-8 sm:mb-10 md:mb-14">
-        <div className={`absolute bottom-0 left-0 w-full h-px ${dividerColor}`}></div>
-      </div>
+      <div className={`h-px mb-8 ${theme === 'dark' ? 'bg-gradient-to-r from-transparent via-neutral-700/30 to-transparent' : 'bg-gradient-to-r from-transparent via-neutral-300/30 to-transparent'}`}></div>
 
       {loading ? (
-        <div className={`flex justify-center items-center py-6 ${textColor}`}>
-          <div className={`animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-t-2 border-b-2 ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
+        <div className={`flex justify-center items-center py-8 ${textColor}`}>
+          <div className={`animate-spin rounded-full h-8 w-8 border-2 border-t-transparent ${theme === 'dark' ? 'border-emerald-500' : 'border-emerald-600'}`}></div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-6">
           {/* Summary Statistics Cards - Full Width */}
           <div className="w-full">
             <SummaryStatisticsCards />
           </div>
 
           {/* Two Column Grid for Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Task Status Pie Chart */}
             <div className="min-w-0 overflow-hidden">
               <PieChartAdmin completed={complete} pending={pending} />
